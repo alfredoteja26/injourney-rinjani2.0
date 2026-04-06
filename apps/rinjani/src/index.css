@@ -1,0 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
+@import "tailwindcss" source(none);
+@source "./**/*.{js,ts,jsx,tsx}";
+@source "../../../packages/portal/src/**/*.{js,ts,jsx,tsx}";
+@source "../../../packages/talent/src/**/*.{js,ts,jsx,tsx}";
+@source "../../../packages/performance/src/**/*.{js,ts,jsx,tsx}";
+@import "tw-animate-css";
+@import "../../../packages/shared-ui/src/theme.css";

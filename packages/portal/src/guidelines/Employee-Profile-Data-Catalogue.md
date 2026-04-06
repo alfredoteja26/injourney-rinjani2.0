@@ -1,0 +1,8 @@
+- **Personal Information:** `employee_profile` (Tier 1), `employee_identification` (Tier 1), `employee_address` (Tier 1), `employee_family_member` (Tier 1), `employee_medical_history` (Tier 1), `employee_medical_record` (Tier 1), `employee_disability` (Tier 1), `employee_social_media` (Tier 3)
+- **Education:** `employee_education_history` (Tier 1), `employee_language_skill` (Tier 2)
+- **Learning:** `employee_learning_history` / `learning_history` (Tier 1)
+- **Work History:** `employee_position_history` (Tier 1), `employee_secondary_assignment` (Tier 1), `employee_assignment_history` (Tier 1)
+- **Employment Info:** `employee_leave_history` (Tier 1), `employee_disciplinary_history` (Tier 1), `employee_contract` (Tier 1)
+- **Qualification:** `competency_assessment` (Tier 1), `learning_agility_assessment` (Tier 1)
+- **Insights:** `career_aspiration` (Tier 4), `eqs_score` (Tier 4), `nine_box_classification` (Tier 4), `talent_pool` (Tier 4), `calibration_result` (Tier 4)
+- **Contributions:** `employee_organization_membership` (Tier 3), `employee_achievement` (Tier 2)

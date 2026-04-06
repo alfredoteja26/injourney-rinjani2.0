@@ -1,0 +1,14 @@
+{
+  "name": "rinjani-integrated-workspace",
+  "private": true,
+  "workspaces": [
+    "apps/rinjani",
+    "packages/shared-types",
+    "packages/shared-ui",
+    "packages/shell"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @rinjani/app",
+    "build": "npm run build --workspace @rinjani/app"
+  }
+}

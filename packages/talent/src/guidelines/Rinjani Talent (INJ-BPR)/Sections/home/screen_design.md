@@ -1,0 +1,453 @@
+# Home — Screen Design
+
+## Home Dashboard Screen
+
+### Context References
+
+- Section Spec: [Home - Section Spec](https://www.notion.so/Home-Section-Spec-27648376ece94b52988f29b896f96162?pvs=21)
+    - Requirements applied:
+        - Personalized greeting berdasarkan waktu lokal user
+        - Career Status Card menampilkan posisi definitif aktif
+        - My Classification Card menampilkan 9-Box + EQS breakdown 6 komponen terhadap posisi definitif
+        - Aspiration Summary Card menampilkan count per 4 sumber + 3 aspirasi individual terbaru
+        - IDP Progress Card menampilkan progress hours + activity status summary
+        - Job Applications Card menampilkan list aplikasi aktif dengan detail status
+        - Period Alerts dari semua modul My Talent Journey, sorted by urgency
+        - Quick Actions bar dengan shortcut ke modul utama
+        - Team Summary Card hanya untuk Line Manager
+    - Constraints applied:
+        - Card-based grid layout, 2 kolom desktop, 1 kolom mobile
+        - Cards load independently (skeleton per card)
+        - Setiap card clickable ke detail page masing-masing modul
+        - No navigation chrome (shell handles it)
+    - View coverage: UC 1-9 (View Personalized Dashboard, Career Status, My Classification, Aspiration Summary, IDP Progress, Job Applications, Period Alerts, Quick Actions, Team Summary)
+- Data Model: [Rinjani Talent - Data Model](https://www.notion.so/Rinjani-Talent-Data-Model-c9438ffdd61f4dadb0cb9eb5fdde3175?pvs=21)
+    - Entities used: Employee, EQSScore, EQSComponent, TalentPoolCandidate, TalentPoolPeriod, IDPRecord, IDPActivity, IDPCycle, Application, Position, TenderPeriod, AssessorAssignment, AssessmentCycle
+    - Fields used: [Employee.name](http://Employee.name), Employee.current_position_title, Employee.organization_name, Employee.grade_jabatan, [Employee.band](http://Employee.band)_jabatan, Employee.position_effective_date, [EQSScore.total](http://EQSScore.total)_score, EQSScore.eqs_band, EQSComponent.component_type, EQSComponent.weight, EQSComponent.weighted_value, TalentPoolCandidate.talent_cluster, IDPRecord.status, [IDPRecord.total](http://IDPRecord.total)_hours, IDPRecord.completed_hours, IDPActivity.title, IDPActivity.status, [IDPActivity.target](http://IDPActivity.target)_date, Application.status, Application.movement_type, Application.submitted_at, Position.title, Position.organization_name, AssessorAssignment.status
+    - Relationships applied:
+        - EQSScore filtered by target_position_id = current definitive position
+        - EQSScore → EQSComponent (1:N, 6 komponen)
+        - TalentPoolCandidate filtered by period = active
+        - IDPRecord filtered by cycle = active
+        - Application filtered by active statuses only
+        - AssessorAssignment filtered by assessor_id = current user, status != completed
+- Sample Data: [Home - Sample Data](https://www.notion.so/Home-Sample-Data-6516f14e36b74226ac251019708ff9ce?pvs=21)
+    - Example values used:
+        - User: "Ratna Kusumawati", VP Human Capital Business Partner, Grade 22, Band IV
+        - EQS: 82.45 (Qualified), 6 components with weighted values (17.60, 15.70, 17.00, 7.50, 16.00, 8.65)
+        - 9-Box: "Promotable", low_risk
+        - IDP: Approved, 18/48 hours, 4 activities (1 completed, 1 in_progress, 2 not_started)
+        - Applications: GM Strategic Planning (Shortlisted, Promosi), VP People Analytics (Submitted, Rotasi)
+        - Alerts: 5 alerts (urgent, warning, info)
+        - Team: 8 subordinates, 6 action items
+    - Copy grounded in sample data: yes
+
+### 1) Screen Intent
+
+- Primary user goal: Mendapatkan gambaran lengkap status talent journey secara cepat di satu halaman, lalu navigasi ke modul yang memerlukan tindakan
+- Success criteria: User memahami posisi karir, klasifikasi talent, progress pengembangan, status lamaran, dan tindakan yang diperlukan — dalam waktu kurang dari 30 detik
+- Key constraints: Dashboard read-only (semua edit terjadi di modul detail), semua card load independent, data real-time
+
+### 2) Layout Regions (high-level)
+
+- Header: Personalized greeting dengan nama user dan tanggal hari ini
+- Main Content: Card grid — Career Status (full width), Classification + Aspiration (2 kolom), IDP + Job Applications (2 kolom), Team Summary (full width, Line Manager only)
+- Alerts Section: Period Alerts list (full width)
+- Sticky Footer (mobile only): Quick Actions bar
+
+### 3) Component Tree (nested hierarchy)
+
+- Screen Container
+    - Greeting Region
+        - Greeting Text: "Selamat [pagi/siang/sore/malam], [Nama]"
+            - Data Source: derived from system clock (pagi 00-11, siang 11-15, sore 15-18, malam 18-24) + [Employee.name](http://Employee.name)
+            - Format Rule: text, first name or full name
+        - Date Text: "[Hari], [Tanggal Bulan Tahun]"
+            - Data Source: system date, locale id-ID
+            - Format Rule: text, e.g. "Senin, 9 Februari 2026"
+    - Quick Actions Region
+        - Quick Action Button: "Ajukan Aspirasi"
+            - Icon: Target
+            - Action: navigate to /career-path/my-aspiration
+            - Visibility: always
+        - Quick Action Button: "Kelola IDP"
+            - Icon: ClipboardList
+            - Action: navigate to /my-development
+            - Visibility: always
+        - Quick Action Button: "Jelajahi Lowongan"
+            - Icon: Briefcase
+            - Action: navigate to /job-tender
+            - Visibility: always
+        - Quick Action Button: "Isi Assessment"
+            - Icon: ClipboardCheck
+            - Action: navigate to /360-assessment/assigned
+            - Visibility: only when AssessorAssignment count (status = pending/notified/in_progress) > 0
+            - Badge: count of pending assessments (e.g. "2")
+    - Cards Grid Region
+        - Row 1: Career Status Card (full width)
+            - Card Header: "Status Karir"
+            - Card Body
+                - Field: Nama Posisi
+                    - Data Source: Employee.current_position_title
+                    - Format Rule: text, prominent
+                    - Null Handling: "Data posisi belum tersedia"
+                - Field: Unit Organisasi
+                    - Data Source: Employee.organization_name
+                    - Format Rule: text, secondary
+                    - Null Handling: show "—"
+                - Field Group (inline row)
+                    - Field: Band Jabatan
+                        - Data Source: [Employee.band](http://Employee.band)_jabatan
+                        - Format Rule: badge
+                    - Field: Grade Jabatan
+                        - Data Source: Employee.grade_jabatan
+                        - Format Rule: badge
+                    - Field: Masa Kerja di Posisi
+                        - Data Source: derived from Employee.position_effective_date to today
+                        - Format Rule: text, e.g. "2 tahun 7 bulan"
+                        - Null Handling: show "—"
+            - Card Action: none (informational only)
+        - Row 2: My Classification Card | Aspiration Summary Card (2 kolom)
+            - Column A: My Classification Card
+                - Card Header: "Klasifikasi Talent"
+                - Card Action: tap/click navigates to /career-path/my-classification
+                - Card Body
+                    - Sub-section: 9-Box Classification
+                        - Field: Cluster Label
+                            - Data Source: TalentPoolCandidate.talent_cluster
+                            - Format Rule: badge, mapped label (9box_promotable → "Promotable", 9box_high_potential → "High Potential", dll)
+                            - Null Handling: show "Belum Diklasifikasi"
+                        - Field: Mini 9-Box Grid
+                            - Data Source: TalentPoolCandidate.talent_cluster
+                            - Format Rule: 3×3 mini grid, user position highlighted
+                            - Null Handling: show grid with no highlight
+                        - Field: Periode
+                            - Data Source: [TalentPoolPeriod.name](http://TalentPoolPeriod.name)
+                            - Format Rule: text, secondary (e.g. "Talent Pool 2026")
+                    - Divider
+                    - Sub-section: EQS Score
+                        - Field: Total Score
+                            - Data Source: [EQSScore.total](http://EQSScore.total)_score
+                            - Format Rule: number with 2 decimal, prominent (e.g. "82.45")
+                            - Null Handling: show "—"
+                        - Field: EQS Band
+                            - Data Source: EQSScore.eqs_band
+                            - Format Rule: badge, mapped label (qualified → "Qualified", highly_qualified → "Highly Qualified", dll)
+                            - Null Handling: show "—"
+                        - Field Group: EQS Component Breakdown (6 items, vertical list)
+                            - For each EQSComponent:
+                                - Field: Component Label
+                                    - Data Source: EQSComponent.component_type
+                                    - Format Rule: mapped label (performance → "Kinerja", competency → "Kompetensi", experience → "Pengalaman", aspiration → "Aspirasi", training → "Pelatihan", tes → "TES")
+                                - Field: Weight
+                                    - Data Source: EQSComponent.weight
+                                    - Format Rule: percentage, secondary (e.g. "20%")
+                                - Field: Weighted Value
+                                    - Data Source: EQSComponent.weighted_value
+                                    - Format Rule: number with 2 decimal (e.g. "17.60")
+                                - Field: Progress Indicator
+                                    - Data Source: derived (weighted_value / weight × 100)
+                                    - Format Rule: horizontal mini bar
+                                    - Null Handling: show empty bar
+                - Empty State:
+                    - Message: "Klasifikasi talent belum tersedia untuk periode ini"
+                    - CTA: none
+            - Column B: Aspiration Summary Card
+                - Card Header: "Aspirasi Karir"
+                - Card Action: tap/click navigates to /career-path/my-aspiration
+                - Card Body
+                    - Field: Total Aspirasi Aktif
+                        - Data Source: [careerAspirations.total](http://careerAspirations.total)_active
+                        - Format Rule: number, prominent (e.g. "7")
+                        - Null Handling: show "0"
+                    - Field Group: Breakdown per Sumber (inline badges or mini stats)
+                        - Field: Individual
+                            - Data Source: [careerAspirations.by](http://careerAspirations.by)_source.individual.count
+                            - Format Rule: count badge with label
+                        - Field: Supervisor
+                            - Data Source: [careerAspirations.by](http://careerAspirations.by)_source.supervisor.count
+                            - Format Rule: count badge with label
+                        - Field: Job Holder
+                            - Data Source: [careerAspirations.by](http://careerAspirations.by)_source.job_holder.count
+                            - Format Rule: count badge with label
+                        - Field: Unit
+                            - Data Source: [careerAspirations.by](http://careerAspirations.by)_source.unit.count
+                            - Format Rule: count badge with label
+                    - Divider
+                    - Sub-section: Aspirasi Individual Terbaru (max 3 items)
+                        - For each aspiration item:
+                            - Field: Posisi Target
+                                - Data Source: [careerAspirations.by](http://careerAspirations.by)_source.individual.latest_positions[n].position_title
+                                - Format Rule: text
+                            - Field: Movement Type
+                                - Data Source: [careerAspirations.by](http://careerAspirations.by)_source.individual.latest_positions[n].movement_type
+                                - Format Rule: badge (VERTICAL → "Vertikal", HORIZONTAL → "Horizontal")
+                - Empty State:
+                    - Message: "Belum ada aspirasi karir yang diajukan"
+                    - CTA: "Ajukan Aspirasi Karir" → /career-path/my-aspiration
+        - Row 3: IDP Progress Card | Job Applications Card (2 kolom)
+            - Column A: IDP Progress Card
+                - Card Header: "Rencana Pengembangan"
+                - Card Action: tap/click navigates to /my-development
+                - Card Body
+                    - Field: Status IDP
+                        - Data Source: IDPRecord.status
+                        - Format Rule: status badge (draft → "Draft", pending_approval → "Menunggu Persetujuan", approved → "Disetujui", revision_requested → "Perlu Revisi", completed → "Selesai")
+                        - Null Handling: show "Belum Ada IDP"
+                    - Field: Progress Hours
+                        - Data Source: IDPRecord.completed_hours / [IDPRecord.total](http://IDPRecord.total)_hours
+                        - Format Rule: progress bar with label (e.g. "18 / 48 jam (37.5%)")
+                        - Null Handling: show empty progress bar
+                        - [WARNING] Jika completed_hours < IDPCycle.min_development_hours dan sudah melewati midyear_checkpoint, tampilkan warning indicator
+                    - Field Group: Activity Status Summary (horizontal mini stats)
+                        - Field: Selesai
+                            - Data Source: count IDPActivity where status = completed
+                            - Format Rule: count with label
+                        - Field: Berlangsung
+                            - Data Source: count IDPActivity where status = in_progress
+                            - Format Rule: count with label
+                        - Field: Belum Mulai
+                            - Data Source: count IDPActivity where status = not_started
+                            - Format Rule: count with label
+                    - Divider
+                    - Sub-section: Aktivitas Terdekat
+                        - Field: Activity Title
+                            - Data Source: IDPActivity.title (nearest by target_date, status != completed)
+                            - Format Rule: text, truncate at 40 chars
+                            - Null Handling: "Tidak ada aktivitas mendatang"
+                        - Field: Target Date
+                            - Data Source: [IDPActivity.target](http://IDPActivity.target)_date
+                            - Format Rule: date, relative (e.g. "dalam 2 bulan")
+                        - Field: Priority
+                            - Data Source: IDPActivity.priority
+                            - Format Rule: badge (high → "Tinggi", medium → "Sedang", low → "Rendah")
+                - Empty State:
+                    - Message: "Belum ada rencana pengembangan untuk periode ini"
+                    - CTA: "Buat IDP" → /my-development
+            - Column B: Job Applications Card
+                - Card Header: "Lamaran Saya"
+                - Card Subheader: "[X] lamaran aktif" (count of active applications)
+                - Card Action: tap/click header navigates to /job-tender/my-applications
+                - Card Body
+                    - Content Presentation: List of active applications
+                    - For each Application item:
+                        - Field: Nama Posisi
+                            - Data Source: Position.title
+                            - Format Rule: text, prominent
+                        - Field: Unit Organisasi
+                            - Data Source: Position.organization_name
+                            - Format Rule: text, secondary
+                        - Field: Movement Type
+                            - Data Source: Application.movement_type
+                            - Format Rule: badge (PROMOSI → "Promosi", ROTASI → "Rotasi")
+                        - Field: Status
+                            - Data Source: Application.status
+                            - Format Rule: status badge (submitted → "Submitted", screening → "Screening", shortlisted → "Shortlisted", interview → "Interview", offered → "Offered")
+                        - Field: Tanggal Submit
+                            - Data Source: Application.submitted_at
+                            - Format Rule: date, relative (e.g. "8 hari lalu")
+                    - Item Action: tap/click item → navigate to /job-tender/[position_id]/my-application
+                - Empty State:
+                    - Message: "Tidak ada lamaran aktif"
+                    - CTA: "Jelajahi Lowongan" → /job-tender
+        - Row 4: Team Summary Card (full width, conditional)
+            - Visibility: only when [currentUser.is](http://currentUser.is)_line_manager = true
+            - Card Header: "Ringkasan Tim"
+            - Card Action: "Lihat Tim Saya" button → navigates to /my-team
+            - Card Body
+                - Field Group Row 1 (inline stats)
+                    - Field: Total Bawahan
+                        - Data Source: [teamSummary.total](http://teamSummary.total)_subordinates
+                        - Format Rule: number, prominent (e.g. "8 Orang")
+                    - Field: Rata-rata EQS
+                        - Data Source: teamSummary.avg_eqs_score
+                        - Format Rule: number with 1 decimal (e.g. "74.8")
+                    - Field: Action Items
+                        - Data Source: teamSummary.action_[items.total](http://items.total)
+                        - Format Rule: number with badge indicator (e.g. "6")
+                        - [WARNING] Jika action items > 0, tampilkan visual attention indicator
+                - Field Group Row 2: 9-Box Distribution (mini heatmap)
+                    - Data Source: teamSummary.nine_box_distribution
+                    - Format Rule: 3×3 mini grid with count per cell
+                    - Mapping:
+                        - 9box_high_potential → cell (3,3)
+                        - 9box_promotable → cell (3,2) or (2,3)
+                        - 9box_solid_contributor → cell (2,2)
+                        - 9box_sleeping_tiger → cell (1,3) or (3,1)
+                        - 9box_unfit → cell (1,1)
+                        - unclassified → shown as footnote count
+                    - Null Handling: show grid with all zeros
+                - Field Group Row 3: IDP Team Status (horizontal bar segments)
+                    - Data Source: teamSummary.idp_status_summary
+                    - Format Rule: stacked horizontal bar with segments per status
+                    - Labels: Draft, Menunggu Persetujuan, Disetujui, Perlu Revisi, Selesai, Belum Ada
+                    - Null Handling: show empty bar
+                - Field Group Row 4: Action Items Breakdown
+                    - Field: IDP Perlu Disetujui
+                        - Data Source: teamSummary.action_items.idp_approval_pending
+                        - Format Rule: count with label
+                    - Field: Aspirasi Perlu Direview
+                        - Data Source: teamSummary.action_items.aspiration_review_pending
+                        - Format Rule: count with label
+                    - Field: Assessment Pending
+                        - Data Source: teamSummary.action_items.assessment_pending
+                        - Format Rule: count with label
+    - Alerts Region (full width)
+        - Section Header: "Pengingat"
+        - Visibility: only when periodAlerts has items where is_dismissed = false
+        - Content Presentation: Vertical list (max 5 visible)
+        - For each Alert item:
+            - Field: Icon
+                - Data Source: periodAlerts[n].icon
+                - Format Rule: Lucide icon matching module (Target, ClipboardList, Briefcase, ClipboardCheck)
+            - Field: Severity Indicator
+                - Data Source: periodAlerts[n].severity
+                - Format Rule: visual indicator (urgent = attention, warning = caution, info = neutral)
+            - Field: Title
+                - Data Source: periodAlerts[n].title
+                - Format Rule: text, prominent
+            - Field: Description
+                - Data Source: periodAlerts[n].description
+                - Format Rule: text, secondary
+            - Field: Days Remaining
+                - Data Source: periodAlerts[n].days_remaining
+                - Format Rule: text, e.g. "19 hari lagi"
+                - [WARNING] Jika days_remaining <= 3, tampilkan sebagai urgent
+            - Item Action: tap/click → navigate to periodAlerts[n].action_url
+            - Dismiss Action: dismiss icon → set is_dismissed = true, persist to local storage
+        - Overflow: jika lebih dari 5 alert, tampilkan "Lihat Semua ([total])" link
+        - Empty State: section tidak ditampilkan jika tidak ada alert aktif
+
+### 4) Data Requirements (Abstract Contract)
+
+**Entities Needed**
+
+- Employee (External Reference)
+    - Required fields: id, name, current_position_title, organization_name, grade_jabatan, band_jabatan, position_effective_date
+    - Optional fields: is_line_manager, direct_report_count
+    - Derived fields: tenure_at_position (calculated from position_effective_date to today), greeting_time_of_day (derived from system clock)
+- EQSScore
+    - Required fields: id, total_score, eqs_band
+    - Optional fields: eligibility_reason
+    - Derived fields: none
+    - Filter: target_position_id = current definitive position, period = active
+- EQSComponent
+    - Required fields: component_type, weight, weighted_value
+    - Optional fields: raw_value, source_data
+    - Derived fields: achievement_percentage (weighted_value / weight × 100)
+    - Filter: eqs_score_id = active EQS score
+- TalentPoolCandidate
+    - Required fields: talent_cluster
+    - Optional fields: is_top_talent, risk_profile
+    - Derived fields: cluster_label (mapped from enum to Indonesian label)
+    - Filter: period = active
+- Career Aspirations (Aggregated)
+    - Required fields: total_active, by_source counts
+    - Optional fields: individual latest_positions (max 3)
+    - Derived fields: none
+- IDPRecord
+    - Required fields: status, total_hours, completed_hours
+    - Optional fields: employee_notes
+    - Derived fields: progress_percentage (completed_hours / total_hours × 100)
+    - Filter: cycle = active
+- IDPActivity
+    - Required fields: title, status, target_date, priority
+    - Optional fields: completion_date
+    - Derived fields: nearest_upcoming (sorted by target_date where status != completed)
+    - Filter: idp_record_id = active record
+- Application
+    - Required fields: position_id, status, movement_type, submitted_at
+    - Optional fields: eqs_score
+    - Derived fields: none
+    - Filter: status NOT IN (accepted, rejected, withdrawn)
+- Position (for applications)
+    - Required fields: title, organization_name
+    - Optional fields: grade_jabatan, deadline
+    - Derived fields: none
+- AssessorAssignment
+    - Required fields: status
+    - Optional fields: assessee_name, channel
+    - Derived fields: pending_count (count where status IN (pending, notified, in_progress))
+    - Filter: assessor_id = current user
+- Period Alerts (Derived)
+    - Required fields: module, severity, icon, title, description, action_url, deadline
+    - Optional fields: days_remaining, is_dismissed
+    - Derived fields: days_remaining (calculated from deadline to today), severity auto-escalation (if days_remaining <= 3 → urgent)
+- Team Summary (Line Manager only)
+    - Required fields: total_subordinates, nine_box_distribution, idp_status_summary, action_items
+    - Optional fields: avg_eqs_score
+    - Derived fields: none
+    - Filter: only loaded when is_line_manager = true
+
+**Sorting / Filtering Requirements**
+
+- Period Alerts: sorted by severity (urgent → warning → info), then by days_remaining ascending
+- Job Applications: sorted by submitted_at descending (most recent first)
+- IDP Activities (for nearest upcoming): sorted by target_date ascending, filtered to status != completed
+- Career Aspirations latest: sorted by submission date descending, max 3
+
+### 5) Interaction States (System + UI Response)
+
+- Default (Idle): All cards rendered with current data, greeting shown, quick actions visible
+- Loading:
+    - Greeting renders immediately (no data dependency)
+    - Each card shows independent skeleton placeholder
+    - Quick Actions rendered immediately (static)
+    - Cards load asynchronously — each card transitions from skeleton to populated when data arrives
+- Empty (per card):
+    - Career Status: "Data posisi belum tersedia" — no CTA
+    - My Classification: "Klasifikasi talent belum tersedia untuk periode ini" — no CTA
+    - Aspiration Summary: "Belum ada aspirasi karir yang diajukan" — CTA: "Ajukan Aspirasi Karir"
+    - IDP Progress: "Belum ada rencana pengembangan untuk periode ini" — CTA: "Buat IDP"
+    - Job Applications: "Tidak ada lamaran aktif" — CTA: "Jelajahi Lowongan"
+    - Team Summary: not rendered when is_line_manager = false
+    - Period Alerts: section hidden when no alerts
+- Error (per card):
+    - Trigger condition: API failure for specific card data
+    - Message: "Gagal memuat data. Silakan coba lagi."
+    - Recovery action: Retry button per card
+    - Other cards remain functional (isolated error handling)
+- Full Page Error:
+    - Trigger condition: Authentication failure or complete API outage
+    - Message: "Terjadi kesalahan. Silakan muat ulang halaman."
+    - Recovery action: Reload page button
+
+### 6) Responsive Behavior (Mobile-first)
+
+- Mobile (sm):
+    - Single column layout — all cards stacked vertically
+    - Card order: Career Status → Classification → Aspiration → IDP → Job Applications → Team Summary → Alerts
+    - Quick Actions: sticky bottom bar, horizontal scroll
+    - Greeting: reduced to first name only
+    - EQS Component breakdown: collapsed by default, expandable
+    - Team 9-Box mini grid: simplified to list view
+- Tablet (md):
+    - 2-column grid for card pairs (Classification + Aspiration, IDP + Job Applications)
+    - Career Status and Team Summary: full width
+    - Quick Actions: inline row below greeting
+- Desktop (lg+):
+    - 2-column grid for card pairs
+    - Career Status and Team Summary: full width
+    - Quick Actions: inline row below greeting
+    - All content visible without collapsing
+
+### 7) Accessibility & Usability Notes
+
+- Focus order: Greeting → Quick Actions (left to right) → Career Status Card → Classification Card → Aspiration Card → IDP Card → Job Applications Card → Team Summary Card → Alerts (top to bottom)
+- Keyboard interactions:
+    - Tab navigates between cards and interactive elements
+    - Enter on card opens linked detail page
+    - Enter on Quick Action button activates navigation
+    - Enter on alert item navigates to action_url
+    - Escape on dismissible alert cancels dismiss action
+- Labels and helper text:
+    - All cards have visible header labels
+    - EQS component labels use full Indonesian names (not abbreviations)
+    - Status badges include text label (not color-only)
+    - Progress bars include text percentage alongside visual
+    - Alerts have severity communicated via icon + text, not color alone
+- Screen reader:
+    - Greeting region: aria-label "Greeting and date"
+    - Cards: role="region" with aria-label matching card header
+    - Mini 9-Box grid: aria-label describing user position in words (e.g. "Posisi Anda: Promotable, Performance tinggi, Potential sedang")
+    - Progress bar: aria-valuenow, aria-valuemin, aria-valuemax
