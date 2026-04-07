@@ -45,3 +45,5 @@ skills-lock.json
 .stitch/metadata.json
 .stitch/next-prompt.md
 .stitch/SITE.md
+
+.vercel
