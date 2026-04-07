@@ -2,8 +2,11 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
 @import "tailwindcss" source(none);
 @source "./**/*.{js,ts,jsx,tsx}";
+@source "../../../packages/shared-ui/src/**/*.{js,ts,jsx,tsx}";
+@source "../../../packages/shell/src/**/*.{js,ts,jsx,tsx}";
 @source "../../../packages/portal/src/**/*.{js,ts,jsx,tsx}";
 @source "../../../packages/talent/src/**/*.{js,ts,jsx,tsx}";
 @source "../../../packages/performance/src/**/*.{js,ts,jsx,tsx}";
 @import "tw-animate-css";
 @import "../../../packages/shared-ui/src/theme.css";
+

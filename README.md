@@ -90,8 +90,8 @@ This matters because shell ownership is a core part of the repository. Package-l
 
 For the current navigation map, see:
 
-- [`docs/INTEGRATED_SITEMAP.md`](./docs/INTEGRATED_SITEMAP.md)
-- [`docs/SHELL_OWNERSHIP.md`](./docs/SHELL_OWNERSHIP.md)
+- [`docs/integrated-product-architecture/INTEGRATED_SITEMAP.md`](./docs/integrated-product-architecture/INTEGRATED_SITEMAP.md)
+- [`docs/integrated-product-architecture/SHELL_OWNERSHIP.md`](./docs/integrated-product-architecture/SHELL_OWNERSHIP.md)
 
 ## Repository Structure
 
@@ -204,19 +204,19 @@ If you are adding or updating routes, prefer following the route ownership docum
 
 This root README is the front door. The deeper architectural decisions live in the `docs/` folder.
 
-- [`docs/EXECPLAN.md`](./docs/EXECPLAN.md)
+- [`docs/archive/completed-execplans/INTEGRATED_SHELL_DESIGN_SYSTEM_EXECPLAN.md`](./docs/archive/completed-execplans/INTEGRATED_SHELL_DESIGN_SYSTEM_EXECPLAN.md)
   Explains the recent integrated shell and design-system unification work.
 
-- [`docs/INTEGRATED_SITEMAP.md`](./docs/INTEGRATED_SITEMAP.md)
+- [`docs/integrated-product-architecture/INTEGRATED_SITEMAP.md`](./docs/integrated-product-architecture/INTEGRATED_SITEMAP.md)
   Lists the current route tree and navigation ownership rules.
 
-- [`docs/SHELL_OWNERSHIP.md`](./docs/SHELL_OWNERSHIP.md)
+- [`docs/integrated-product-architecture/SHELL_OWNERSHIP.md`](./docs/integrated-product-architecture/SHELL_OWNERSHIP.md)
   Defines which layer is allowed to render shell chrome.
 
-- [`docs/TALENT_ROUTE_NORMALIZATION.md`](./docs/TALENT_ROUTE_NORMALIZATION.md)
+- [`docs/integrated-product-architecture/TALENT_ROUTE_NORMALIZATION.md`](./docs/integrated-product-architecture/TALENT_ROUTE_NORMALIZATION.md)
   Captures the normalization of Talent routes into the integrated structure.
 
-- [`docs/DESIGN_CONSISTENCY_AUDIT.md`](./docs/DESIGN_CONSISTENCY_AUDIT.md)
+- [`docs/design-system-overhaul-2026-04-07/DESIGN_CONSISTENCY_AUDIT.md`](./docs/design-system-overhaul-2026-04-07/DESIGN_CONSISTENCY_AUDIT.md)
   Records design-system consistency observations across the integrated product.
 
 ## Contribution Guidance

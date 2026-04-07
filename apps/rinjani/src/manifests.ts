@@ -44,6 +44,7 @@ export const sidebarModules: ModuleManifest[] = [
   { id: "portal-mail", label: "Mail Management", routePath: "/mail", parentPlatformId: "portal", visibleTo: ["Admin"], sidebarGroup: "Administration", description: "Message templates and email administration.", iconKey: "mail", order: 6 },
   { id: "portal-offboarding", label: "Offboarding", routePath: "/offboarding", parentPlatformId: "portal", visibleTo: ["Admin", "User"], sidebarGroup: "Administration", description: "Offboarding process tracking.", iconKey: "briefcase", order: 7 },
   { id: "portal-settings", label: "Settings", routePath: "/settings", parentPlatformId: "portal", visibleTo: ["Admin", "User"], sidebarGroup: "Administration", description: "CMS, user management, notifications, onboarding, and survey administration.", iconKey: "settings", order: 8 },
+  { id: "portal-design-system", label: "Design System", routePath: "/design-system", parentPlatformId: "portal", visibleTo: ["Admin"], sidebarGroup: "Administration", description: "Admin-only shared component library preview.", iconKey: "grid", order: 9 },
 
   { id: "talent-home", label: "Talent Home", routePath: "/talent", parentPlatformId: "talent", visibleTo: ["Admin", "User"], sidebarGroup: "My Talent Journey", description: "Talent dashboard and alerts.", iconKey: "grid", order: 1 },
   { id: "talent-career-aspiration", label: "Career Aspiration", routePath: "/talent/career-aspiration", parentPlatformId: "talent", visibleTo: ["Admin", "User"], sidebarGroup: "My Talent Journey", description: "Career path and aspiration flow.", iconKey: "target", order: 2 },
@@ -80,6 +81,7 @@ export const routeMeta: AppRouteMeta[] = [
   { path: "/mail", pageTitle: "Mail Management", breadcrumbLabel: "Mail", platformId: "portal", moduleId: "portal-mail", searchScope: "platform" },
   { path: "/offboarding", pageTitle: "Offboarding", breadcrumbLabel: "Offboarding", platformId: "portal", moduleId: "portal-offboarding", searchScope: "platform" },
   { path: "/settings", pageTitle: "Settings", breadcrumbLabel: "Settings", platformId: "portal", moduleId: "portal-settings", searchScope: "platform" },
+  { path: "/design-system", pageTitle: "Design System", breadcrumbLabel: "Design System", platformId: "portal", moduleId: "portal-design-system", searchScope: "platform" },
   { path: "/talent", pageTitle: "Talent Home", breadcrumbLabel: "Talent Home", platformId: "talent", moduleId: "talent-home", searchScope: "platform" },
   { path: "/talent/career-aspiration", pageTitle: "Career Aspiration", breadcrumbLabel: "Career Aspiration", platformId: "talent", moduleId: "talent-career-aspiration", searchScope: "platform" },
   { path: "/talent/idp", pageTitle: "Development Plan", breadcrumbLabel: "Development Plan", platformId: "talent", moduleId: "talent-idp", searchScope: "platform" },

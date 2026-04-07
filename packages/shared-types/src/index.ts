@@ -102,6 +102,17 @@ export interface AppRouteMeta {
   hidden?: boolean;
 }
 
+export type ShellSearchItemKind = "person" | "policy";
+
+export interface ShellSearchItem {
+  id: string;
+  kind: ShellSearchItemKind;
+  label: string;
+  description?: string;
+  routePath: string;
+  keywords?: string[];
+}
+
 export interface ShellNavigationState {
   currentPlatformId: string;
   currentModuleId: string;

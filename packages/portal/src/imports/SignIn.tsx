@@ -1,625 +1,562 @@
-import React, { useState } from "react";
-import svgPaths from "./svg-izqa2monp3";
-import clsx from "clsx";
-import imgImage295 from "figma:asset/c431b6a1465f2d5e74a13b698b185dc831318ab2.png";
-import imgInjourneyMessage from "figma:asset/0555df0e0c1d85de0cc58056a4c1d890f8040452.png";
-import imgSlide1 from "figma:asset/b74632a06399af372f2f92041724e086ad939295.png";
-import imgSlide2 from "figma:asset/29dfb5da3ec9b90e5b2144d2bfebf81a3e3bf34d.png";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  Input,
+  Separator,
+  cn,
+} from "@rinjani/shared-ui";
+import { ArrowLeft, ArrowRight, Eye, EyeOff, Globe2, HelpCircle, KeyRound, Lock, Mail, ShieldCheck, Sparkles, UserPlus } from "lucide-react";
+
+import heroImage from "../assets/0555df0e0c1d85de0cc58056a4c1d890f8040452.png";
+import heroImageTwo from "../assets/b74632a06399af372f2f92041724e086ad939295.png";
+import heroImageThree from "../assets/29dfb5da3ec9b90e5b2144d2bfebf81a3e3bf34d.png";
 
 interface SignInProps {
   onLogin: (email: string, role: "Admin" | "User") => void;
   onMicrosoftLogin: () => void;
 }
 
-function TextFieldDefault({ children }: React.PropsWithChildren<{}>) {
-  return (
-    <div className="bg-white h-[48px] relative rounded-[6px] shrink-0 w-full">
-      <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
-        <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[6px] relative size-full">{children}</div>
-      </div>
-      <div aria-hidden="true" className="absolute border-[#dde1e6] border-[1.5px] border-solid inset-0 pointer-events-none rounded-[6px]" />
-    </div>
-  );
-}
-type Wrapper1Props = {
-  additionalClassNames?: string;
+type DemoAccount = {
+  label: string;
+  email: string;
+  password: string;
+  role: "Admin" | "User";
+  description: string;
 };
 
-function Wrapper1({ children, additionalClassNames = "" }: React.PropsWithChildren<Wrapper1Props>) {
+type AuthMode = "login" | "cooldown";
+
+type HeroSlide = {
+  image: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+};
+
+const DEMO_ACCOUNTS: DemoAccount[] = [
+  {
+    label: "Admin Account",
+    email: "dimas@injourney.co.id",
+    password: "Injourney@2025",
+    role: "Admin",
+    description: "Akses prototype untuk area admin dan preview sistem.",
+  },
+  {
+    label: "User Account",
+    email: "binavia@injourney.co.id",
+    password: "Injourney@2025",
+    role: "User",
+    description: "Akses prototype untuk alur karyawan umum.",
+  },
+];
+
+const AUTH_ERROR = "Email atau kata sandi belum sesuai. Periksa kembali lalu coba lagi.";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const HERO_ROTATION_MS = 12000;
+
+const HERO_SLIDES: HeroSlide[] = [
+  {
+    image: heroImage,
+    eyebrow: "Hospitality & Excellence",
+    title: "Empowering Indonesia Hospitality",
+    description: "Crafting a seamless digital ecosystem for world-class hospitality and integrated talent management.",
+  },
+  {
+    image: heroImageTwo,
+    eyebrow: "Connected Talent Journey",
+    title: "Strengthening every service moment",
+    description: "Align people, performance, and development across the InJourney ecosystem with clarity and care.",
+  },
+  {
+    image: heroImageThree,
+    eyebrow: "Enterprise Readiness",
+    title: "One access point for growth",
+    description: "Support operational teams with a secure workspace for talent mobility, performance, and employee services.",
+  },
+];
+
+const KAWUNG_CHAIN = Array.from({ length: 7 });
+
+function MicrosoftMark() {
   return (
-    <div className={clsx("absolute", additionalClassNames)}>
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 42 42">
-        <g id="Clip path group">{children}</g>
-      </svg>
+    <span className="grid size-5 grid-cols-2 grid-rows-2 gap-0.5" aria-hidden="true">
+      <span className="bg-[#f25325]" />
+      <span className="bg-[#80bc06]" />
+      <span className="bg-[#05a6f0]" />
+      <span className="bg-[#feba08]" />
+    </span>
+  );
+}
+
+function FeatureAnnouncement() {
+  return (
+    <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-primary/15 bg-card/90 px-2 py-1 text-xs shadow-sm shadow-primary/5 backdrop-blur">
+      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent/15 px-2.5 py-1 font-semibold text-primary">
+        <Sparkles className="size-3.5 text-accent" aria-hidden="true" />
+        Available now
+      </span>
+      <span className="truncate pr-2 font-semibold text-foreground">InJourney Rinjani Performance 2.0</span>
     </div>
   );
 }
 
-function Wrapper({ children }: React.PropsWithChildren<{}>) {
+function SecurityNote() {
   return (
-    <div className="relative size-full">
-      <Wrapper1 additionalClassNames="inset-[-1.36%]">{children}</Wrapper1>
-    </div>
-  );
-}
-
-function Helper5() {
-  return (
-    <svg fill="none" preserveAspectRatio="none" viewBox="0 0 24 24" className="block size-full">
-      <g id="arrow-back">
-        <path d={svgPaths.p1af51d00} fill="var(--fill-0, white)" id="Vector" />
-      </g>
-    </svg>
-  );
-}
-
-function Helper4() {
-  return (
-    <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0">
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-0 mt-[16.91%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[0.01%] mt-[50.03%] relative size-[40.565px]">
-        <div className="flex-none scale-y-[-100%] size-[40.565px]">
-          <ClipPathGroup1 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[16.91%] mt-[66.18%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup2 />
-        </div>
-      </div>
-      <Helper1 />
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[49.36%] mt-0 relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup3 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[16.23%] mt-0 relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup4 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[66.18%] mt-[49.28%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup5 />
-        </div>
-      </div>
-      <Helper2 />
-    </div>
-  );
-}
-
-function Helper3() {
-  return (
-    <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0">
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-0 mt-[16.91%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[0.01%] mt-[50.04%] relative size-[40.565px]">
-        <div className="flex-none scale-y-[-100%] size-[40.565px]">
-          <ClipPathGroup1 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[16.91%] mt-[66.18%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup2 />
-        </div>
-      </div>
-      <Helper1 />
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[49.36%] mt-0 relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup3 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[16.23%] mt-0 relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup4 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[66.18%] mt-[49.28%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup5 />
-        </div>
-      </div>
-      <Helper2 />
-    </div>
-  );
-}
-
-function Helper2() {
-  return (
-    <div className="[grid-area:1_/_1] flex h-[40.575px] items-center justify-center ml-[66.18%] mt-[16.15%] relative w-[40.586px]">
-      <div className="flex-none h-[40.575px] scale-y-[-100%] w-[40.586px]">
-        <Wrapper>
-          <path d={svgPaths.p34e1a880} id="path167" stroke="var(--stroke-0, #00A199)" strokeMiterlimit="10" strokeOpacity="0.06" strokeWidth="1.10267" />
-        </Wrapper>
-      </div>
-    </div>
-  );
-}
-
-function Helper1() {
-  return (
-    <div className="[grid-area:1_/_1] flex h-[40.586px] items-center justify-center ml-[50.04%] mt-[66.18%] relative w-[40.575px]">
-      <div className="flex-none h-[40.586px] scale-y-[-100%] w-[40.575px]">
-        <Wrapper>
-          <path d={svgPaths.p3b44b180} id="path159" stroke="var(--stroke-0, #00A199)" strokeMiterlimit="10" strokeOpacity="0.06" strokeWidth="1.10267" />
-        </Wrapper>
-      </div>
-    </div>
-  );
-}
-
-function Helper() {
-  return (
-    <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0">
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-0 mt-[16.91%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[0.01%] mt-[50.04%] relative size-[40.565px]">
-        <div className="flex-none scale-y-[-100%] size-[40.565px]">
-          <ClipPathGroup1 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[16.91%] mt-[66.18%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup2 />
-        </div>
-      </div>
-      <Helper1 />
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[49.36%] mt-[0.01%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup3 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[16.23%] mt-0 relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup4 />
-        </div>
-      </div>
-      <div className="[grid-area:1_/_1] flex items-center justify-center ml-[66.18%] mt-[49.28%] relative size-[40.575px]">
-        <div className="flex-none scale-y-[-100%] size-[40.575px]">
-          <ClipPathGroup5 />
-        </div>
-      </div>
-      <Helper2 />
-    </div>
-  );
-}
-
-function ClipPathGroup5() {
-  return (
-    <Wrapper>
-      <path d={svgPaths.p5f76480} id="path165" stroke="var(--stroke-0, #00A199)" strokeMiterlimit="10" strokeOpacity="0.06" strokeWidth="1.10267" />
-    </Wrapper>
-  );
-}
-
-function ClipPathGroup4() {
-  return (
-    <Wrapper>
-      <path d={svgPaths.p1c30f100} id="path163" stroke="var(--stroke-0, #00A199)" strokeMiterlimit="10" strokeOpacity="0.06" strokeWidth="1.10267" />
-    </Wrapper>
-  );
-}
-
-function ClipPathGroup3() {
-  return (
-    <div className="relative size-full">
-      <Wrapper1 additionalClassNames="inset-[-1.35%_-1.36%_-1.36%_-1.36%]">
-        <path d={svgPaths.p4bba100} id="path161" stroke="var(--stroke-0, #00A199)" strokeMiterlimit="10" strokeOpacity="0.06" strokeWidth="1.10267" />
-      </Wrapper1>
-    </div>
-  );
-}
-
-function ClipPathGroup2() {
-  return (
-    <Wrapper>
-      <path d={svgPaths.p1517f00} id="path157" stroke="var(--stroke-0, #00A199)" strokeMiterlimit="10" strokeOpacity="0.06" strokeWidth="1.10267" />
-    </Wrapper>
-  );
-}
-
-function ClipPathGroup1() {
-  return (
-    <Wrapper>
-      <path d={svgPaths.p2a75280} id="path155" stroke="var(--stroke-0, #00A199)" strokeMiterlimit="10" strokeOpacity="0.06" strokeWidth="1.10267" />
-    </Wrapper>
-  );
-}
-
-function ClipPathGroup() {
-  return (
-    <Wrapper>
-      <path d={svgPaths.p3f7b3600} id="path153" stroke="var(--stroke-0, #00A199)" strokeMiterlimit="10" strokeOpacity="0.06" strokeWidth="1.10267" />
-    </Wrapper>
-  );
-}
-
-function Frame() {
-  return (
-    <div className="content-stretch flex items-center leading-[0] relative shrink-0">
-      <Helper3 />
-      <Helper3 />
-      <Helper3 />
-      <Helper />
-      <Helper3 />
-      <Helper3 />
-      <Helper />
-    </div>
-  );
-}
-
-function Divider() {
-  return (
-    <div className="basis-0 grow h-0 min-h-px min-w-px relative shrink-0" data-name="Divider">
-      <div className="absolute inset-[-0.5px_0]">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 211 1">
-          <g id="Divider">
-            <path d="M0 0.5H210.5" id="line" stroke="var(--stroke-0, #DDE1E6)" />
-          </g>
-        </svg>
-      </div>
+    <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+      <ShieldCheck className="size-3.5 text-primary" aria-hidden="true" />
+      <span>Secured by enterprise encryption</span>
     </div>
   );
 }
 
 export default function SignIn({ onLogin, onMicrosoftLogin }: SignInProps) {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showCredentialsPopup, setShowCredentialsPopup] = useState(false);
-  
-  const slides = [
-    {
-      image: imgInjourneyMessage,
-      text: "We are the ecosystem of Indonesia's aviation and tourism, bringing the nation's hospitality to the world."
-    },
-    {
-      image: imgSlide1,
-      text: "Your journey with us contributes to Indonesia's sustainable growth and global presence."
-    },
-    {
-      image: imgSlide2,
-      text: "Connecting people, cultures, and destinations through world-class tourism experiences."
+  const [submitted, setSubmitted] = useState(false);
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [authError, setAuthError] = useState("");
+  const [demoOpen, setDemoOpen] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSubmitted, setResetSubmitted] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const emailError = submitted && !normalizedEmail ? "Masukkan alamat email." : submitted && !EMAIL_PATTERN.test(normalizedEmail) ? "Gunakan format email yang valid." : "";
+  const passwordError = submitted && !password ? "Masukkan kata sandi." : "";
+  const resetEmailError = resetSubmitted && resetEmail.trim() && !EMAIL_PATTERN.test(resetEmail.trim().toLowerCase()) ? "Gunakan format email yang valid." : "";
+
+  const matchingAccount = useMemo(
+    () => DEMO_ACCOUNTS.find((account) => account.email.toLowerCase() === normalizedEmail && account.password === password),
+    [normalizedEmail, password],
+  );
+
+  const isSubmitDisabled = authMode === "cooldown";
+  const currentSlide = HERO_SLIDES[activeSlide];
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveSlide((slide) => (slide + 1) % HERO_SLIDES.length);
+    }, HERO_ROTATION_MS);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const showPreviousSlide = () => {
+    setActiveSlide((slide) => (slide === 0 ? HERO_SLIDES.length - 1 : slide - 1));
+  };
+
+  const showNextSlide = () => {
+    setActiveSlide((slide) => (slide + 1) % HERO_SLIDES.length);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitted(true);
+    setAuthError("");
+
+    if (!normalizedEmail || !password || !EMAIL_PATTERN.test(normalizedEmail)) {
+      return;
     }
-  ];
 
-  const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+    if (!matchingAccount) {
+      const nextAttempts = failedAttempts + 1;
+      setFailedAttempts(nextAttempts);
+      setPassword("");
+      setAuthError(nextAttempts >= 3 ? "Terlalu banyak percobaan masuk. Gunakan pemulihan akses atau coba beberapa saat lagi." : AUTH_ERROR);
+
+      if (nextAttempts >= 3) {
+        setAuthMode("cooldown");
+      }
+      return;
+    }
+
+    onLogin(matchingAccount.email, matchingAccount.role);
   };
 
-  const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  const applyDemoAccount = (account: DemoAccount) => {
+    setEmail(account.email);
+    setPassword(account.password);
+    setSubmitted(false);
+    setFailedAttempts(0);
+    setAuthMode("login");
+    setAuthError("");
+    setDemoOpen(false);
   };
 
-  const handleLogin = () => {
-    // Determine role based on email
-    if (email && password) {
-      const role = email === "dimas@injourney.co.id" ? "Admin" : "User";
-      onLogin(email, role);
+  const handleForgotSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setResetSubmitted(true);
+
+    if (!resetEmail.trim() || !EMAIL_PATTERN.test(resetEmail.trim().toLowerCase())) {
+      return;
     }
   };
 
-  // Handle Enter key press
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && email && password) {
-      handleLogin();
-    }
+  const resetLoginAttempts = () => {
+    setFailedAttempts(0);
+    setAuthMode("login");
+    setAuthError("");
   };
-
-  // Check if button should be disabled
-  const isLoginDisabled = !email || !password;
 
   return (
-    <div className="bg-white content-stretch flex items-center relative size-full" data-name="Sign In">
-      {/* Credentials Popup */}
-      {showCredentialsPopup && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]" onClick={() => setShowCredentialsPopup(false)}>
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <h3 className="mb-4" style={{ fontSize: 'var(--text-xl)', fontWeight: 'var(--font-weight-semibold)' }}>Demo Credentials</h3>
-            <div className="space-y-4 mb-6">
-              <div className="bg-muted rounded-lg p-4 border border-border">
-                <p className="caption mb-2" style={{ fontWeight: 'var(--font-weight-semibold)', color: 'var(--primary)' }}>Admin Account</p>
-                <div className="space-y-1">
-                  <p className="caption text-foreground">Email: dimas@injourney.co.id</p>
-                  <p className="caption text-foreground">Password: Injourney@2025</p>
-                </div>
-                <button
-                  onClick={() => {
-                    setEmail("dimas@injourney.co.id");
-                    setPassword("Injourney@2025");
-                    setShowCredentialsPopup(false);
-                  }}
-                  className="mt-3 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-opacity caption"
-                  style={{ fontWeight: 'var(--font-weight-semibold)' }}
-                >
-                  Use Admin Credentials
-                </button>
-              </div>
-              
-              <div className="bg-muted rounded-lg p-4 border border-border">
-                <p className="caption mb-2" style={{ fontWeight: 'var(--font-weight-semibold)', color: 'var(--primary)' }}>User Account</p>
-                <div className="space-y-1">
-                  <p className="caption text-foreground">Email: binavia@injourney.co.id</p>
-                  <p className="caption text-foreground">Password: Injourney@2025</p>
-                </div>
-                <button
-                  onClick={() => {
-                    setEmail("binavia@injourney.co.id");
-                    setPassword("Injourney@2025");
-                    setShowCredentialsPopup(false);
-                  }}
-                  className="mt-3 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-opacity caption"
-                  style={{ fontWeight: 'var(--font-weight-semibold)' }}
-                >
-                  Use User Credentials
-                </button>
-              </div>
-            </div>
-            
-            <button
-              onClick={() => setShowCredentialsPopup(false)}
-              className="w-full px-4 py-2 border border-border rounded-md hover:bg-muted transition-colors caption"
-              style={{ fontWeight: 'var(--font-weight-semibold)' }}
-            >
-              Close
-            </button>
-          </div>
+    <main className="relative isolate min-h-dvh overflow-hidden bg-background text-foreground">
+      <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div className="absolute -inset-12 bg-[linear-gradient(135deg,rgba(0,101,115,0.09)_0%,rgba(144,188,64,0.05)_32%,rgba(255,255,255,0.72)_54%,rgba(244,124,32,0.07)_100%)]" />
+        <div className="absolute -inset-16 bg-[radial-gradient(circle_at_78%_22%,rgba(0,101,115,0.08),transparent_44%),radial-gradient(circle_at_24%_74%,rgba(244,124,32,0.07),transparent_40%)]" />
+      </div>
+      <div className="absolute -left-24 top-10 size-[32rem] rounded-full bg-primary/10 blur-3xl" aria-hidden="true" />
+      <div className="absolute -right-24 bottom-0 size-[34rem] rounded-full bg-secondary/10 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div className="absolute -inset-24 bg-[url('/brand/kawung-factors/kawung-factor-09-tile.svg')] bg-[length:128px_128px] bg-repeat opacity-[0.045]" />
+        <div className="absolute -inset-24 bg-[url('/brand/kawung-factors/kawung-factor-09-tile.svg')] bg-[length:168px_168px] bg-repeat opacity-[0.03]" />
+        <div className="absolute left-[-6%] top-[18%] flex items-center gap-2 opacity-35">
+          {KAWUNG_CHAIN.map((_, index) => (
+            <img
+              key={`kawung-chain-a-${index}`}
+              src="/brand/kawung-factors/kawung-factor-09-tile.svg"
+              alt=""
+              className="size-8 object-contain"
+            />
+          ))}
         </div>
-      )}
-      
-      <div className="absolute content-stretch flex h-[1024px] items-end left-0 top-0 w-[797px]" data-name="Kawung">
-        <div className="content-stretch flex flex-col items-start justify-center relative shrink-0">
-          <div className="content-stretch flex items-center leading-[0] relative shrink-0">
-            <Helper />
-            <Helper />
-            <Helper3 />
-            <Helper3 />
-            <Helper />
-            <Helper3 />
-            <Helper4 />
-          </div>
-          <Frame />
-          <div className="content-stretch flex items-center leading-[0] relative shrink-0">
-            {[...Array(2).keys()].map((_, i) => (
-              <Helper4 key={i} />
-            ))}
-            <Helper />
-            <Helper3 />
-            <Helper3 />
-            <Helper />
-            <Helper3 />
-          </div>
-          <div className="content-stretch flex items-center leading-[0] relative shrink-0">
-            <Helper />
-            <Helper />
-            <Helper3 />
-            <Helper3 />
-            <Helper />
-            <Helper3 />
-            <Helper4 />
-          </div>
-          <div className="content-stretch flex items-center leading-[0] relative shrink-0">
-            <Helper3 />
-            <Helper />
-            <Helper3 />
-            <Helper />
-            <Helper3 />
-            <Helper4 />
-            <Helper />
-          </div>
-          <div className="content-stretch flex items-center leading-[0] relative shrink-0">
-            <Helper4 />
-            <Helper3 />
-            <Helper />
-            <Helper3 />
-            <Helper4 />
-            <Helper />
-            <Helper />
-          </div>
-          <div className="content-stretch flex items-center leading-[0] relative shrink-0">
-            <Helper />
-            <Helper3 />
-            <Helper3 />
-            <Helper4 />
-            <Helper />
-            <Helper />
-            <Helper3 />
-          </div>
-          <Frame />
-          <div className="content-stretch flex items-center leading-[0] relative shrink-0">
-            <Helper3 />
-            <Helper4 />
-            <Helper />
-            <Helper3 />
-            <Helper3 />
-            <Helper />
-            <Helper3 />
-          </div>
+        <div className="absolute right-[-8%] top-[56%] flex items-center gap-2 opacity-30">
+          {KAWUNG_CHAIN.map((_, index) => (
+            <img
+              key={`kawung-chain-b-${index}`}
+              src="/brand/kawung-factors/kawung-factor-09-tile.svg"
+              alt=""
+              className="size-7 object-contain"
+            />
+          ))}
         </div>
       </div>
-      <div className="basis-0 grow h-[1024px] min-h-px min-w-px relative shrink-0">
-        <div className="flex flex-row items-center size-full">
-          <div className="content-stretch flex items-center justify-center relative size-full p-[0px]">
-            <div className="content-stretch flex flex-col gap-[24px] h-[601px] items-start relative shrink-0 w-[469px]">
-              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                <div className="content-stretch flex gap-[8px] items-center relative shrink-0 w-[168px]" data-name="Logo Klik">
-                  <div className="relative shrink-0 size-[40px]" data-name="image 295">
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      <img alt="" className="absolute h-[300%] left-[-235.98%] max-w-none top-[-90%] w-[841.96%]" src={imgImage295} />
-                    </div>
-                  </div>
-                  <div className="content-stretch flex flex-col items-start justify-center not-italic relative shrink-0">
-                    <p className="font-['Inter:Bold',sans-serif] font-bold leading-[1.2] relative shrink-0 text-[#181d27] text-[16px] text-nowrap whitespace-pre">RINJANI</p>
-                    <p className="font-['Inter:Medium',sans-serif] font-medium leading-[1.5] relative shrink-0 text-[#717680] text-[8px] w-[82px]">Integrated Talent Management System</p>
-                  </div>
-                </div>
-                <p className="font-['IBM_Plex_Sans:Bold',sans-serif] leading-[52px] not-italic relative shrink-0 text-[#444444] text-center text-nowrap whitespace-pre text-[36px] font-[Inter] font-bold">Rinjani Portal</p>
-                <p className="font-['Inter:Regular',sans-serif] font-normal leading-[20px] not-italic relative shrink-0 text-[#878d96] text-[14px] text-center text-nowrap whitespace-pre">Masukan Email dan Password Anda</p>
-              </div>
-              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="input">
-                <div className="flex flex-col font-['IBM_Plex_Sans:Medium',sans-serif] h-[19px] justify-end leading-[0] not-italic relative shrink-0 text-[#444444] text-[14px] w-full">
-                  <p className="leading-[normal]">Email</p>
-                </div>
-                <TextFieldDefault>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Masukan email"
-                    className="basis-0 flex flex-col font-['Inter:Regular',sans-serif] font-normal grow h-full justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#444444] text-[14px] bg-transparent outline-none border-none placeholder:text-[#878d96]"
-                  />
-                </TextFieldDefault>
-              </div>
-              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="input">
-                <div className="flex flex-col font-['IBM_Plex_Sans:Medium',sans-serif] h-[19px] justify-end leading-[0] not-italic relative shrink-0 text-[#444444] text-[14px] w-full">
-                  <p className="leading-[normal]">Password</p>
-                </div>
-                <TextFieldDefault>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Masukan password"
-                    className="basis-0 flex flex-col font-['Inter:Regular',sans-serif] font-normal grow h-full justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#444444] text-[14px] bg-transparent outline-none border-none placeholder:text-[#878d96]"
-                    onKeyDown={handleKeyDown}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="relative shrink-0 size-[20px] cursor-pointer"
-                    data-name="icn/eyeSlash"
-                  >
-                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-                      <g id="icn/eyeSlash">
-                        <path d={svgPaths.p31771030} fill="var(--fill-0, #878D96)" id="Vector" />
-                      </g>
-                    </svg>
-                  </button>
-                </TextFieldDefault>
-              </div>
-              <div className="flex items-center justify-between w-full">
-                <div className="content-stretch flex gap-[12px] items-center justify-center overflow-clip relative rounded-[6px] shrink-0" data-name="Button">
-                  <p className="font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[24px] not-italic relative shrink-0 text-[#878d96] text-[16px] text-center text-nowrap whitespace-pre">Forgot Password?</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowCredentialsPopup(true)}
-                  className="caption text-primary hover:underline cursor-pointer"
-                  style={{ fontWeight: 'var(--font-weight-medium)' }}
-                >
-                  View Demo Credentials
-                </button>
-              </div>
-              <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
-                <button
-                  onClick={handleLogin}
-                  className={`bg-[#00a199] relative rounded-[6px] shrink-0 w-full transition-colors ${
-                    isLoginDisabled 
-                      ? 'opacity-40 cursor-not-allowed' 
-                      : 'hover:bg-[#007d75] cursor-pointer'
-                  }`}
-                  data-name="Button"
-                  disabled={isLoginDisabled}
-                >
-                  <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
-                    <div className="content-stretch flex gap-[12px] items-center justify-center px-[24px] py-[8px] relative w-full">
-                      <p className="font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[24px] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white whitespace-pre">Sign In</p>
-                    </div>
-                  </div>
-                </button>
-                <div className="content-stretch flex gap-[16px] items-center justify-center overflow-clip relative shrink-0 w-full" data-name="Divider">
-                  <Divider />
-                  <p className="font-['Inter:Regular',sans-serif] font-normal leading-[20px] not-italic relative shrink-0 text-[#444444] text-[14px] text-nowrap whitespace-pre">Or</p>
-                  <Divider />
-                </div>
-                <button
-                  onClick={onMicrosoftLogin}
-                  className="content-stretch flex items-start relative rounded-[8px] shrink-0 w-full cursor-pointer"
-                  data-name="Button"
-                >
-                  <div className="basis-0 bg-white grow min-h-px min-w-px relative rounded-[8px] shrink-0 hover:bg-gray-50 transition-colors" data-name="_Button base">
-                    <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
-                      <div className="content-stretch flex gap-[8px] items-center justify-center px-[18px] py-[10px] relative w-full">
-                        <div className="overflow-clip relative shrink-0 size-[20px]" data-name="microsoft">
-                          <div className="absolute contents inset-[15.63%]" data-name="microsoft">
-                            <div className="absolute bg-[#feba08] inset-[53.13%_15.63%_15.63%_53.13%]" data-name="yeloow" />
-                            <div className="absolute bg-[#05a6f0] inset-[53.13%_53.13%_15.63%_15.63%]" data-name="blue" />
-                            <div className="absolute bg-[#80bc06] inset-[15.63%_15.63%_53.13%_53.13%]" data-name="green" />
-                            <div className="absolute bg-[#f25325] inset-[15.63%_53.13%_53.13%_15.63%]" data-name="red" />
-                          </div>
-                        </div>
-                        <p className="font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[24px] not-italic relative shrink-0 text-[#414651] text-[16px] text-nowrap whitespace-pre">Login via Microsoft Account</p>
-                      </div>
-                    </div>
-                    <div aria-hidden="true" className="absolute border border-[#d5d7da] border-solid inset-0 pointer-events-none rounded-[8px] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]" />
-                  </div>
-                </button>
-              </div>
-              
-              <p className="font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal leading-[20px] min-w-full relative shrink-0 text-[#344054] text-[14px] text-center w-[min-content]">
-                <span>{`Dengan masuk ke platform `}</span>InJourney<span>{`, Anda setuju dengan `}</span>
-                <span className="font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold">Syarat dan Ketentuan Layanan</span>
-                <span>{` kami.`}</span>
+      <div
+        className="absolute bottom-8 left-0 hidden h-80 w-80 bg-[url('/brand/kawung-factors/kawung-factor-09-small-teal-left.svg')] bg-contain bg-no-repeat opacity-[0.08] lg:block"
+        aria-hidden="true"
+      />
+      <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-white/75 to-transparent" aria-hidden="true" />
+
+      <div className="relative mx-auto flex min-h-dvh w-full max-w-[1920px] flex-col px-5 py-6 sm:px-8 lg:px-10">
+        <header className="flex items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full" aria-hidden="true">
+              <img src="/brand/rinjani-logo-transparent.png" alt="" className="absolute left-0 top-1/2 h-16 max-w-none -translate-y-1/2" />
+            </span>
+            <div className="min-w-0 leading-none">
+              <p className="truncate text-2xl font-bold tracking-tight text-primary">Rinjani</p>
+              <p className="mt-1 truncate text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">InJourney HCMS</p>
+            </div>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2 text-sm font-semibold text-primary">
+            <Button type="button" variant="ghost" size="sm" className="hidden gap-2 sm:inline-flex">
+              <Globe2 className="size-4" aria-hidden="true" />
+              Bahasa Indonesia
+            </Button>
+            <Button type="button" variant="ghost" size="icon" aria-label="Bantuan autentikasi">
+              <HelpCircle className="size-5" aria-hidden="true" />
+            </Button>
+          </div>
+        </header>
+
+        <section className="grid flex-1 content-center gap-8 py-4 lg:grid-cols-12 lg:items-stretch lg:gap-10 lg:py-5">
+          <div className="mx-auto flex w-full max-w-[720px] flex-col gap-6 lg:col-span-5 lg:mx-0 lg:max-w-none">
+            <FeatureAnnouncement />
+
+            <div className="space-y-4">
+              <h1 className="max-w-xl text-4xl font-bold leading-[1.08] tracking-tighter text-foreground sm:text-5xl">
+                Selamat datang kembali
+              </h1>
+              <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+                Portal terpadu untuk talenta masa depan Indonesia dalam ekosistem InJourney.
               </p>
             </div>
-          </div>
-        </div>
-      </div>
-      <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
-        <div className="flex flex-row items-center size-full">
-          <div className="content-stretch flex items-center relative w-full h-[1024px] p-[24px]">
-            <div className="basis-0 grow h-[1024px] min-h-px min-w-px relative rounded-[16px] shrink-0" data-name="Injourney Message">
-              <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none rounded-[16px] size-full" src={slides[currentSlide].image} />
-              <div className="flex flex-col items-center justify-end overflow-clip rounded-[inherit] size-full">
-                <div className="content-stretch flex flex-col items-center justify-end p-[24px] relative size-full">
-                  <div className="content-stretch flex gap-[24px] items-start justify-center relative shrink-0 w-full">
-                    <div className="basis-0 bg-[rgba(255,255,255,0.1)] grow min-h-px min-w-px relative rounded-[16px] shrink-0">
-                      <div className="overflow-clip rounded-[inherit] size-full">
-                        <div className="content-stretch flex items-start p-[16px] relative w-full">
-                          <p className="basis-0 font-['Inter:Medium',sans-serif] font-medium grow leading-[1.5] min-h-px min-w-px not-italic relative shrink-0 text-[20px] text-white">{slides[currentSlide].text}</p>
-                        </div>
+
+            <Card className="rounded-xl bg-card/95 shadow-xl shadow-primary/5">
+              <CardContent className="space-y-5 p-6 sm:p-8">
+                {authError ? (
+                  <div aria-live="polite">
+                    <Alert variant={authMode === "cooldown" ? "warning" : "destructive"}>
+                      <AlertDescription>{authError}</AlertDescription>
+                    </Alert>
+                  </div>
+                ) : null}
+
+                <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+                  <FieldGroup>
+                    <Field>
+                      <FieldLabel htmlFor="email">Email Address</FieldLabel>
+                      <div className="relative">
+                        <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                        <Input
+                          id="email"
+                          type="email"
+                          value={email}
+                          onChange={(event) => {
+                            setEmail(event.target.value);
+                            setAuthError("");
+                          }}
+                          placeholder="yourname@injourney.id"
+                          autoComplete="email"
+                          aria-invalid={Boolean(emailError)}
+                          className="h-12 pl-10 text-base"
+                        />
                       </div>
-                    </div>
-                    <div className="content-stretch flex flex-col gap-[16px] items-start relative self-stretch shrink-0">
-                      <button 
-                        onClick={handleNextSlide}
-                        className="aspect-[56/56] basis-0 bg-[rgba(255,255,255,0.1)] grow min-h-px min-w-px overflow-clip relative rounded-[12px] shrink-0 hover:bg-[rgba(255,255,255,0.2)] transition-colors cursor-pointer"
-                      >
-                        <div className="absolute flex items-center justify-center left-1/2 size-[24px] top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                          <div className="flex-none rotate-[180deg]">
-                            <div className="relative size-[24px]" data-name="arrow-back">
-                              <Helper5 />
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                      <button 
-                        onClick={handlePrevSlide}
-                        className="aspect-[56/56] basis-0 bg-[rgba(255,255,255,0.1)] grow min-h-px min-w-px overflow-clip relative rounded-[12px] shrink-0 hover:bg-[rgba(255,255,255,0.2)] transition-colors cursor-pointer"
-                      >
-                        <div className="absolute left-1/2 size-[24px] top-1/2 translate-x-[-50%] translate-y-[-50%]" data-name="arrow-back">
-                          <Helper5 />
-                        </div>
-                      </button>
-                    </div>
+                      {emailError ? <FieldError>{emailError}</FieldError> : null}
+                    </Field>
+
+                    <Field>
+                      <div className="flex items-center justify-between gap-4">
+                        <FieldLabel htmlFor="password">Password</FieldLabel>
+                        <button
+                          type="button"
+                          onClick={() => setForgotOpen(true)}
+                          className="text-xs font-semibold text-secondary transition-colors hover:text-secondary/80 hover:underline"
+                        >
+                          Lupa kata sandi?
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          value={password}
+                          onChange={(event) => {
+                            setPassword(event.target.value);
+                            setAuthError("");
+                          }}
+                          placeholder="Masukkan kata sandi"
+                          autoComplete="current-password"
+                          aria-invalid={Boolean(passwordError)}
+                          className="h-12 px-10 text-base"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((value) => !value)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+                        >
+                          {showPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
+                        </button>
+                      </div>
+                      {passwordError ? <FieldError>{passwordError}</FieldError> : null}
+                    </Field>
+                  </FieldGroup>
+
+                  <Button type="submit" size="lg" className="h-12 w-full" disabled={isSubmitDisabled}>
+                    {authMode === "cooldown" ? "Masuk sementara dibatasi" : "Sign In to Account"}
+                  </Button>
+                </form>
+
+                {authMode === "cooldown" ? (
+                  <Button type="button" variant="outline" className="w-full" onClick={resetLoginAttempts}>
+                    Reset percobaan prototype
+                  </Button>
+                ) : null}
+
+                <div className="flex items-center gap-3">
+                  <Separator className="flex-1" />
+                  <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Or securely with</span>
+                  <Separator className="flex-1" />
+                </div>
+
+                <Button type="button" variant="outline" size="lg" className="h-12 w-full bg-card text-base" onClick={onMicrosoftLogin}>
+                  <MicrosoftMark />
+                  Microsoft Account
+                </Button>
+
+                <div className="grid gap-3 border-t border-border pt-5 sm:grid-cols-2">
+                  <Button type="button" variant="ghost" className="justify-start text-secondary hover:text-secondary" onClick={() => setDemoOpen(true)}>
+                    <KeyRound className="size-4" aria-hidden="true" />
+                    Lihat kredensial demo
+                  </Button>
+                  <Button type="button" variant="ghost" className="justify-start" onClick={() => setRegisterOpen(true)}>
+                    <UserPlus className="size-4" aria-hidden="true" />
+                    Ajukan akses baru
+                  </Button>
+                </div>
+
+                <SecurityNote />
+              </CardContent>
+            </Card>
+          </div>
+
+          <aside className="hidden h-full min-h-[650px] overflow-hidden rounded-xl border border-white/20 bg-primary shadow-2xl ring-1 ring-black/5 lg:col-span-7 lg:block xl:min-h-[680px]">
+            <div className="relative flex size-full min-h-[650px] items-end overflow-hidden xl:min-h-[680px]">
+              {HERO_SLIDES.map((slide, index) => (
+                <img
+                  key={slide.title}
+                  src={slide.image}
+                  alt=""
+                  className={cn(
+                    "absolute inset-0 size-full object-cover transition-opacity duration-700",
+                    index === activeSlide ? "opacity-100" : "opacity-0",
+                  )}
+                />
+              ))}
+              <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/60 to-primary/5" aria-hidden="true" />
+              <div className="absolute right-16 top-16 size-48 rounded-full border border-white/20 bg-white/10 backdrop-blur-md" aria-hidden="true" />
+
+              <div className="relative mx-10 mb-10 max-w-3xl rounded-xl border border-white/20 bg-white/10 p-8 text-white shadow-xl xl:mx-16 xl:mb-16 xl:p-10">
+                <div className="mb-7 flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-accent">
+                  <span className="h-0.5 w-16 bg-accent" aria-hidden="true" />
+                  {currentSlide.eyebrow}
+                </div>
+                <h2 className="max-w-2xl text-5xl font-bold leading-[1.08] tracking-tighter xl:text-6xl">
+                  {currentSlide.title}
+                </h2>
+                <p className="mt-6 max-w-2xl text-lg leading-8 text-white/80">
+                  {currentSlide.description}
+                </p>
+                <div className="mt-10 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    {HERO_SLIDES.map((slide, index) => (
+                      <button
+                        key={slide.title}
+                        type="button"
+                        onClick={() => setActiveSlide(index)}
+                        className={cn(
+                          "h-2 rounded-full transition-all",
+                          index === activeSlide ? "w-10 bg-white" : "w-3 bg-white/30 hover:bg-white/60",
+                        )}
+                        aria-label={`Tampilkan slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button type="button" variant="outline" size="icon" className="border-white/25 bg-white/10 text-white backdrop-blur hover:bg-white/20 hover:text-white" onClick={showPreviousSlide} aria-label="Slide sebelumnya">
+                      <ArrowLeft className="size-4" aria-hidden="true" />
+                    </Button>
+                    <Button type="button" variant="outline" size="icon" className="border-white/25 bg-white/10 text-white backdrop-blur hover:bg-white/20 hover:text-white" onClick={showNextSlide} aria-label="Slide berikutnya">
+                      <ArrowRight className="size-4" aria-hidden="true" />
+                    </Button>
                   </div>
                 </div>
               </div>
             </div>
+          </aside>
+        </section>
+
+        <footer className="mt-4 flex flex-col gap-2 border-t border-border/70 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <span>Copyright 2026 InJourney. All rights reserved.</span>
+          <div className="flex gap-4">
+            <button type="button" className="hover:text-primary hover:underline">
+              Terms of Use
+            </button>
+            <button type="button" className="hover:text-primary hover:underline">
+              Privacy Policy
+            </button>
           </div>
-        </div>
+        </footer>
       </div>
-    </div>
+
+      <Dialog open={demoOpen} onOpenChange={setDemoOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Demo Credentials</DialogTitle>
+            <DialogDescription>Pilih akun prototype untuk mengisi email dan kata sandi secara otomatis.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-3">
+            {DEMO_ACCOUNTS.map((account) => (
+              <button
+                key={account.email}
+                type="button"
+                className="rounded-lg border border-border bg-muted/40 p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/5"
+                onClick={() => applyDemoAccount(account)}
+              >
+                <span className="block text-sm font-semibold text-foreground">{account.label}</span>
+                <span className="mt-1 block text-xs leading-5 text-muted-foreground">{account.description}</span>
+                <span className="mt-3 block font-mono text-xs text-primary">{account.email}</span>
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Pemulihan kata sandi</DialogTitle>
+            <DialogDescription>Masukkan email kerja Anda. Jika email terdaftar, instruksi pemulihan akan dikirimkan.</DialogDescription>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={handleForgotSubmit} noValidate>
+            <Field>
+              <FieldLabel htmlFor="reset-email">Email kerja</FieldLabel>
+              <Input
+                id="reset-email"
+                type="email"
+                value={resetEmail}
+                onChange={(event) => {
+                  setResetEmail(event.target.value);
+                  setResetSubmitted(false);
+                }}
+                placeholder="yourname@injourney.id"
+                autoComplete="email"
+                aria-invalid={Boolean(resetEmailError)}
+              />
+              {resetEmailError ? <FieldError>{resetEmailError}</FieldError> : null}
+            </Field>
+            {resetSubmitted && !resetEmailError && resetEmail.trim() ? (
+              <Alert variant="success">
+                <AlertDescription>Jika email terdaftar, instruksi pemulihan akan dikirimkan.</AlertDescription>
+              </Alert>
+            ) : null}
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setForgotOpen(false)}>
+                Tutup
+              </Button>
+              <Button type="submit">Kirim instruksi</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Ajukan akses baru</DialogTitle>
+            <DialogDescription>
+              Registrasi mandiri belum tersedia di prototype ini. Untuk akses baru, ajukan permintaan melalui admin HC atau pengelola sistem internal.
+            </DialogDescription>
+          </DialogHeader>
+          <Alert variant="info">
+            <AlertDescription>Gunakan akun demo untuk meninjau pengalaman prototype sementara alur provisioning akun disiapkan.</AlertDescription>
+          </Alert>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setRegisterOpen(false)}>
+              Tutup
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setRegisterOpen(false);
+                setDemoOpen(true);
+              }}
+            >
+              Lihat akun demo
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </main>
   );
 }

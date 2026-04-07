@@ -4,11 +4,13 @@ import { Navigate, Outlet, createHashRouter, useParams } from "react-router";
 import { AppShell } from "@rinjani/shell";
 import { SessionProvider, useSession } from "./session";
 import { platforms, sidebarModules } from "./manifests";
+import { globalSearchItems } from "./search-data";
 import type { UserRole } from "@rinjani/shared-types";
 import SignIn from "@portal/imports/SignIn";
 import { MicrosoftLoginPage } from "@portal/components/MicrosoftLoginPage";
 import { LoadingScreen } from "@portal/components/LoadingScreen";
 import { PortalAnalyticsPage, PortalDashboardPage, PortalEmployeeProfilePage, PortalMailPage, PortalMyProfilePage, PortalOffboardingPage, PortalPolicyPage, PortalSettingsPage, PortalSurveyAnalyticsPage, PortalSurveyManagementPage, PortalSurveyPage, PortalSurveyTakePage } from "./portal-pages";
+import { DesignSystemPage } from "./design-system-page";
 import {
   PerformanceCheckInPage,
   PerformanceEvaluationPage,
@@ -98,6 +100,7 @@ function IntegratedShellLayout() {
     <AppShell
       platforms={platforms}
       modules={sidebarModules}
+      globalSearchItems={globalSearchItems}
       notifications={notifications}
       userRole={session.role}
       userEmail={session.email}
@@ -216,6 +219,14 @@ export const router = createHashRouter([
                   {
                     path: "settings",
                     element: <PortalContextRoute render={(props) => <PortalSettingsPage {...props} />} />
+                  },
+                  {
+                    path: "design-system",
+                    element: (
+                      <AdminOnly>
+                        <DesignSystemPage />
+                      </AdminOnly>
+                    )
                   },
 
                   {

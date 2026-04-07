@@ -29,6 +29,12 @@
   --muted-foreground: #475467;
   --destructive: #bc2419;
   --destructive-foreground: #ffffff;
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --success-muted: #ecfdf3;
+  --warning: #f59e0b;
+  --warning-foreground: #101828;
+  --warning-muted: #fffaeb;
   --border: #eaecf0;
   --input: #d0d5dd;
   --input-background: #ffffff;
@@ -47,9 +53,10 @@
   --sidebar-border: #ffffff;
   --sidebar-ring: #90bc40;
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-serif: Georgia, serif;
+  /* Serif is intentionally deferred; keep the alias safe until a serif family is approved. */
+  --font-serif: var(--font-sans);
   --font-mono: "JetBrains Mono", monospace;
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   --shadow-2xs: 0px 2px 10px 0px hsl(220 42.8571% 10.9804% / 0.03);
   --shadow-xs: 0px 2px 10px 0px hsl(220 42.8571% 10.9804% / 0.03);
   --shadow-sm: 0px 2px 10px 0px hsl(220 42.8571% 10.9804% / 0.05), 0px 1px 2px -1px hsl(220 42.8571% 10.9804% / 0.05);
@@ -160,6 +167,12 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-muted: var(--success-muted);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-muted: var(--warning-muted);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-input-background: var(--input-background);

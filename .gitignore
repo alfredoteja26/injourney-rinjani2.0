@@ -30,3 +30,18 @@ coverage/
 
 # Misc
 *.local
+skills-lock.json
+
+# Local IDE / agent / tooling (do not push)
+.claude/
+.cloud/
+.kiro/
+.playwright/
+.playwright-cli/
+.cli/
+
+# Stitch: machine-local session + generated exports (not required on GitHub)
+.stitch/designs/
+.stitch/metadata.json
+.stitch/next-prompt.md
+.stitch/SITE.md
