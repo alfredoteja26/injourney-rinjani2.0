@@ -1,4 +1,4 @@
-# Rinjani Integrated
+# Rinjani Integrated HCMS Application
 
 Rinjani Integrated is the consolidation workspace for the Rinjani 2.0 product experience. It brings three previously separate prototype streams into one browser app:
 
