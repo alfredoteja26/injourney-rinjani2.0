@@ -8,6 +8,7 @@ import { hqMetrics, assessmentCycle, companyMetrics } from '../data';
 import { WeightConfigView } from './WeightConfigView';
 import { ScheduleConfigView } from './ScheduleConfigView';
 import { cn } from '../../ui/utils';
+import { PrototypeWorkflowPanel } from '../shared/PrototypeWorkflowPanel';
 
 export function HQDashboard() {
   const [currentView, setCurrentView] = useState<'dashboard' | 'weight' | 'schedule'>('dashboard');
@@ -30,9 +31,9 @@ export function HQDashboard() {
             <span>/</span>
             <span>Performance</span>
             <span>/</span>
-            <span className="text-foreground font-medium">KPI Headquarter</span>
+            <span className="text-foreground font-medium">Markas KPI</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">KPI Headquarter 2026</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Markas KPI 2026</h1>
         </div>
         <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-md border text-sm">
            <span className="text-muted-foreground">Company:</span>
@@ -42,6 +43,8 @@ export function HQDashboard() {
            </select>
         </div>
       </div>
+
+      <PrototypeWorkflowPanel variant="hq" />
 
       {/* Overview Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -135,7 +138,7 @@ export function HQDashboard() {
                   <div className="flex gap-3 p-3 bg-yellow-50 border border-yellow-100 rounded-md">
                      <AlertTriangle className="w-5 h-5 text-yellow-600 shrink-0" />
                      <div className="text-sm text-yellow-800">
-                        <strong>PT AP II</strong>: Goal Setting completion below target (92%)
+                        <strong>PT AP II</strong>: Rencana KPI completion below target (92%)
                      </div>
                   </div>
                   <div className="flex gap-3 p-3 bg-blue-50 border border-blue-100 rounded-md">

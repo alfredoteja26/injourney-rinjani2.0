@@ -18,13 +18,18 @@ import { SubmitKPIForm } from "@performance/components/performance/kpi-library/S
 import { KPIDetailView } from "@performance/components/performance/kpi-library/KPIDetailView";
 import { KPITreeView } from "@performance/components/performance/kpi-tree/KPITreeView";
 import { HQDashboard } from "@performance/components/performance/kpi-headquarter/HQDashboard";
+import { PrototypePersonaBar } from "@performance/components/performance/shared/PrototypePersonaBar";
+import { PerformancePrototypeProvider } from "@performance/lib/performance";
 
 function PageWrap({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6">
-      <PageHeading eyebrow="Performance" title={title} description={description} />
-      <div className="overflow-hidden rounded-[24px] border border-border bg-card text-card-foreground shadow-sm">{children}</div>
-    </div>
+    <PerformancePrototypeProvider>
+      <div className="mx-auto max-w-7xl space-y-6 p-6">
+        <PageHeading eyebrow="Performance" title={title} description={description} />
+        <PrototypePersonaBar />
+        <div className="overflow-hidden rounded-[24px] border border-border bg-card text-card-foreground shadow-sm">{children}</div>
+      </div>
+    </PerformancePrototypeProvider>
   );
 }
 

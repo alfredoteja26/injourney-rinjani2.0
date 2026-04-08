@@ -7,6 +7,7 @@ import { KPIListItem } from '../shared/KPIListItem';
 import { ProgressBar } from '../shared/ProgressBar';
 import { kpiBersama, kpiUnit, performanceStats, currentUser } from '../data';
 import { cn } from '../../ui/utils';
+import { PrototypeWorkflowPanel } from '../shared/PrototypeWorkflowPanel';
 
 interface PlanningDashboardProps {
   onEditKPI: (kpiId?: string) => void;
@@ -38,7 +39,7 @@ export function PlanningDashboard({ onEditKPI, onSubmit }: PlanningDashboardProp
             <span>/</span>
             <span>Performance</span>
             <span>/</span>
-            <span className="text-foreground font-medium">Goal Setting</span>
+            <span className="text-foreground font-medium">Rencana KPI</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">My KPI 2026</h1>
         </div>
@@ -55,17 +56,19 @@ export function PlanningDashboard({ onEditKPI, onSubmit }: PlanningDashboardProp
         </div>
       </div>
 
-      {/* Goal Setting Progress Banner */}
+      <PrototypeWorkflowPanel variant="my-kpi" />
+
+      {/* Rencana KPI Progress Banner */}
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-6">
            <div className="flex justify-between items-start mb-4">
               <div>
                  <h2 className="text-lg font-bold text-blue-900 flex items-center gap-2">
-                    📋 GOAL SETTING IN PROGRESS
+                    📋 RENCANA KPI IN PROGRESS
                  </h2>
                  <p className="text-blue-700 mt-1">Deadline: 28 Feb 2026 (21 days remaining)</p>
               </div>
-              <Button onClick={() => onEditKPI()}>Continue Goal Setting →</Button>
+              <Button onClick={() => onEditKPI()}>Continue Rencana KPI →</Button>
            </div>
            <div className="space-y-2">
               <div className="flex justify-between text-sm text-blue-800 font-medium">

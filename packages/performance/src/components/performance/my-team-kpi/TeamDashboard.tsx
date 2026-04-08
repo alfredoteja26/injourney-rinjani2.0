@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { ScoreCard } from '../shared/ScoreCard';
 import { teamMembers, teamMetrics, checkInSummaries } from '../data';
 import { cn } from '../../ui/utils';
+import { PrototypeWorkflowPanel } from '../shared/PrototypeWorkflowPanel';
 
 interface TeamDashboardProps {
   onMemberClick: (nik: string) => void;
@@ -31,6 +32,8 @@ export function TeamDashboard({ onMemberClick, onViewPlanning }: TeamDashboardPr
             <Button>Export Report</Button>
         </div>
       </div>
+
+      <PrototypeWorkflowPanel variant="my-team" />
 
       {/* Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

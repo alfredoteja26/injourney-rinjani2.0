@@ -11,18 +11,21 @@ import { GoalSettingForm } from './GoalSettingForm';
 import { EvaluationDashboard } from './EvaluationDashboard';
 import { YearEndAssessment } from './YearEndAssessment';
 import { cn } from '../../ui/utils';
+import { usePerformancePrototype } from '../../../lib/performance';
+import { PrototypeWorkflowPanel } from '../shared/PrototypeWorkflowPanel';
 
 export function MyKPIDashboard() {
   const [expandedBersama, setExpandedBersama] = useState(true);
   const [expandedUnit, setExpandedUnit] = useState(true);
   const [currentView, setCurrentView] = useState<'dashboard' | 'check-in' | 'planning' | 'goal-setting' | 'evaluation' | 'year-end-assessment'>('dashboard');
+  const { submitPlanning } = usePerformancePrototype();
 
   if (currentView === 'check-in') {
     return <CheckInForm onBack={() => setCurrentView('dashboard')} />;
   }
 
   if (currentView === 'planning') {
-    return <PlanningDashboard onEditKPI={() => setCurrentView('goal-setting')} onSubmit={() => setCurrentView('dashboard')} />;
+    return <PlanningDashboard onEditKPI={() => setCurrentView('goal-setting')} onSubmit={() => { submitPlanning(); setCurrentView('dashboard'); }} />;
   }
 
   if (currentView === 'goal-setting') {
@@ -85,6 +88,8 @@ export function MyKPIDashboard() {
            </div>
         </div>
       </div>
+
+      <PrototypeWorkflowPanel variant="my-kpi" />
 
       {/* Score Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

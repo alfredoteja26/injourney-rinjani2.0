@@ -25,6 +25,8 @@ import { KPILibraryDashboard } from "./components/performance/kpi-library/KPILib
 import { KPITreeView } from "./components/performance/kpi-tree/KPITreeView";
 import { HQDashboard } from "./components/performance/kpi-headquarter/HQDashboard";
 import { PerformanceSidebar } from "./components/PerformanceSidebar";
+import { PerformancePrototypeProvider } from "./lib/performance";
+import { PrototypePersonaBar } from "./components/performance/shared/PrototypePersonaBar";
 
 export type { Notification };
 
@@ -242,6 +244,7 @@ function App() {
 
   return (
     <OnboardingProvider userId={userEmail}>
+      <PerformancePrototypeProvider>
       <div className="flex h-screen bg-background overflow-hidden">
         {showTalentSidebar ? (
           <RinjaniSidebar onBackClick={handleBackToMain} onProfileClick={handleProfileClick} />
@@ -277,6 +280,7 @@ function App() {
             />
           </div>
           <main className="flex-1 overflow-y-auto overflow-x-hidden">
+            {currentPage === "performance" && <PrototypePersonaBar />}
             {currentPage === "myprofile" ? (
               <MyProfile onBack={handleBackFromProfile} userRole={userRole} userEmail={userEmail} onLogout={handleLogout} />
             ) : currentPage === "settings" ? (
@@ -317,6 +321,7 @@ function App() {
       <SpotlightTour />
       <FeatureAnnouncementModal />
       <NewEmployeeOnboarding userEmail={userEmail} renderChecklistInSidebar={false} />
+      </PerformancePrototypeProvider>
     </OnboardingProvider>
   );
 }

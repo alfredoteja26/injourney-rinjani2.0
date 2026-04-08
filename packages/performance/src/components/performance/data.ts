@@ -138,8 +138,8 @@ export const performanceStats = {
   currentPI: 3.79,
   currentRating: "Excellent",
   totalWeight: 100,
-  kpiBersamaWeight: 45,
-  kpiUnitWeight: 55,
+  kpiBersamaWeight: 40,
+  kpiUnitWeight: 60,
   year: 2026
 };
 
@@ -521,7 +521,7 @@ export const companyMetrics = [
 
 export const weightConfig = [
   { band: "Utama", grade: "19-21", type: "Struktural", bersama: 50, unit: 50 },
-  { band: "Madya", grade: "16-18", type: "Struktural", bersama: 45, unit: 55 },
+  { band: "Madya", grade: "16-18", type: "Struktural", bersama: 40, unit: 60 },
   { band: "Muda", grade: "13-15", type: "Struktural", bersama: 40, unit: 60 },
   { band: "Pratama A", grade: "10-12", type: "Struktural", bersama: 35, unit: 65 },
   { band: "Pratama B", grade: "7-9", type: "Struktural", bersama: 30, unit: 70 },

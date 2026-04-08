@@ -5,6 +5,7 @@ import { ScoreCard } from '../shared/ScoreCard';
 import { ProgressBar } from '../shared/ProgressBar';
 import { teamMembers } from '../data';
 import { StatusBadge } from '../shared/StatusBadge';
+import { PrototypeWorkflowPanel } from '../shared/PrototypeWorkflowPanel';
 
 interface TeamPlanningDashboardProps {
   onViewMonitoring: () => void;
@@ -38,13 +39,15 @@ export function TeamPlanningDashboard({ onViewMonitoring, onCascadeKPI, onMember
         </div>
       </div>
 
-      {/* Goal Setting Banner */}
+      <PrototypeWorkflowPanel variant="my-team" />
+
+      {/* Rencana KPI Banner */}
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-6">
            <div className="flex justify-between items-start mb-4">
               <div>
                  <h2 className="text-lg font-bold text-blue-900 flex items-center gap-2">
-                    📋 GOAL SETTING PERIOD
+                    📋 RENCANA KPI PERIOD
                  </h2>
                  <p className="text-blue-700 mt-1">Deadline: 28 Feb 2026</p>
               </div>
@@ -55,7 +58,7 @@ export function TeamPlanningDashboard({ onViewMonitoring, onCascadeKPI, onMember
                  <span>{progress}%</span>
               </div>
               <ProgressBar value={progress} className="h-2.5" />
-              <p className="text-xs text-blue-600">{approvedCount} of {totalCount} team members completed goal setting</p>
+              <p className="text-xs text-blue-600">{approvedCount} of {totalCount} team members completed Rencana KPI</p>
            </div>
         </CardContent>
       </Card>
