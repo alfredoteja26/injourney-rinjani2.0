@@ -17,6 +17,11 @@ import {
   DescriptionList,
   DescriptionListItem,
   DescriptionTerm,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   EmptyState,
   MetricCard,
   PageHeading,
@@ -48,6 +53,7 @@ import {
 import type { DictionaryItemStatus, KpiDictionaryItem } from "../../lib/domain/types";
 import { usePerformanceV2 } from "../../lib/store/performance-v2-store";
 import { PersonaContextBar } from "../../ui/persona-context-bar";
+import { PerformanceV2FilterRail, PerformanceV2PageFrame, PerformanceV2SectionBand } from "../../ui/performance-v2-page-frame";
 import {
   DictionaryStatusBadge,
   bandOptions,
@@ -230,66 +236,71 @@ export function KpiLibraryScreen() {
   const selectedItem = selectedId ? state.dictionaryItems.find((item) => item.id === selectedId) ?? null : null;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6">
+    <PerformanceV2PageFrame variation="workspace-explorer">
       <PageHeading
         eyebrow="Performance 2.0"
-        title="Kamus KPI"
+        title="KPI Library"
         description="Kelola katalog KPI standar, queue validasi, governance publish, dan insight pemakaian dalam satu workspace."
       />
       <PersonaContextBar />
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <MetricCard
-            label="Item published"
-            value={analytics.published.length}
-            description="KPI standar siap dipakai ke planning."
-            trend={`${metricPercent(analytics.published.length, analytics.total)}%`}
-            trendTone="success"
-          />
-          <MetricCard
-            label="Queue governance"
-            value={analytics.queued.length}
-            description="Menunggu validasi atau keputusan publish."
-            trend={`${validationItems.length} validasi`}
-            trendTone="warning"
-          />
-          <MetricCard
-            label="Adopsi aktif"
-            value={analytics.adopted.length}
-            description="Relasi aktif dari Kamus KPI ke portfolio karyawan."
-            trend={`${analytics.published.reduce((sum, item) => sum + item.usageCount, 0)} total usage`}
-          />
-          <MetricCard
-            label="Item deprecated"
-            value={analytics.deprecated.length}
-            description="Masih tampil untuk histori, tidak direkomendasikan untuk planning baru."
-            trend={analytics.deprecated.length > 0 ? "Perlu cleanup" : "Terkendali"}
-            trendTone={analytics.deprecated.length > 0 ? "destructive" : "success"}
-          />
-        </div>
+      <PerformanceV2SectionBand variation="workspace">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <MetricCard
+              label="Item published"
+              value={analytics.published.length}
+              description="KPI standar siap dipakai ke planning."
+              trend={`${metricPercent(analytics.published.length, analytics.total)}%`}
+              trendTone="success"
+            />
+            <MetricCard
+              label="Queue governance"
+              value={analytics.queued.length}
+              description="Menunggu validasi atau keputusan publish."
+              trend={`${validationItems.length} validasi`}
+              trendTone="warning"
+            />
+            <MetricCard
+              label="Adopsi aktif"
+              value={analytics.adopted.length}
+              description="Relasi aktif dari Kamus KPI ke portfolio karyawan."
+              trend={`${analytics.published.reduce((sum, item) => sum + item.usageCount, 0)} total usage`}
+            />
+            <MetricCard
+              label="Item deprecated"
+              value={analytics.deprecated.length}
+              description="Masih tampil untuk histori, tidak direkomendasikan untuk planning baru."
+              trend={analytics.deprecated.length > 0 ? "Perlu cleanup" : "Terkendali"}
+              trendTone={analytics.deprecated.length > 0 ? "destructive" : "success"}
+            />
+          </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Aksi cepat</CardTitle>
-            <CardDescription>Pakai deep link agar demo lebih mudah berpindah konteks.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            <Button asChild>
-              <Link to="/performance-v2/my-kpi/planning?open=library-import">Gunakan di My KPI</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link to="/performance-v2/kpi-library/submit?source=DIRECT">Ajukan item baru</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link to="/performance-v2/kpi-library?tab=validation">Buka validation queue</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link to="/performance-v2/kpi-library?tab=approval">Buka governance publish</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+          <div className="flex flex-col items-start gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button type="button">Aksi cepat</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[15rem]">
+                <DropdownMenuItem asChild>
+                  <Link to="/performance-v2/my-kpi/planning?open=library-import">Gunakan di My KPI</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/performance-v2/kpi-library/submit?source=DIRECT">Ajukan item baru</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/performance-v2/kpi-library?tab=validation">Buka validation queue</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/performance-v2/kpi-library?tab=approval">Buka governance publish</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <p className="text-xs text-muted-foreground">Pakai deep link agar demo lebih mudah berpindah konteks.</p>
+          </div>
+        </div>
+      </PerformanceV2SectionBand>
 
       <Tabs value={tab} onValueChange={(value) => patchSearchParams({ tab: value, page: "1", item: null, panel: null })}>
         <TabsList>
@@ -308,7 +319,7 @@ export function KpiLibraryScreen() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_repeat(4,minmax(0,1fr))]">
+              <PerformanceV2FilterRail className="md:grid-cols-2 xl:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(11rem,0.75fr))]">
                 <SearchInput
                   value={search}
                   onChange={(event) => patchSearchParams({ q: event.target.value, page: "1" })}
@@ -364,7 +375,7 @@ export function KpiLibraryScreen() {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </PerformanceV2FilterRail>
 
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-muted-foreground">
@@ -755,6 +766,6 @@ export function KpiLibraryScreen() {
           ) : null}
         </SheetContent>
       </Sheet>
-    </div>
+    </PerformanceV2PageFrame>
   );
 }

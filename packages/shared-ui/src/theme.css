@@ -150,6 +150,9 @@
   --shadow-elevation-sm: var(--elevation-sm);
   /** Upward elevation for fixed bottom action bars (app shell). */
   --shadow-footer-up: 0 -4px 24px hsl(220 42.8571% 10.9804% / 0.06);
+  --layout-max-width-dashboard: 84rem;
+  --layout-max-width-workspace: 96rem;
+  --layout-max-width-governance: 88rem;
 }
 
 @theme inline {
@@ -253,6 +256,38 @@
   ::placeholder {
     color: var(--muted-foreground);
     opacity: 1;
+  }
+}
+
+@layer components {
+  .rinjani-page-frame-dashboard {
+    background: var(--background);
+  }
+
+  .rinjani-page-frame-workspace {
+    background: var(--background);
+  }
+
+  .rinjani-page-frame-governance {
+    background: var(--background);
+  }
+
+  .rinjani-section-band-dashboard {
+    background: var(--card);
+    border: 1px solid color-mix(in srgb, var(--primary) 14%, var(--border) 86%);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .rinjani-section-band-workspace {
+    background: var(--card);
+    border: 1px solid color-mix(in srgb, var(--primary) 10%, var(--border) 90%);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .rinjani-section-band-governance {
+    background: var(--card);
+    border: 1px solid color-mix(in srgb, var(--muted-foreground) 6%, var(--border) 94%);
+    box-shadow: var(--shadow-xs);
   }
 }
 

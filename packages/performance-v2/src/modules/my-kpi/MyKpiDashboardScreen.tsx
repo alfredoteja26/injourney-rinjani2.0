@@ -19,6 +19,7 @@ import { useMyKpiMatrixProfile } from "./use-my-kpi-matrix-profile";
 import { useMyKpiMonitoringMatrix } from "./use-my-kpi-monitoring-matrix";
 import type { KpiItem } from "../../lib/domain/types";
 import { PersonaContextBar } from "../../ui/persona-context-bar";
+import { PerformanceV2PageFrame } from "../../ui/performance-v2-page-frame";
 
 export function MyKpiDashboardScreen() {
   const matrixProfile = useMyKpiMatrixProfile();
@@ -43,6 +44,8 @@ export function MyKpiDashboardScreen() {
     [isMonitoringPhase, monMatrix.unitItemCount, items]
   );
   const portfolioStatusLabel = useMemo(() => portfolioStatusLabelFromItems(items), [items]);
+  const monitoringFooterOk = monMatrix.jumlahDrafRealisasi === 0;
+  const footerOk = isMonitoringPhase ? monitoringFooterOk : planningCheck.ok;
 
   const titleText = `Portofolio & rencana KPI ${period.year}`;
   const descText = `${getEmployeeDisplay(actingAsEmployeeNumber)}${
@@ -50,7 +53,7 @@ export function MyKpiDashboardScreen() {
   } · Periode: ${period.name ?? period.id}`;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6 pb-28">
+    <PerformanceV2PageFrame variation="dashboard-hub" stickyFooterSafe>
       <PageHeading
         eyebrow={`Performa · ${phaseLabel} · status ${period.status}`}
         title={titleText}
@@ -113,7 +116,7 @@ export function MyKpiDashboardScreen() {
         }
       />
 
-      <MyKpiHubStatusGrid items={items} />
+      {!isMonitoringPhase ? <MyKpiHubStatusGrid items={items} /> : null}
 
       <MyKpiChangeRequestsPanel />
 
@@ -143,18 +146,33 @@ export function MyKpiDashboardScreen() {
       <AppStickyFooter
         leading={
           <div className="flex min-w-0 items-start gap-2.5 text-left text-sm">
-            {planningCheck.ok ? (
+            {footerOk ? (
               <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-success" aria-hidden />
             ) : (
               <AlertTriangle className="mt-0.5 size-5 shrink-0 text-warning" aria-hidden />
             )}
             <div className="min-w-0">
-              <p className={planningCheck.ok ? "font-medium text-success" : "font-medium text-warning"}>
-                {planningCheck.ok ? "Validasi: bobot total 100% tercapai." : "Validasi: perbaiki portofolio sebelum mengajukan."}
+              <p className={footerOk ? "font-medium text-success" : "font-medium text-warning"}>
+                {isMonitoringPhase
+                  ? footerOk
+                    ? "Semua draf realisasi sudah bersih dari antrian submit."
+                    : `${monMatrix.jumlahDrafRealisasi} draf realisasi KPI Unit belum dikirim.`
+                  : planningCheck.ok
+                    ? "Validasi: bobot total 100% tercapai."
+                    : "Validasi: perbaiki portofolio sebelum mengajukan."}
               </p>
               <p className="text-xs text-muted-foreground">
-                Harap pastikan semua KPI Unit telah didiskusikan dengan atasan langsung sebelum submit. Submit diblokir jika ada item ALLOCATED
-                tanpa target final.
+                {isMonitoringPhase ? (
+                  <>
+                    KPI Bersama diinput admin. Bukti tetap wajib mengikuti flag per item dan realisasi yang masih draf perlu dikirim dari workspace
+                    monitoring.
+                  </>
+                ) : (
+                  <>
+                    Harap pastikan semua KPI Unit telah didiskusikan dengan atasan langsung sebelum submit. Submit diblokir jika ada item
+                    ALLOCATED tanpa target final.
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -162,15 +180,28 @@ export function MyKpiDashboardScreen() {
         trailing={
           <>
             <MyKpiPersonaDemoDialogTrigger />
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/performance-v2/my-kpi/planning">Simpan draft / kelola</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link to="/performance-v2/my-kpi/planning">Lanjutkan submit</Link>
-            </Button>
+            {isMonitoringPhase ? (
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/performance-v2/my-kpi/year-end">Ringkasan akhir tahun</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link to="/performance-v2/my-kpi/check-in">Buka monitoring</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/performance-v2/my-kpi/planning">Simpan draft / kelola</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link to="/performance-v2/my-kpi/planning">Lanjutkan submit</Link>
+                </Button>
+              </>
+            )}
           </>
         }
       />
-    </div>
+    </PerformanceV2PageFrame>
   );
 }

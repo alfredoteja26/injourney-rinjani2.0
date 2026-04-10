@@ -43,6 +43,7 @@ import {
 import type { AlignmentWarning, BulkUploadJob, CascadeRelation, KpiChangeLog, KpiItem, OrgTreeNode, PositionTreeNode } from "../../lib/domain/types";
 import { usePerformanceV2 } from "../../lib/store/performance-v2-store";
 import { PersonaContextBar } from "../../ui/persona-context-bar";
+import { PerformanceV2FilterRail, PerformanceV2PageFrame, PerformanceV2SectionBand } from "../../ui/performance-v2-page-frame";
 
 type TreeView = "org" | "hierarchy";
 type TreeTab = "tree" | "warnings" | "upload" | "analytics";
@@ -421,7 +422,7 @@ export function KpiTreeScreen() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6 pb-24">
+    <PerformanceV2PageFrame variation="workspace-explorer" className="pb-24">
       <PageHeading
         eyebrow="Performance 2.0"
         title="KPI Tree"
@@ -439,96 +440,100 @@ export function KpiTreeScreen() {
       />
       <PersonaContextBar />
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <MetricCard
-          label="Target setting progress"
-          value={`${state.treeAnalytics.targetSettingProgressPct}%`}
-          description="Proporsi posisi yang portofolionya sudah memiliki target tahunan."
-          trend={`${filteredPositions.length} posisi dalam scope`}
-          trendTone="neutral"
-        />
-        <MetricCard
-          label="Cascade health"
-          value={`${state.treeAnalytics.cascadeHealthPct}%`}
-          description="Kualitas relasi parent-child KPI berdasarkan fixture alignment terkini."
-          trend={`${state.cascadeRelations.length} relasi aktif`}
-          trendTone="success"
-        />
-        <MetricCard
-          label="Alignment gaps"
-          value={state.treeAnalytics.alignmentGapCount}
-          description="Warning yang perlu ditindaklanjuti sebelum finalisasi KPI tahunan."
-          trend={`${state.alignmentWarnings.length} warning aktif`}
-          trendTone="warning"
-        />
-        <MetricCard
-          label="Unallocated positions"
-          value={state.treeAnalytics.unallocatedPositionCount}
-          description="Posisi tanpa KPI atau posisi yang masih membutuhkan alokasi dari atasan."
-          trend={`${positions.filter((position) => position.kpiCount === 0).length} kosong di fixture`}
-          trendTone="destructive"
-        />
-      </section>
-
-      <Card>
-        <CardHeader className="gap-4">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <CardTitle>Workspace KPI Tree</CardTitle>
-              <CardDescription>{workspaceTitle} · state tersimpan di URL agar mudah dipakai saat demo atau review.</CardDescription>
-            </div>
-            <div className="flex flex-wrap gap-2">
-          {VIEW_OPTIONS.map((option) => (
-                <Button
-                  key={option.value}
-                  type="button"
-                  variant={view === option.value ? "primary" : "outline"}
-                  onClick={() => updateParams({ view: option.value, tab: "tree" })}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="grid gap-3 lg:grid-cols-[minmax(0,1.2fr)_repeat(2,minmax(0,0.7fr))]">
-          <SearchInput
-            placeholder="Cari posisi, incumbent, unit, atau KPI"
-            value={search}
-            onChange={(event) => updateParams({ search: event.currentTarget.value, positionId: null })}
-            onClear={() => updateParams({ search: null })}
-            aria-label="Cari dalam KPI Tree"
+      <PerformanceV2SectionBand variation="workspace">
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <MetricCard
+            label="Target setting progress"
+            value={`${state.treeAnalytics.targetSettingProgressPct}%`}
+            description="Proporsi posisi yang portofolionya sudah memiliki target tahunan."
+            trend={`${filteredPositions.length} posisi dalam scope`}
+            trendTone="neutral"
           />
-          <Select value={companyId} onValueChange={(value) => updateParams({ companyId: value, orgUnitId: "all", positionId: null })}>
-            <SelectTrigger aria-label="Filter company">
-              <SelectValue placeholder="Semua company" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Semua company</SelectItem>
-              {state.companies.map((company) => (
-                <SelectItem key={company.company_id} value={company.company_id}>
-                  {company.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={orgUnitId} onValueChange={(value) => updateParams({ orgUnitId: value, positionId: null })}>
-            <SelectTrigger aria-label="Filter organisasi">
-              <SelectValue placeholder="Semua organisasi" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Semua organisasi</SelectItem>
-              {state.orgUnits
-                .filter((unit) => companyId === "all" || unit.company_id === companyId)
-                .map((unit) => (
-                  <SelectItem key={unit.org_unit_id} value={unit.org_unit_id}>
-                    {unit.name}
-                  </SelectItem>
+          <MetricCard
+            label="Cascade health"
+            value={`${state.treeAnalytics.cascadeHealthPct}%`}
+            description="Kualitas relasi parent-child KPI berdasarkan fixture alignment terkini."
+            trend={`${state.cascadeRelations.length} relasi aktif`}
+            trendTone="success"
+          />
+          <MetricCard
+            label="Alignment gaps"
+            value={state.treeAnalytics.alignmentGapCount}
+            description="Warning yang perlu ditindaklanjuti sebelum finalisasi KPI tahunan."
+            trend={`${state.alignmentWarnings.length} warning aktif`}
+            trendTone="warning"
+          />
+          <MetricCard
+            label="Unallocated positions"
+            value={state.treeAnalytics.unallocatedPositionCount}
+            description="Posisi tanpa KPI atau posisi yang masih membutuhkan alokasi dari atasan."
+            trend={`${positions.filter((position) => position.kpiCount === 0).length} kosong di fixture`}
+            trendTone="destructive"
+          />
+        </section>
+
+        <Card>
+          <CardHeader className="gap-4">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <CardTitle>Workspace KPI Tree</CardTitle>
+                <CardDescription>{workspaceTitle} · state tersimpan di URL agar mudah dipakai saat demo atau review.</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {VIEW_OPTIONS.map((option) => (
+                  <Button
+                    key={option.value}
+                    type="button"
+                    variant={view === option.value ? "primary" : "outline"}
+                    onClick={() => updateParams({ view: option.value, tab: "tree" })}
+                  >
+                    {option.label}
+                  </Button>
                 ))}
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <PerformanceV2FilterRail className="md:grid-cols-[minmax(0,1.4fr)_repeat(2,minmax(13rem,0.9fr))] xl:grid-cols-[minmax(0,1.8fr)_repeat(2,minmax(14rem,0.75fr))]">
+              <SearchInput
+                placeholder="Cari posisi, incumbent, unit, atau KPI"
+                value={search}
+                onChange={(event) => updateParams({ search: event.currentTarget.value, positionId: null })}
+                onClear={() => updateParams({ search: null })}
+                aria-label="Cari dalam KPI Tree"
+              />
+              <Select value={companyId} onValueChange={(value) => updateParams({ companyId: value, orgUnitId: "all", positionId: null })}>
+                <SelectTrigger aria-label="Filter company">
+                  <SelectValue placeholder="Semua company" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua company</SelectItem>
+                  {state.companies.map((company) => (
+                    <SelectItem key={company.company_id} value={company.company_id}>
+                      {company.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={orgUnitId} onValueChange={(value) => updateParams({ orgUnitId: value, positionId: null })}>
+                <SelectTrigger aria-label="Filter organisasi">
+                  <SelectValue placeholder="Semua organisasi" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua organisasi</SelectItem>
+                  {state.orgUnits
+                    .filter((unit) => companyId === "all" || unit.company_id === companyId)
+                    .map((unit) => (
+                      <SelectItem key={unit.org_unit_id} value={unit.org_unit_id}>
+                        {unit.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </PerformanceV2FilterRail>
+          </CardContent>
+        </Card>
+      </PerformanceV2SectionBand>
 
       <Tabs value={tab} onValueChange={(value) => updateParams({ tab: value, warningType: value === "warnings" ? warningType : null })}>
         <TabsList className="h-auto flex-wrap">
@@ -625,7 +630,7 @@ export function KpiTreeScreen() {
           ) : null}
         </SheetContent>
       </Sheet>
-    </div>
+    </PerformanceV2PageFrame>
   );
 }
 

@@ -52,6 +52,7 @@ import {
 import type { CapType, HqAdjustmentRequest, HqAuditLog } from "../../lib/domain/types";
 import { usePerformanceV2 } from "../../lib/store/performance-v2-store";
 import { PersonaContextBar } from "../../ui/persona-context-bar";
+import { PerformanceV2FilterRail, PerformanceV2PageFrame, PerformanceV2SectionBand } from "../../ui/performance-v2-page-frame";
 
 const HQ_SECTIONS = [
   { value: "dashboard", label: "Dashboard" },
@@ -69,6 +70,9 @@ const ADJUSTMENT_STATUS_OPTIONS = ["ALL", "PENDING", "APPROVED", "REJECTED", "RE
 const ADJUSTMENT_TYPE_OPTIONS = ["ALL", "KPI_CHANGE", "WEIGHT_CHANGE", "TARGET_CHANGE", "ITEM_ADD", "ITEM_REMOVE"] as const;
 const TIER_OPTIONS = ["ALL", "1", "2", "3"] as const;
 const PHASE_OPTIONS = ["ALL", "PLANNING", "MONITORING", "YEAR_END"] as const;
+const GLOBAL_CAP_OPTIONS = ["NO_CAP", "CAPPED_100", "CAPPED_110", "CAPPED_120"] as const;
+
+type GlobalCapOption = (typeof GLOBAL_CAP_OPTIONS)[number];
 
 function isSection(value: string | null): value is HqSection {
   return HQ_SECTIONS.some((section) => section.value === value);
@@ -168,6 +172,10 @@ function parseNullableNumber(value: string) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function normalizeGlobalCapType(value: CapType): GlobalCapOption {
+  return value === "CUSTOM" ? "NO_CAP" : value;
+}
+
 function FieldValue({ label, value }: { label: string; value: string }) {
   return (
     <div className="space-y-1 rounded-lg border border-border bg-muted/30 p-3">
@@ -212,7 +220,7 @@ export function KpiHqScreen() {
     maxItemsPerType: state.kpiRuleConfig.maxItemsPerType == null ? "" : String(state.kpiRuleConfig.maxItemsPerType),
     minWeightPerItemPct: String(state.kpiRuleConfig.minWeightPerItemPct ?? ""),
     maxWeightPerItemPct: String(state.kpiRuleConfig.maxWeightPerItemPct ?? ""),
-    globalCapType: state.kpiRuleConfig.globalCapType as CapType,
+    globalCapType: normalizeGlobalCapType(state.kpiRuleConfig.globalCapType),
     categoryBasedScoringEnabled: state.kpiRuleConfig.categoryBasedScoringEnabled,
   }));
 
@@ -457,7 +465,7 @@ export function KpiHqScreen() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6">
+    <PerformanceV2PageFrame variation="governance-cockpit">
       <PageHeading
         eyebrow="Performance 2.0"
         title="KPI Headquarter"
@@ -467,8 +475,12 @@ export function KpiHqScreen() {
 
       <Card>
         <CardContent className="space-y-4 p-4">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-1">
+          <div
+            data-slot="hq-toolbar-header"
+            data-content-alignment="top-left"
+            className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"
+          >
+            <div className="space-y-1 self-start">
               <p className="text-sm font-medium text-foreground">
                 Periode aktif {state.performancePeriod.year} · fase {state.performancePeriod.phase}
               </p>
@@ -476,7 +488,7 @@ export function KpiHqScreen() {
                 Gunakan tab dan query-state untuk deep-link review kebijakan, antrian adjustment, dan audit trail.
               </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <PerformanceV2FilterRail className="sm:grid-cols-2 xl:grid-cols-[minmax(10rem,0.7fr)_minmax(12rem,0.9fr)_minmax(12rem,0.9fr)_minmax(0,1.4fr)]">
               <Field>
                 <FieldLabel htmlFor="hq-year">Tahun</FieldLabel>
                 <Input id="hq-year" value={yearFilter} onChange={(event) => updateQuery({ year: event.target.value })} />
@@ -522,7 +534,7 @@ export function KpiHqScreen() {
                   aria-label="Cari data KPI HQ"
                 />
               </Field>
-            </div>
+            </PerformanceV2FilterRail>
           </div>
         </CardContent>
       </Card>
@@ -537,93 +549,95 @@ export function KpiHqScreen() {
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-6">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-            <MetricCard
-              label="Planning progress"
-              value={`${dashboardMetrics.planningProgress}%`}
-              description="Proporsi portofolio bawahan yang sudah berstatus approved."
-              trend={`${state.performancePeriod.phase}`}
-              trendTone="success"
-            />
-            <MetricCard
-              label="Open deadline"
-              value={dashboardMetrics.openDeadlines}
-              description="Deadline config yang masih aktif di fase berjalan."
-              supportingValue={`Scope ${companyFilter === "ALL" ? "semua perusahaan" : companyFilter}`}
-            />
-            <MetricCard
-              label="Pending adjustment"
-              value={dashboardMetrics.pendingAdjustments}
-              description="Permintaan yang menunggu review HQ."
-              trend={dashboardMetrics.pendingAdjustments > 0 ? "Butuh keputusan" : "Terkendali"}
-              trendTone={dashboardMetrics.pendingAdjustments > 0 ? "warning" : "success"}
-            />
-            <MetricCard
-              label="Revisi diminta"
-              value={dashboardMetrics.revisionAdjustments}
-              description="Adjustment yang harus dikembalikan ke pengusul."
-              trend={dashboardMetrics.revisionAdjustments > 0 ? "Follow up" : "0 blocker"}
-              trendTone={dashboardMetrics.revisionAdjustments > 0 ? "warning" : "neutral"}
-            />
-            <MetricCard
-              label="Avg pending approval"
-              value={dashboardMetrics.averagePendingApproval}
-              description="Rata-rata item yang masih menunggu approval per company tier."
-            />
-          </div>
+          <PerformanceV2SectionBand variation="governance">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+              <MetricCard
+                label="Planning progress"
+                value={`${dashboardMetrics.planningProgress}%`}
+                description="Proporsi portofolio bawahan yang sudah berstatus approved."
+                trend={`${state.performancePeriod.phase}`}
+                trendTone="success"
+              />
+              <MetricCard
+                label="Open deadline"
+                value={dashboardMetrics.openDeadlines}
+                description="Deadline config yang masih aktif di fase berjalan."
+                supportingValue={`Scope ${companyFilter === "ALL" ? "semua perusahaan" : companyFilter}`}
+              />
+              <MetricCard
+                label="Pending adjustment"
+                value={dashboardMetrics.pendingAdjustments}
+                description="Permintaan yang menunggu review HQ."
+                trend={dashboardMetrics.pendingAdjustments > 0 ? "Butuh keputusan" : "Terkendali"}
+                trendTone={dashboardMetrics.pendingAdjustments > 0 ? "warning" : "success"}
+              />
+              <MetricCard
+                label="Revisi diminta"
+                value={dashboardMetrics.revisionAdjustments}
+                description="Adjustment yang harus dikembalikan ke pengusul."
+                trend={dashboardMetrics.revisionAdjustments > 0 ? "Follow up" : "0 blocker"}
+                trendTone={dashboardMetrics.revisionAdjustments > 0 ? "warning" : "neutral"}
+              />
+              <MetricCard
+                label="Avg pending approval"
+                value={dashboardMetrics.averagePendingApproval}
+                description="Rata-rata item yang masih menunggu approval per company tier."
+              />
+            </div>
 
-          <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
-            <Card>
-              <CardHeader>
-                <CardTitle>Company governance pulse</CardTitle>
-                <CardDescription>Ringkasan progress, pending approval, dan urgensi review lintas entitas.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {companyRows.map((row) => (
-                  <div key={row.id} className="rounded-xl border border-border bg-card p-4">
-                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="font-medium text-foreground">{row.companyName}</p>
-                          <Badge variant="neutral">Tier {row.tier}</Badge>
-                          <Badge variant={row.pendingApprovalCount > 2 ? "warning" : "success"}>
-                            {row.pendingApprovalCount} pending approval
-                          </Badge>
+            <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Company governance pulse</CardTitle>
+                  <CardDescription>Ringkasan progress, pending approval, dan urgensi review lintas entitas.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {companyRows.map((row) => (
+                    <div key={row.id} className="rounded-xl border border-border bg-card p-4">
+                      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                        <div className="space-y-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-medium text-foreground">{row.companyName}</p>
+                            <Badge variant="neutral">Tier {row.tier}</Badge>
+                            <Badge variant={row.pendingApprovalCount > 2 ? "warning" : "success"}>
+                              {row.pendingApprovalCount} pending approval
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{row.characteristics}</p>
                         </div>
-                        <p className="text-sm text-muted-foreground">{row.characteristics}</p>
-                      </div>
-                      <div className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-3">
-                        <FieldValue label="Posisi" value={String(row.positionCount)} />
-                        <FieldValue label="KPI" value={String(row.kpiCount)} />
-                        <FieldValue label="Progress" value={`${row.progressPct}%`} />
+                        <div className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-3">
+                          <FieldValue label="Posisi" value={String(row.positionCount)} />
+                          <FieldValue label="KPI" value={String(row.kpiCount)} />
+                          <FieldValue label="Progress" value={`${row.progressPct}%`} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+                  ))}
+                </CardContent>
+              </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick actions</CardTitle>
-                <CardDescription>Arahkan reviewer ke modul governance terkait tanpa keluar dari konteks HQ.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button className="w-full justify-between" variant="outline" asChild>
-                  <Link to="/performance-v2/kpi-library">Buka Kamus KPI</Link>
-                </Button>
-                <Button className="w-full justify-between" variant="outline" asChild>
-                  <Link to="/performance-v2/kpi-tree">Buka KPI Tree</Link>
-                </Button>
-                <Button className="w-full justify-between" variant="secondary" onClick={() => updateQuery({ tab: "adjustments" })}>
-                  Review adjustment queue
-                </Button>
-                <Button className="w-full justify-between" variant="secondary" onClick={() => updateQuery({ tab: "audit" })}>
-                  Audit governance log
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Quick actions</CardTitle>
+                  <CardDescription>Arahkan reviewer ke modul governance terkait tanpa keluar dari konteks HQ.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button className="w-full justify-between" variant="outline" asChild>
+                    <Link to="/performance-v2/kpi-library">Buka Kamus KPI</Link>
+                  </Button>
+                  <Button className="w-full justify-between" variant="outline" asChild>
+                    <Link to="/performance-v2/kpi-tree">Buka KPI Tree</Link>
+                  </Button>
+                  <Button className="w-full justify-between" variant="secondary" onClick={() => updateQuery({ tab: "adjustments" })}>
+                    Review adjustment queue
+                  </Button>
+                  <Button className="w-full justify-between" variant="secondary" onClick={() => updateQuery({ tab: "audit" })}>
+                    Audit governance log
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </PerformanceV2SectionBand>
 
           <div className="grid gap-4 xl:grid-cols-[1.25fr_1fr]">
             <Card>
@@ -861,12 +875,12 @@ export function KpiHqScreen() {
 
                 <Field>
                   <FieldLabel>Cap global</FieldLabel>
-                  <Select value={ruleDraft.globalCapType} onValueChange={(value) => setRuleDraft((current) => ({ ...current, globalCapType: value as CapType }))}>
+                  <Select value={ruleDraft.globalCapType} onValueChange={(value) => setRuleDraft((current) => ({ ...current, globalCapType: value as GlobalCapOption }))}>
                     <SelectTrigger aria-label="Pilih cap global">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {["NO_CAP", "CAPPED_100", "CAPPED_110", "CAPPED_120"].map((option) => (
+                      {GLOBAL_CAP_OPTIONS.map((option) => (
                         <SelectItem key={option} value={option}>
                           {option}
                         </SelectItem>
@@ -880,14 +894,14 @@ export function KpiHqScreen() {
                   <div className="flex gap-2">
                     <Button
                       type="button"
-                      variant={ruleDraft.categoryBasedScoringEnabled ? "default" : "outline"}
+                      variant={ruleDraft.categoryBasedScoringEnabled ? "primary" : "outline"}
                       onClick={() => setRuleDraft((current) => ({ ...current, categoryBasedScoringEnabled: true }))}
                     >
                       Aktif
                     </Button>
                     <Button
                       type="button"
-                      variant={!ruleDraft.categoryBasedScoringEnabled ? "default" : "outline"}
+                      variant={!ruleDraft.categoryBasedScoringEnabled ? "primary" : "outline"}
                       onClick={() => setRuleDraft((current) => ({ ...current, categoryBasedScoringEnabled: false }))}
                     >
                       Nonaktif
@@ -1415,6 +1429,6 @@ export function KpiHqScreen() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </PerformanceV2PageFrame>
   );
 }

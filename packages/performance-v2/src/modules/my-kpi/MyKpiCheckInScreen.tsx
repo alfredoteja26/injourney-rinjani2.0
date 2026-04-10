@@ -38,6 +38,7 @@ import { portfolioStatusLabelFromItems } from "./my-kpi-portfolio-status";
 import { useMyKpiMatrixProfile } from "./use-my-kpi-matrix-profile";
 import { useMyKpiMonitoringMatrix } from "./use-my-kpi-monitoring-matrix";
 import { MyKpiChangeRequestsPanel } from "./my-kpi-change-requests-panel";
+import { MyKpiExtensionRequestsPanel } from "./my-kpi-extension-requests-panel";
 import { PersonaContextBar } from "../../ui/persona-context-bar";
 
 const NOTES_MAX = 2000;
@@ -103,7 +104,6 @@ export function MyKpiCheckInScreen() {
     upsertRealization,
     addRealizationEvidence,
     removeRealizationEvidence,
-    addExtensionRequest,
   } = usePerformanceV2();
   const { items, bersamaTotal, unitTotal, ownerships } = usePerformanceV2Portfolio();
   const monMatrix = useMyKpiMonitoringMatrix();
@@ -119,8 +119,6 @@ export function MyKpiCheckInScreen() {
   const [formActual, setFormActual] = useState("");
   const [formNotes, setFormNotes] = useState("");
   const [mockLink, setMockLink] = useState("");
-  const [extReason, setExtReason] = useState("");
-  const [extDays, setExtDays] = useState("3");
   const [detailKpi, setDetailKpi] = useState<KpiItem | null>(null);
   const activeRealizationRef = useRef<KpiRealization | undefined>(undefined);
 
@@ -301,24 +299,6 @@ export function MyKpiCheckInScreen() {
     });
   }
 
-  function submitExtensionRequest() {
-    const days = Number(extDays);
-    if (!extReason.trim() || Number.isNaN(days) || days < 1) {
-      return;
-    }
-    addExtensionRequest({
-      id: `ext-${Date.now()}`,
-      performancePeriodId: state.performancePeriod.id,
-      requestedBy: actingAsEmployeeNumber,
-      reason: extReason.trim(),
-      requestedDays: days,
-      status: "PENDING",
-      createdAt: new Date().toISOString(),
-    });
-    setExtReason("");
-    setExtDays("3");
-  }
-
   const period = state.performancePeriod;
   const checkInDesc = `${getEmployeeDisplay(actingAsEmployeeNumber)}${
     getPositionTitleForEmployee(actingAsEmployeeNumber) ? ` · ${getPositionTitleForEmployee(actingAsEmployeeNumber)}` : ""
@@ -377,49 +357,7 @@ export function MyKpiCheckInScreen() {
         detailVariant="monitoring"
       />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Perpanjangan tenggat (mock)</CardTitle>
-          <CardDescription>Ajukan permohonan perpanjangan — US-MK-014; tercatat di store.</CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2">
-          <Field className="sm:col-span-2">
-            <FieldLabel htmlFor="ext-reason">Alasan</FieldLabel>
-            <Textarea id="ext-reason" value={extReason} onChange={(e) => setExtReason(e.target.value)} rows={3} />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="ext-days">Hari tambahan</FieldLabel>
-            <Input id="ext-days" type="number" min={1} value={extDays} onChange={(e) => setExtDays(e.target.value)} />
-            <FieldDescription>Contoh: 3 hari kerja.</FieldDescription>
-          </Field>
-          <div className="flex items-end">
-            <Button type="button" onClick={submitExtensionRequest}>
-              Kirim permohonan
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {state.extensionRequests.filter((x) => x.requestedBy === actingAsEmployeeNumber).length > 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Permohonan Anda</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            {state.extensionRequests
-              .filter((x) => x.requestedBy === actingAsEmployeeNumber)
-              .map((x) => (
-                <div key={x.id} className="rounded-lg border border-border px-3 py-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="neutral">{x.status}</Badge>
-                    <span className="text-muted-foreground">+{x.requestedDays} hari</span>
-                  </div>
-                  <p className="mt-1">{x.reason}</p>
-                </div>
-              ))}
-          </CardContent>
-        </Card>
-      ) : null}
+      <MyKpiExtensionRequestsPanel />
 
       <MyKpiChangeRequestsPanel />
 

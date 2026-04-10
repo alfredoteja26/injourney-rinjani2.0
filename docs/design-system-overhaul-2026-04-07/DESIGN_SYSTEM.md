@@ -300,6 +300,63 @@ Default content layout:
 - Use right-side panels when users need context from the list behind it.
 - Collapse to a single-column hierarchy on smaller screens.
 
+### Page Layout Variations
+
+The product should not use one repeated content recipe for every module landing page. Use a small set of semantic page-layout variations so screens feel related but not monotonous.
+
+Approved variation families for this phase:
+
+- `dashboard hub`
+- `workspace explorer`
+- `governance cockpit`
+
+#### Dashboard hub
+
+Use when the primary job is scanning performance status, team summary, readiness, or next actions.
+
+Behavior:
+
+- Use a broad enterprise frame, but avoid one continuous white slab.
+- Prefer a layered surface model: quieter page canvas plus grouped cards and panels.
+- Hero/header, summary metrics, and first actionable zones should feel structured and slightly denser than reading pages.
+- For manager-facing dashboard surfaces such as My Team KPI, avoid the lightest all-white treatment if it weakens hierarchy.
+
+#### Workspace explorer
+
+Use when the page is an operational work surface with search, filters, tabs, and inspectable records.
+
+Behavior:
+
+- Use a strong filter rail or toolbar near the top of the workspace.
+- Use layered panels and contained surfaces rather than a plain document-like page.
+- Let search expand first; keep bounded controls at stable widths.
+- Tables, browser cards, and sheets remain the primary working surfaces.
+
+#### Governance cockpit
+
+Use when the page supports policy, audit, approval, administration, or wide comparative review.
+
+Behavior:
+
+- This can be the lightest of the approved layout variants because governance pages benefit from clarity and legibility.
+- Prioritize wide data regions, filter controls, summary metrics, and audit views.
+- Keep the surface hierarchy visible through borders, panel separation, and spacing, even when the overall page feels cleaner.
+
+### Surface Layering
+
+For large desktop pages, avoid a single giant white field with all content floating inside it.
+
+Use a two-level surface model:
+
+- Page canvas: quieter supporting surface that reduces visual glare and separates the work area from the shell.
+- Work surfaces: cards, grouped panels, tables, and drawers using the standard high-clarity card surface.
+
+Rules:
+
+- Do not solve “too white” pages with ad hoc hardcoded tinted backgrounds in feature files.
+- If a page canvas or layout surface needs a different tone, add it as a semantic token or documented layout hook first.
+- Preserve strong contrast for tables, charts, and numeric data surfaces.
+
 Grid versus flex rule:
 
 - Use `grid` for true two-dimensional layout: page scaffolds, responsive columns, equal-width card groups, dashboards, and tables of preview categories.
@@ -307,6 +364,17 @@ Grid versus flex rule:
 - Do not use auto-row grid stacks for component preview title + component pairs unless equal-height stretching is explicitly desired.
 - In multi-column preview pages, set grid parents to `items-start` when columns should keep their natural content height.
 - Use a standard preview wrapper with explicit vertical gap for repeated preview blocks. This prevents taller sibling columns from stretching title-to-component spacing.
+
+### Toolbar And Header Alignment
+
+When a page combines an intro block with filters or controls, the copy block must align to the top-left, not sink toward the lower edge of taller controls.
+
+Rules:
+
+- Default toolbar/header alignment should bias toward `items-start` behavior when filters can grow taller than the copy block.
+- Avoid visually bottom-aligning title and subtitle content beside tall form controls.
+- On smaller breakpoints, split the intro block and the controls into stacked rows before forcing awkward mixed-height alignment.
+- The toolbar copy should read as an anchored page introduction, not as vertically centered decoration.
 
 Stitch/Stage desktop viewport rule:
 

@@ -41,6 +41,7 @@ import type { KpiRealization } from "../../lib/domain/types";
 import { useDirectReports, usePerformanceV2 } from "../../lib/store/performance-v2-store";
 import { PersonaContextBar } from "../../ui/persona-context-bar";
 import { KpiStatusBadge } from "../../ui/kpi-status-badge";
+import { PerformanceV2PageFrame } from "../../ui/performance-v2-page-frame";
 import { initialsFromName } from "../my-kpi/my-kpi-employee-brief-card";
 import { MyTeamKpiHubMatrix } from "./my-team-kpi-hub-matrix";
 import { locationLabelForEmployee, orgUnitNameForEmployee } from "./my-team-kpi-talent-helpers";
@@ -204,20 +205,20 @@ export function MyTeamMonitoringScreen() {
 
   if (actingAsEmployeeNumber !== "260101") {
     return (
-      <div className="mx-auto max-w-7xl space-y-6 p-6">
+      <PerformanceV2PageFrame variation="dashboard-hub">
         <PageHeading eyebrow="Performance 2.0" title="My Team KPI" description="Konteks atasan diperlukan" />
         <PersonaContextBar />
         <Button variant="outline" asChild>
           <Link to="/performance-v2/my-team-kpi/planning">Kembali</Link>
         </Button>
-      </div>
+      </PerformanceV2PageFrame>
     );
   }
 
   const period = state.performancePeriod;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6 pb-28">
+    <PerformanceV2PageFrame variation="dashboard-hub" stickyFooterSafe>
       <PageHeading
         eyebrow={`Performance 2.0 · Monitoring · ${period.id}`}
         title="Pantau & verifikasi capaian tim"
@@ -464,6 +465,6 @@ export function MyTeamMonitoringScreen() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PerformanceV2PageFrame>
   );
 }

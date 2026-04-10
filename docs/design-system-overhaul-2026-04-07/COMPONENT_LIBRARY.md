@@ -129,6 +129,73 @@ For repeated preview examples, use a standard title-and-preview wrapper pattern:
 
 Avoid auto-row grid stacks for preview title + component pairs, because taller sibling columns can stretch rows and create large title-to-component gaps.
 
+### Page Layout Variation Guidance
+
+For operational product pages, do not force every module landing page into the same page shell and visual weight.
+
+Use these variation labels as documentation-first layout contracts:
+
+- `dashboard hub`
+- `workspace explorer`
+- `governance cockpit`
+
+These are page-level composition patterns, not new shell chrome and not automatically shared library components yet.
+
+#### Dashboard hub
+
+Use when the page is a summary-and-action surface.
+
+Expected behavior:
+
+- broader enterprise frame
+- stronger grouped cards and summary zones
+- layered surfaces instead of one continuous white field
+- suitable for manager and employee dashboard surfaces
+
+#### Workspace explorer
+
+Use when the page is a browse/search/filter/inspect workflow.
+
+Expected behavior:
+
+- strong top filter rail
+- stable search and bounded filter widths
+- clear tabs or sibling workspace navigation
+- layered surfaces for browser cards, tables, and inspection panels
+
+#### Governance cockpit
+
+Use when the page is policy-heavy, audit-heavy, or table-heavy.
+
+Expected behavior:
+
+- lightest overall surface treatment of the approved variations
+- widest table and governance regions
+- strong top summary plus filtering behavior
+- surface hierarchy preserved through borders and grouped sections
+
+### Filter Rail And Toolbar Guidance
+
+Repeated local search + filter rows across modules should follow one composition rule before they are considered for shared-component promotion.
+
+Use when:
+
+- a page combines `SearchInput`, `Select`, and small bounded controls near the top of a workspace
+- the user needs local refinement before interacting with the main table or browser region
+
+Rules:
+
+- Search expands first.
+- Bounded controls keep stable minimum widths.
+- The rail should wrap gracefully before collapsing into a full one-column stack.
+- Intro copy, title, or subtitle content should align to the top-left of the toolbar region.
+- Do not visually bottom-align the copy block beside taller filter controls.
+
+Promotion rule:
+
+- Keep filter rails as page-level composition first.
+- Promote a generic shared wrapper only after the pattern is clearly stable across modules and has a generic API.
+
 ### Reusable Component Documentation Standard
 
 Every reusable component should be documented with these minimum details before it is used for migration:
@@ -272,6 +339,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@rinj
   <CardContent>...</CardContent>
 </Card>
 ```
+
+For large landing pages, `Card` should usually sit inside a documented page variation with a clear surface hierarchy. Avoid using one page-sized white `Card` as a substitute for layout structure.
 
 ### `Field`, `Label`, `Input`, `SearchInput`, and `Textarea`
 
@@ -559,6 +628,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rinjani/shared-ui";
   <TabsContent value="tokens">...</TabsContent>
 </Tabs>
 ```
+
+In workspace-heavy pages such as KPI Library or KPI Tree, tabs should read as local workspace navigation, not as a loose stack of sections beneath a generic page shell.
 
 ### `Breadcrumb` and `Pagination`
 

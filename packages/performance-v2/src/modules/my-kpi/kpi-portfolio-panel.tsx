@@ -418,14 +418,24 @@ function ViewModeToggle({
   mode: PortfolioViewMode;
   onChange: (m: PortfolioViewMode) => void;
 }) {
-  const btn = (m: PortfolioViewMode, label: string) => (
+  const btn = (m: PortfolioViewMode, label: string, disabled = false) => (
     <button
       key={m}
       type="button"
       aria-pressed={mode === m}
-      onClick={() => onChange(m)}
+      aria-disabled={disabled}
+      disabled={disabled}
+      onClick={() => {
+        if (!disabled) {
+          onChange(m);
+        }
+      }}
       className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-        mode === m ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted/80 text-muted-foreground hover:bg-muted"
+        disabled
+          ? "cursor-not-allowed bg-muted/50 text-muted-foreground/60"
+          : mode === m
+            ? "bg-primary text-primary-foreground shadow-sm"
+            : "bg-muted/80 text-muted-foreground hover:bg-muted"
       }`}
     >
       {label}
@@ -435,7 +445,7 @@ function ViewModeToggle({
     <div className="flex flex-wrap gap-1 rounded-xl border border-border bg-background/80 p-1" role="group" aria-label="Mode tampilan portofolio">
       {btn("table", "Tabel")}
       {btn("list", "Daftar")}
-      {btn("hierarchy", "Hierarki")}
+      {btn("hierarchy", "Hierarki", true)}
     </div>
   );
 }

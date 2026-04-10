@@ -81,7 +81,6 @@ export function MyKpiPhaseMatrix({
   unitTargetPct,
   bersamaCurrentPct,
   unitCurrentPct,
-  planningOk,
   profile,
   bersamaItemCount,
   unitItemCount,
@@ -90,16 +89,8 @@ export function MyKpiPhaseMatrix({
 }: MyKpiPhaseMatrixProps) {
   const bersamaValid = bersamaCurrentPct === bersamaTargetPct;
   const unitValid = unitCurrentPct === unitTargetPct;
-  const totalPct = bersamaCurrentPct + unitCurrentPct;
-  const aggregateValid = bersamaValid && unitValid && totalPct === 100;
-  const bandAndPlanningOk = aggregateValid && planningOk;
   const itemTotal = bersamaItemCount + unitItemCount;
   const statusClass = portfolioStatusEmphasisClassName(portfolioStatusLabel);
-
-  const totalCardClass = cn(
-    matrixMetricBaseClass,
-    bandAndPlanningOk ? "border-primary/20 bg-primary/5" : "border-destructive/45 bg-destructive/[0.06]"
-  );
 
   const mon = variant === "monitoring" ? monitoring : undefined;
 
@@ -150,10 +141,10 @@ export function MyKpiPhaseMatrix({
                     <span className="leading-snug">
                       {mon.openPeriodLabel ? (
                         <>
-                          <span className="block text-foreground">Check-in {mon.openPeriodLabel} terbuka</span>
-                          {mon.openPeriodCountdownLabel ? (
-                            <span className="mt-0.5 block text-xs font-medium text-primary">{mon.openPeriodCountdownLabel}</span>
-                          ) : null}
+                          <span className="block text-foreground">
+                            {mon.openPeriodCountdownLabel ?? "Jendela check-in aktif"}
+                          </span>
+                          <span className="mt-0.5 block text-xs font-medium text-primary">Check-in {mon.openPeriodLabel} terbuka</span>
                         </>
                       ) : mon.nextUpcomingSchedule ? (
                         <>
@@ -195,7 +186,7 @@ export function MyKpiPhaseMatrix({
               />
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:items-stretch">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 xl:items-stretch">
               <MetricCard
                 className={weightMetricCardClass(bersamaValid)}
                 label="KPI Bersama"
@@ -224,20 +215,6 @@ export function MyKpiPhaseMatrix({
                     <span className={cn("block text-xs font-semibold leading-snug", statusClass)}>{portfolioStatusLabel}</span>
                   </span>
                 }
-              />
-              <MetricCard
-                className={totalCardClass}
-                label="Total bobot"
-                value={weightValueWithIcon(bandAndPlanningOk, totalPct)}
-                description={
-                  bandAndPlanningOk
-                    ? "Bobot memenuhi rumus band."
-                    : !aggregateValid
-                      ? "Total harus 100% dan sesuai band Bersama/Unit."
-                      : "Lengkapi syarat ajuan (lihat peringatan di atas)."
-                }
-                trend={bandAndPlanningOk ? "Band OK" : "Sesuaikan band"}
-                trendTone={bandAndPlanningOk ? "success" : "destructive"}
               />
             </div>
           )}

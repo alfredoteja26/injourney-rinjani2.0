@@ -45,7 +45,9 @@ function AppStickyFooter({
           contentMaxWidthClassName
         )}
       >
-        <div className="min-w-0 justify-self-start text-left">{leading}</div>
+        <div className="min-w-0 justify-self-start rounded-xl border border-border/70 bg-background/80 px-4 py-3 text-left shadow-sm">
+          {leading}
+        </div>
         <div className="flex min-w-0 flex-wrap justify-start gap-2 justify-self-stretch sm:justify-self-end sm:justify-end">
           {trailing}
         </div>
@@ -61,7 +63,7 @@ function AppStickyFooter({
         "bg-background/75 supports-[backdrop-filter]:bg-background/55",
         "shadow-[var(--shadow-footer-up)] ring-0 outline-none",
         useShellLeft &&
-          "md:left-[calc(var(--rinjani-shell-sidebar-width)+1rem)] md:transition-[left] md:duration-300 md:ease-out",
+          "md:left-[var(--rinjani-shell-sidebar-width)] md:transition-[left] md:duration-300 md:ease-out",
         insetStartClassName,
         className
       )}
