@@ -148,6 +148,8 @@
   --color-status-approved: #10b981;
   --color-status-rejected: #ef4444;
   --shadow-elevation-sm: var(--elevation-sm);
+  /** Upward elevation for fixed bottom action bars (app shell). */
+  --shadow-footer-up: 0 -4px 24px hsl(220 42.8571% 10.9804% / 0.06);
 }
 
 @theme inline {

@@ -1,5 +1,18 @@
 # Design System: InJourney Rinjani 2.0
+
 **Project ID:** 4201029456809424526
+
+## Canonical source (product + code)
+
+**This file is a condensed, Stitch-oriented summary for generation and mood alignment.** The **authoritative** design system for engineering and AI-assisted implementation is:
+
+- `docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM.md`
+- `docs/design-system-overhaul-2026-04-07/COMPONENT_LIBRARY.md`
+- `packages/shared-ui/src/theme.css` (runtime tokens)
+
+Stitch / Stage output should be **reconciled** with those sources; do not override `theme.css` with ad hoc hex from this document without a deliberate token update. See root `AGENTS.md`.
+
+---
 
 ## 1. Visual Theme & Atmosphere
 
@@ -66,21 +79,14 @@ Typography behavior:
 
 ## 4. Component Stylings
 
-* **Buttons:** Primary buttons use Authority Teal (`#006573`) with white text. Secondary emphasis may use Journey Orange (`#F47C20`) when attention or warmth is needed. Destructive buttons use Critical Action Red (`#BC2419`) only for destructive actions. Buttons should feel compact, reliable, and enterprise-grade, with softly rounded corners and restrained shadows.
-
-* **Action Chips and Badges:** Badges are compact status labels and should remain small. Action chips are larger interactive controls for filters, selected modules, and command options. Do not use Talent-only readiness language such as “Ready now” as a generic global badge example outside Talent-specific context.
-
-* **Cards/Containers:** Cards use white surfaces, Ink Slate text, fine Soft Divider Gray (`#EAECF0`) borders, and whisper-soft diffused shadows. Standard cards should be gently rounded; larger panels, sheets, and dialogs may use more generous rounding. Avoid harsh outlines and heavy floating effects.
-
-* **Inputs/Forms:** Inputs use white backgrounds, Input Gray (`#D0D5DD`) borders, clear visible labels, helper text, error states, and teal focus rings. Use field wrappers for label/helper/error composition. Search inputs should be visually strong enough to read as interactive, especially in the topbar.
-
-* **Tables/Data Display:** Tables should prioritize readability and operational scanning. Use white surfaces, clear headers, soft row dividers, search/filter/sort/pagination states when needed, and column visibility for admin-heavy tables. Data tables should support empty, loading, and error states instead of showing blank surfaces.
-
-* **Analytics:** Metric cards should be compact and avoid wasted whitespace. Bar charts are the current chart foundation: include x-axis labels, y-axis context, hover tooltip, and hover animation. Pie charts and deeper chart variants are deferred.
-
-* **Overlays:** Use dialogs for short focused tasks, alert dialogs for high-impact confirmations, sheets/drawers for right-side inspection or edit workflows, popovers for compact contextual details, tooltips for short helper text, and dropdown menus for secondary contextual actions. Sheets may slide from the right with soft rounding and optional blurred overlay.
-
-* **AppShell:** The shell uses a dark teal sidebar and teal topbar, a white workspace with a rounded top-left corner, a search-first navbar, platform switcher, notifications, help, and profile access. The Rinjani logo must not be recolored; place it on a light or frosted brand plate when used on teal/dark surfaces. Use the approved kawung factor as a small repeated warm tile or controlled silhouette, not as a full noisy wallpaper.
+- **Buttons:** Primary buttons use Authority Teal (`#006573`) with white text. Secondary emphasis may use Journey Orange (`#F47C20`) when attention or warmth is needed. Destructive buttons use Critical Action Red (`#BC2419`) only for destructive actions. Buttons should feel compact, reliable, and enterprise-grade, with softly rounded corners and restrained shadows.
+- **Action Chips and Badges:** Badges are compact status labels and should remain small. Action chips are larger interactive controls for filters, selected modules, and command options. Do not use Talent-only readiness language such as “Ready now” as a generic global badge example outside Talent-specific context.
+- **Cards/Containers:** Cards use white surfaces, Ink Slate text, fine Soft Divider Gray (`#EAECF0`) borders, and whisper-soft diffused shadows. Standard cards should be gently rounded; larger panels, sheets, and dialogs may use more generous rounding. Avoid harsh outlines and heavy floating effects.
+- **Inputs/Forms:** Inputs use white backgrounds, Input Gray (`#D0D5DD`) borders, clear visible labels, helper text, error states, and teal focus rings. Use field wrappers for label/helper/error composition. Search inputs should be visually strong enough to read as interactive, especially in the topbar.
+- **Tables/Data Display:** Tables should prioritize readability and operational scanning. Use white surfaces, clear headers, soft row dividers, search/filter/sort/pagination states when needed, and column visibility for admin-heavy tables. Data tables should support empty, loading, and error states instead of showing blank surfaces.
+- **Analytics:** Metric cards should be compact and avoid wasted whitespace. Bar charts are the current chart foundation: include x-axis labels, y-axis context, hover tooltip, and hover animation. Pie charts and deeper chart variants are deferred.
+- **Overlays:** Use dialogs for short focused tasks, alert dialogs for high-impact confirmations, sheets/drawers for right-side inspection or edit workflows, popovers for compact contextual details, tooltips for short helper text, and dropdown menus for secondary contextual actions. Sheets may slide from the right with soft rounding and optional blurred overlay.
+- **AppShell:** The shell uses a dark teal sidebar and teal topbar, a white workspace with a rounded top-left corner, a search-first navbar, platform switcher, notifications, help, and profile access. The Rinjani logo must not be recolored; place it on a light or frosted brand plate when used on teal/dark surfaces. Use the approved kawung factor as a small repeated warm tile or controlled silhouette, not as a full noisy wallpaper.
 
 ## 5. Layout Principles
 

@@ -74,6 +74,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  EmployeeBriefCard,
   Field,
   FieldDescription,
   FieldError,
@@ -187,6 +188,7 @@ const implementedComponents = [
   { name: "DataTable", path: "packages/shared-ui/src/data-table.tsx", status: "Implemented", category: "Data Display" },
   { name: "DescriptionList", path: "packages/shared-ui/src/description-list.tsx", status: "Implemented", category: "Data Display" },
   { name: "DetailPanel", path: "packages/shared-ui/src/detail-panel.tsx", status: "Implemented", category: "Data Display" },
+  { name: "EmployeeBriefCard", path: "packages/shared-ui/src/employee-brief-card.tsx", status: "Implemented", category: "Data Display" },
   { name: "List", path: "packages/shared-ui/src/list.tsx", status: "Implemented", category: "Data Display" },
   { name: "ProfileSummary", path: "packages/shared-ui/src/profile-summary.tsx", status: "Implemented", category: "Data Display" },
   { name: "Accordion", path: "packages/shared-ui/src/accordion.tsx", status: "Implemented", category: "Data Display" },
@@ -244,6 +246,7 @@ const componentStates: Record<string, string> = {
   DataTable: "search, sort, column visibility, pagination, empty state; row selection and row actions future",
   DescriptionList: "term/detail metadata rows",
   DetailPanel: "header, content, footer, supporting panel",
+  EmployeeBriefCard: "assignment-aware employee identity card with primary and secondary role contexts",
   LoadingState: "panel/page loading copy",
   Combobox: "searchable selection, descriptions, disabled option",
   DateInput: "single date, disabled-ready",
@@ -352,6 +355,36 @@ const employeeColumns: DataTableColumn[] = [
   { id: "readiness", header: "Readiness", accessorKey: "readiness", enableSorting: true },
   { id: "unit", header: "Unit", accessorKey: "unit", enableSorting: true },
   { id: "score", header: "Score", accessorKey: "score", enableSorting: true, cell: (value) => <span className="tabular-nums">{String(value)}</span> },
+];
+
+const employeeBriefCards = [
+  {
+    name: "Binavia Utama",
+    employeeId: "24070418",
+    title: "Senior Manager, Human Capital Strategy",
+    organization: "Human Capital",
+    location: "Head Office",
+    assignmentType: "primary" as const,
+    initials: "BU",
+  },
+  {
+    name: "Binavia Utama",
+    employeeId: "24070418",
+    title: "Transformation Program Lead",
+    organization: "Talent Mobility Office",
+    location: "Cross-functional assignment",
+    assignmentType: "talent-mobility" as const,
+    initials: "BU",
+  },
+  {
+    name: "Dewi Maharani",
+    employeeId: "19030177",
+    title: "PMO Lead, Airport Service Blueprint",
+    organization: "Project Assignment",
+    location: "Airport Services",
+    assignmentType: "project-assignment" as const,
+    initials: "DM",
+  },
 ];
 
 const progressClusterItems = [
@@ -520,8 +553,12 @@ export function DesignSystemPage() {
                 <ActionChip variant="selected">Selected module</ActionChip>
                 <ActionChip variant="attention">Needs review</ActionChip>
                 <ActionChip variant="destructive">Blocked</ActionChip>
-                <ActionChip size="lg">Large chip</ActionChip>
+                <ActionChip size="lg">Project assignment</ActionChip>
               </div>
+              <p className="text-sm leading-6 text-muted-foreground">
+                <span className="font-semibold text-foreground">Chip guidance:</span> use `Badge` for non-interactive status or metadata, and use `ActionChip`
+                for selectable filters or compact commands. Both preserve normal casing by default; reserve all-caps for deliberate metadata labels only.
+              </p>
             </CardContent>
           </Card>
 
@@ -540,6 +577,9 @@ export function DesignSystemPage() {
                 <Badge variant="attention">Needs action</Badge>
                 <Badge variant="destructive">Rejected</Badge>
               </ActionGroup>
+              <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm leading-6 text-muted-foreground">
+                Badge labels should follow authored casing such as `Primary`, `Talent mobility`, or `Project assignment`. Do not force uppercase unless the screen is explicitly using a metadata label treatment.
+              </div>
               <ComponentPreviewTitle title="StatusLabel" description="Text-first status indicator for metadata rows and compact summaries." />
               <div className="grid gap-3 rounded-lg border border-border p-4 sm:grid-cols-2">
                 <StatusLabel variant="neutral">Draft</StatusLabel>
@@ -963,7 +1003,7 @@ export function DesignSystemPage() {
           <Card>
             <CardHeader>
               <CardTitle>Data Display</CardTitle>
-              <CardDescription>Base table for dense comparable records.</CardDescription>
+              <CardDescription>Base table for dense comparable records with standardized radius and cell padding.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-5">
               <ComponentPreviewTitle title="Table" description="Dense comparable records when the screen does not need advanced table behavior." />
@@ -1068,6 +1108,26 @@ export function DesignSystemPage() {
                   size="sm"
                 />
               </ComponentPreviewBlock>
+              <ComponentPreviewBlock
+                title="EmployeeBriefCard"
+                description="Assignment-aware employee card for primary position, talent mobility, and project assignment."
+              >
+                <div className="grid gap-3">
+                  {employeeBriefCards.map((employee) => (
+                    <EmployeeBriefCard
+                      key={`${employee.employeeId}-${employee.assignmentType}`}
+                      name={employee.name}
+                      employeeId={employee.employeeId}
+                      title={employee.title}
+                      organization={employee.organization}
+                      location={employee.location}
+                      assignmentType={employee.assignmentType}
+                      initials={employee.initials}
+                      action={<Button size="sm" variant="outline">Open</Button>}
+                    />
+                  ))}
+                </div>
+              </ComponentPreviewBlock>
             </CardContent>
           </Card>
 
@@ -1135,6 +1195,10 @@ export function DesignSystemPage() {
                 <p>
                   <span className="font-semibold text-foreground">Previewed now:</span> base table, searchable and sortable
                   DataTable, column visibility, pagination, empty state, and loading skeleton.
+                </p>
+                <p>
+                  <span className="font-semibold text-foreground">Standard spacing:</span> header cells and row cells now share the same horizontal inset, while
+                  body rows get slightly taller vertical padding to improve scanning against the table outline.
                 </p>
                 <p>
                   <span className="font-semibold text-foreground">Next table states:</span> row selection, row actions, error

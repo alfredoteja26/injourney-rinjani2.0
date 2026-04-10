@@ -26,12 +26,14 @@
 
 ## 2. Personas & access
 
-| **Persona** | **Goals** | **Can** | **Cannot** |
-| --- | --- | --- | --- |
-| **Karyawan** (browse) | Menemukan KPI standar untuk planning | Browse, search, filter library; view item detail; use item in planning ("Gunakan Item Ini") | Submit item baru; validate; approve; view analytics; deprecate |
-| **Atasan** (browse + submit) | Menemukan KPI untuk tim dan mengajukan item baru | Semua kemampuan Karyawan + submit new item proposal | Validate; approve; view admin analytics; deprecate |
-| **Validator / HC Admin** (validate) | Memastikan item yang diajukan memenuhi standar kualitas | Review submitted items; accept/reject with notes; flag similar items | Publish item; configure locked attributes; deprecate; view full analytics |
-| **Approver / PA HO** (approve + govern) | Menjaga kualitas dan konsistensi library secara keseluruhan | Review validated items; configure fixed weight, locked attributes, cap type; publish/reject; deprecate; view analytics dashboard | Input realisasi; manage KPI Tree; configure HQ periods |
+
+| **Persona**                             | **Goals**                                                   | **Can**                                                                                                                          | **Cannot**                                                                |
+| --------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **Karyawan** (browse)                   | Menemukan KPI standar untuk planning                        | Browse, search, filter library; view item detail; use item in planning ("Gunakan Item Ini")                                      | Submit item baru; validate; approve; view analytics; deprecate            |
+| **Atasan** (browse + submit)            | Menemukan KPI untuk tim dan mengajukan item baru            | Semua kemampuan Karyawan + submit new item proposal                                                                              | Validate; approve; view admin analytics; deprecate                        |
+| **Validator / HC Admin** (validate)     | Memastikan item yang diajukan memenuhi standar kualitas     | Review submitted items; accept/reject with notes; flag similar items                                                             | Publish item; configure locked attributes; deprecate; view full analytics |
+| **Approver / PA HO** (approve + govern) | Menjaga kualitas dan konsistensi library secara keseluruhan | Review validated items; configure fixed weight, locked attributes, cap type; publish/reject; deprecate; view analytics dashboard | Input realisasi; manage KPI Tree; configure HQ periods                    |
+
 
 ---
 
@@ -100,7 +102,7 @@
 1. Validator (HC Admin) membuka Validation Queue -> melihat items PENDING_VALIDATION.
 2. Per item: review details, check similar items warning (system flags items with similar titles).
 3. Aksi:
-    - **Accept:** status -> VALIDATED -> masuk Approval Queue.
+  - **Accept:** status -> VALIDATED -> masuk Approval Queue.
     - **Reject:** notes mandatory -> status DRAFT (submitter can revise); notification ke submitter.
 4. SLA monitoring: items pending > 5 days flagged.
 
@@ -109,11 +111,11 @@
 1. Approver (PA HO) membuka Approval Queue -> melihat items VALIDATED.
 2. Per item: review details + validation history.
 3. Approver configures:
-    - Fixed Weight (optional preset).
+  - Fixed Weight (optional preset).
     - Locked Attributes (toggle per attribute: title, polarity, targetUnit, capType, etc.).
     - Cap Type (final confirmation).
 4. Aksi:
-    - **Publish:** status -> PUBLISHED; available in library catalog.
+  - **Publish:** status -> PUBLISHED; available in library catalog.
     - **Reject:** notes mandatory -> notification ke submitter.
     - **Send back to Validation:** notes mandatory -> status PENDING_VALIDATION.
 
@@ -126,7 +128,7 @@
 ### Analytics Dashboard
 
 1. PA HO membuka Analytics tab -> melihat:
-    - Metrics: total, published, pending, deprecated, usage count, adoption rate.
+  - Metrics: total, published, pending, deprecated, usage count, adoption rate.
     - Charts: status distribution (donut), submission trend by month (bar), usage by BSC (bar), usage by company (horizontal bar).
     - Top 10 most-used items (table).
 
@@ -138,84 +140,84 @@
 
 - **Story:** As a karyawan, I want to browse and search the KPI library so I can find standardized KPI items for my planning.
 - **Acceptance criteria:**
-    - Default view: Published items only (DEPRECATED hidden per business rule).
-    - Search: real-time autocomplete (min 2 chars, max 10 suggestions, case-insensitive, debounce 300ms).
-    - Filters combinable (AND logic): KPI type, BSC perspective, applicable function, applicable band jabatan.
-    - Card View: grid (3-col desktop), showing code, title, BSC badge, usage count, polarity icon.
-    - List View: table, full-width, sortable columns.
-    - View toggle with preference persistence.
-    - Pagination: 20/50/100 per page.
+  - Default view: Published items only (DEPRECATED hidden per business rule).
+  - Search: real-time autocomplete (min 2 chars, max 10 suggestions, case-insensitive, debounce 300ms).
+  - Filters combinable (AND logic): KPI type, BSC perspective, applicable function, applicable band jabatan.
+  - Card View: grid (3-col desktop), showing code, title, BSC badge, usage count, polarity icon.
+  - List View: table, full-width, sortable columns.
+  - View toggle with preference persistence.
+  - Pagination: 20/50/100 per page.
 - **Touches:** KpiDictionaryItem (read where status = PUBLISHED)
 
 ### US-KL-002 - View item detail
 
 - **Story:** As a karyawan, I want to see complete details of a library item so I can decide if it fits my KPI needs.
 - **Acceptance criteria:**
-    - Detail panel (slide-over or page): title, code, description, kpiType, bscPerspective, targetUnit, polarity, monitoringPeriod, formula, capType (with label: "Tanpa Batas" / "Maks 100%" / "Maks 120%" / "Kustom: X%"), locked attributes (lock/unlock icons per attribute), evidence requirement, usage statistics (total users, active this year), metadata (created, published, last updated).
-    - Locked attributes visually marked: lock icon + tooltip "Atribut ini tidak dapat diubah saat digunakan."
+  - Detail panel (slide-over or page): title, code, description, kpiType, bscPerspective, targetUnit, polarity, monitoringPeriod, formula, capType (with label: "Tanpa Batas" / "Maks 100%" / "Maks 120%" / "Kustom: X%"), locked attributes (lock/unlock icons per attribute), evidence requirement, usage statistics (total users, active this year), metadata (created, published, last updated).
+  - Locked attributes visually marked: lock icon + tooltip "Atribut ini tidak dapat diubah saat digunakan."
 - **Touches:** KpiDictionaryItem (read), DictionaryUsageRecord (aggregate)
 
 ### US-KL-003 - Use item in planning
 
 - **Story:** As a karyawan, I want to use a library item directly in my KPI planning so I save time on data entry.
 - **Acceptance criteria:**
-    - "Gunakan Item Ini" button on detail panel.
-    - Redirect to My KPI planning drawer; form prefilled with library item data.
-    - Locked attributes: field disabled + lock icon; unlocked attributes: editable (target, weight).
-    - dictionaryItemId linked on created KpiItem; source = LIBRARY.
+  - "Gunakan Item Ini" button on detail panel.
+  - Redirect to My KPI planning drawer; form prefilled with library item data.
+  - Locked attributes: field disabled + lock icon; unlocked attributes: editable (target, weight).
+  - dictionaryItemId linked on created KpiItem; source = LIBRARY.
 - **Touches:** KpiDictionaryItem (read), KpiItem (create via My KPI)
 
 ### US-KL-004 - Submit new item
 
 - **Story:** As a karyawan or atasan, I want to propose a new KPI item to the library when nothing suitable exists.
 - **Acceptance criteria:**
-    - Form fields: title (required, unique check async on blur), description (required, max 2000 chars), kpiType (UNIT only), bscPerspective (required), targetUnit (required), polarity (required), monitoringPeriod (required), capType (required), formula (optional), evidence requirement (optional, max 500 chars), applicable functions (min 1), applicable band jabatan (min 1).
-    - Entry points: Library page ("+Ajukan Item Baru"), My KPI planning drawer ("Ajukan KPI Baru ke Kamus"), My Team KPI, Performance Tree.
-    - Source module auto-tagged based on entry point.
-    - Submit -> status PENDING_VALIDATION; toast: "Item KPI berhasil diajukan untuk review."
+  - Form fields: title (required, unique check async on blur), description (required, max 2000 chars), kpiType (UNIT only), bscPerspective (required), targetUnit (required), polarity (required), monitoringPeriod (required), capType (required), formula (optional), evidence requirement (optional, max 500 chars), applicable functions (min 1), applicable band jabatan (min 1).
+  - Entry points: Library page ("+Ajukan Item Baru"), My KPI planning drawer ("Ajukan KPI Baru ke Kamus"), My Team KPI, Performance Tree.
+  - Source module auto-tagged based on entry point.
+  - Submit -> status PENDING_VALIDATION; toast: "Item KPI berhasil diajukan untuk review."
 - **Touches:** KpiDictionaryItem (create)
 
 ### US-KL-005 - Validate submitted item
 
 - **Story:** As a validator (HC Admin), I want to review submitted items to ensure they meet quality standards before approval.
 - **Acceptance criteria:**
-    - Validation Queue tabs: Semua, Menunggu Validasi, Tervalidasi, Ditolak.
-    - Per item: title, submitter name, source module badge, submission date, SLA status.
-    - Similar items warning: system shows items with >70% title similarity (if any).
-    - Accept: status -> VALIDATED; reject: notes mandatory, status -> DRAFT, notification to submitter.
-    - SLA badge: items > 5 days pending flagged "Segera Review".
+  - Validation Queue tabs: Semua, Menunggu Validasi, Tervalidasi, Ditolak.
+  - Per item: title, submitter name, source module badge, submission date, SLA status.
+  - Similar items warning: system shows items with >70% title similarity (if any).
+  - Accept: status -> VALIDATED; reject: notes mandatory, status -> DRAFT, notification to submitter.
+  - SLA badge: items > 5 days pending flagged "Segera Review".
 - **Touches:** KpiDictionaryItem (update status), DictionaryValidationRecord (create)
 
 ### US-KL-006 - Approve & publish item
 
 - **Story:** As an approver (PA HO), I want to review validated items, configure governance settings, and publish them to the library.
 - **Acceptance criteria:**
-    - Approval Queue tabs: Semua, Menunggu Persetujuan, Disetujui, Ditolak.
-    - Per item: full detail + validation history (validator name, action, notes, date).
-    - Configuration panel: Fixed Weight toggle + input, Locked Attributes toggles per attribute (title, polarity, targetUnit, bscPerspective, monitoringPeriod, capType), Cap Type confirmation.
-    - Publish: status -> PUBLISHED; toast "Item berhasil dipublikasikan ke Kamus KPI."
-    - Reject: notes mandatory; Send back to Validation: notes mandatory.
+  - Approval Queue tabs: Semua, Menunggu Persetujuan, Disetujui, Ditolak.
+  - Per item: full detail + validation history (validator name, action, notes, date).
+  - Configuration panel: Fixed Weight toggle + input, Locked Attributes toggles per attribute (title, polarity, targetUnit, bscPerspective, monitoringPeriod, capType), Cap Type confirmation.
+  - Publish: status -> PUBLISHED; toast "Item berhasil dipublikasikan ke Kamus KPI."
+  - Reject: notes mandatory; Send back to Validation: notes mandatory.
 - **Touches:** KpiDictionaryItem (update), DictionaryApprovalRecord (create)
 
 ### US-KL-007 - Deprecate item
 
 - **Story:** As a PA HO, I want to deprecate an outdated library item so it no longer appears in the catalog.
 - **Acceptance criteria:**
-    - "Nonaktifkan" action on published item detail.
-    - Confirmation dialog showing current usage count: "Item ini digunakan oleh X pekerja aktif. Nonaktifkan?"
-    - Status -> DEPRECATED; hidden from browse; existing KPI items using this dictionary reference are unaffected.
-    - Toast: "Item berhasil dinonaktifkan."
+  - "Nonaktifkan" action on published item detail.
+  - Confirmation dialog showing current usage count: "Item ini digunakan oleh X pekerja aktif. Nonaktifkan?"
+  - Status -> DEPRECATED; hidden from browse; existing KPI items using this dictionary reference are unaffected.
+  - Toast: "Item berhasil dinonaktifkan."
 - **Touches:** KpiDictionaryItem (update status, deprecatedAt)
 
 ### US-KL-008 - View analytics dashboard
 
 - **Story:** As a PA HO, I want to see library usage analytics so I can assess adoption and identify gaps.
 - **Acceptance criteria:**
-    - Metrics cards: Total Items, Published, Pending, Deprecated, Total Usage Count, Adoption Rate (%).
-    - Charts: Status distribution (donut), Submission trend by month (bar), Usage by BSC perspective (bar), Usage by company (horizontal bar).
-    - Top 10 most-used items (table: rank, code, title, usage count, BSC).
-    - Active vs historical usage split.
-    - Validation and approval SLA aging view (items pending > threshold).
+  - Metrics cards: Total Items, Published, Pending, Deprecated, Total Usage Count, Adoption Rate (%).
+  - Charts: Status distribution (donut), Submission trend by month (bar), Usage by BSC perspective (bar), Usage by company (horizontal bar).
+  - Top 10 most-used items (table: rank, code, title, usage count, BSC).
+  - Active vs historical usage split.
+  - Validation and approval SLA aging view (items pending > threshold).
 - **Touches:** KpiDictionaryItem (aggregate), DictionaryUsageRecord (aggregate)
 
 ---

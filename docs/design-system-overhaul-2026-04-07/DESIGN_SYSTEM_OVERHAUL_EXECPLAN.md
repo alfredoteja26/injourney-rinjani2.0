@@ -27,63 +27,63 @@ Current stage:
 
 Completed in code:
 
-- [x] `packages/shared-ui/src/utils.ts`: `cn`
-- [x] `packages/shared-ui/src/action-chip.tsx`: `ActionChip`
-- [x] `packages/shared-ui/src/button.tsx`: `Button`, `IconButton`, `ActionGroup`
-- [x] `packages/shared-ui/src/dropdown-menu.tsx`: `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`
-- [x] `packages/shared-ui/src/command-menu.tsx`: `CommandMenu`, `CommandMenuDialog`, `CommandMenuInput`, `CommandMenuItem`
-- [x] `packages/shared-ui/src/badge.tsx`: `Badge`
-- [x] `packages/shared-ui/src/card.tsx`: `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter`
-- [x] `packages/shared-ui/src/field.tsx`: `Field`, `FieldGroup`, `FieldLabel`, `FieldDescription`, `FieldError`
-- [x] `packages/shared-ui/src/label.tsx`: `Label`
-- [x] `packages/shared-ui/src/input.tsx`: `Input`
-- [x] `packages/shared-ui/src/textarea.tsx`: `Textarea`
-- [x] `packages/shared-ui/src/select.tsx`: `Select`, `SelectTrigger`, `SelectContent`, `SelectItem`, `SelectValue`
-- [x] `packages/shared-ui/src/checkbox.tsx`: `Checkbox`
-- [x] `packages/shared-ui/src/radio-group.tsx`: `RadioGroup`, `RadioGroupItem`
-- [x] `packages/shared-ui/src/switch.tsx`: `Switch`
-- [x] `packages/shared-ui/src/progress.tsx`: `Progress`
-- [x] `packages/shared-ui/src/alert.tsx`: `Alert`, `AlertTitle`, `AlertDescription`
-- [x] `packages/shared-ui/src/banner.tsx`: `Banner`, `BannerTitle`, `BannerDescription`
-- [x] `packages/shared-ui/src/dialog.tsx`: `Dialog`, `DialogTrigger`, `DialogContent`
-- [x] `packages/shared-ui/src/alert-dialog.tsx`: `AlertDialog`, `AlertDialogTrigger`, `AlertDialogContent`
-- [x] `packages/shared-ui/src/sheet.tsx`: `Sheet`, `SheetTrigger`, `SheetContent`
-- [x] `packages/shared-ui/src/popover.tsx`: `Popover`, `PopoverTrigger`, `PopoverContent`
-- [x] `packages/shared-ui/src/tooltip.tsx`: `Tooltip`, `TooltipTrigger`, `TooltipContent`
-- [x] `packages/shared-ui/src/state.tsx`: `EmptyState`, `ErrorState`
-- [x] `packages/shared-ui/src/separator.tsx`: `Separator`
-- [x] `packages/shared-ui/src/skeleton.tsx`: `Skeleton`
-- [x] `packages/shared-ui/src/spinner.tsx`: `Spinner`
-- [x] `packages/shared-ui/src/tabs.tsx`: `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`
-- [x] `packages/shared-ui/src/breadcrumb.tsx`: `Breadcrumb`, `BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbPage`
-- [x] `packages/shared-ui/src/pagination.tsx`: `Pagination`, `PaginationContent`, `PaginationLink`
-- [x] `packages/shared-ui/src/table.tsx`: `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableCell`
-- [x] `packages/shared-ui/src/data-table.tsx`: `DataTable`
-- [x] `packages/shared-ui/src/description-list.tsx`: `DescriptionList`, `DescriptionListItem`
-- [x] `packages/shared-ui/src/detail-panel.tsx`: `DetailPanel`, `DetailPanelHeader`, `DetailPanelContent`
-- [x] `packages/shared-ui/src/loading-state.tsx`: `LoadingState`
-- [x] `packages/shared-ui/src/index.ts`: shared exports
-- [x] `apps/rinjani/src/index.css`: Tailwind source scanning for `packages/shared-ui/src`
-- [x] `apps/rinjani/src/design-system-page.tsx`: admin-only component preview page
-- [x] `apps/rinjani/src/routes.tsx`: `/#/design-system` admin-only route
-- [x] `apps/rinjani/src/manifests.ts`: admin sidebar item and route metadata
+- `packages/shared-ui/src/utils.ts`: `cn`
+- `packages/shared-ui/src/action-chip.tsx`: `ActionChip`
+- `packages/shared-ui/src/button.tsx`: `Button`, `IconButton`, `ActionGroup`
+- `packages/shared-ui/src/dropdown-menu.tsx`: `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`
+- `packages/shared-ui/src/command-menu.tsx`: `CommandMenu`, `CommandMenuDialog`, `CommandMenuInput`, `CommandMenuItem`
+- `packages/shared-ui/src/badge.tsx`: `Badge`
+- `packages/shared-ui/src/card.tsx`: `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter`
+- `packages/shared-ui/src/field.tsx`: `Field`, `FieldGroup`, `FieldLabel`, `FieldDescription`, `FieldError`
+- `packages/shared-ui/src/label.tsx`: `Label`
+- `packages/shared-ui/src/input.tsx`: `Input`
+- `packages/shared-ui/src/textarea.tsx`: `Textarea`
+- `packages/shared-ui/src/select.tsx`: `Select`, `SelectTrigger`, `SelectContent`, `SelectItem`, `SelectValue`
+- `packages/shared-ui/src/checkbox.tsx`: `Checkbox`
+- `packages/shared-ui/src/radio-group.tsx`: `RadioGroup`, `RadioGroupItem`
+- `packages/shared-ui/src/switch.tsx`: `Switch`
+- `packages/shared-ui/src/progress.tsx`: `Progress`
+- `packages/shared-ui/src/alert.tsx`: `Alert`, `AlertTitle`, `AlertDescription`
+- `packages/shared-ui/src/banner.tsx`: `Banner`, `BannerTitle`, `BannerDescription`
+- `packages/shared-ui/src/dialog.tsx`: `Dialog`, `DialogTrigger`, `DialogContent`
+- `packages/shared-ui/src/alert-dialog.tsx`: `AlertDialog`, `AlertDialogTrigger`, `AlertDialogContent`
+- `packages/shared-ui/src/sheet.tsx`: `Sheet`, `SheetTrigger`, `SheetContent`
+- `packages/shared-ui/src/popover.tsx`: `Popover`, `PopoverTrigger`, `PopoverContent`
+- `packages/shared-ui/src/tooltip.tsx`: `Tooltip`, `TooltipTrigger`, `TooltipContent`
+- `packages/shared-ui/src/state.tsx`: `EmptyState`, `ErrorState`
+- `packages/shared-ui/src/separator.tsx`: `Separator`
+- `packages/shared-ui/src/skeleton.tsx`: `Skeleton`
+- `packages/shared-ui/src/spinner.tsx`: `Spinner`
+- `packages/shared-ui/src/tabs.tsx`: `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`
+- `packages/shared-ui/src/breadcrumb.tsx`: `Breadcrumb`, `BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbPage`
+- `packages/shared-ui/src/pagination.tsx`: `Pagination`, `PaginationContent`, `PaginationLink`
+- `packages/shared-ui/src/table.tsx`: `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableCell`
+- `packages/shared-ui/src/data-table.tsx`: `DataTable`
+- `packages/shared-ui/src/description-list.tsx`: `DescriptionList`, `DescriptionListItem`
+- `packages/shared-ui/src/detail-panel.tsx`: `DetailPanel`, `DetailPanelHeader`, `DetailPanelContent`
+- `packages/shared-ui/src/loading-state.tsx`: `LoadingState`
+- `packages/shared-ui/src/index.ts`: shared exports
+- `apps/rinjani/src/index.css`: Tailwind source scanning for `packages/shared-ui/src`
+- `apps/rinjani/src/design-system-page.tsx`: admin-only component preview page
+- `apps/rinjani/src/routes.tsx`: `/#/design-system` admin-only route
+- `apps/rinjani/src/manifests.ts`: admin sidebar item and route metadata
 
 Next implementation candidates:
 
-- [x] `Combobox`
-- [x] `DateInput`
-- [x] `SearchInput`, `List`, `StatusLabel`
-- [x] `ProfileSummary`
-- [ ] Shell visual redesign for navbar/sidebar/header using the approved manual Figma direction as reference
-- [x] `MetricCard`, `ChartContainer`, `BarChart`, `ProgressCluster`, `RankingList`
-- [x] Admin-only `/#/design-system` preview route
+- `Combobox`
+- `DateInput`
+- `SearchInput`, `List`, `StatusLabel`
+- `ProfileSummary`
+- Shell visual redesign for navbar/sidebar/header using the approved manual Figma direction as reference
+- `MetricCard`, `ChartContainer`, `BarChart`, `ProgressCluster`, `RankingList`
+- Admin-only `/#/design-system` preview route
 
 Product-designer review gate:
 
-- [ ] Review `/#/design-system` in local dev as Admin.
-- [ ] Confirm visual direction, density, hierarchy, and token usage.
-- [ ] Confirm state coverage for implemented components.
-- [ ] Mark components as approved, needs iteration, or blocked.
+- Review `/#/design-system` in local dev as Admin.
+- Confirm visual direction, density, hierarchy, and token usage.
+- Confirm state coverage for implemented components.
+- Mark components as approved, needs iteration, or blocked.
 
 ## Context and Orientation
 
@@ -99,10 +99,10 @@ Primary project facts:
 
 Reference inputs:
 
-- Design Systems Surf guides: https://designsystems.surf/guides
-- Typography system article: https://designsystems.surf/articles/do-you-have-a-typography-system-or-just-text-styles
-- Component-category article: https://designsystems.surf/articles/the-building-blocks-of-great-design-systems-5-essential-categories
-- AI kickoff article: https://designsystems.surf/articles/how-to-kick-start-of-your-design-system-with-ai
+- Design Systems Surf guides: [https://designsystems.surf/guides](https://designsystems.surf/guides)
+- Typography system article: [https://designsystems.surf/articles/do-you-have-a-typography-system-or-just-text-styles](https://designsystems.surf/articles/do-you-have-a-typography-system-or-just-text-styles)
+- Component-category article: [https://designsystems.surf/articles/the-building-blocks-of-great-design-systems-5-essential-categories](https://designsystems.surf/articles/the-building-blocks-of-great-design-systems-5-essential-categories)
+- AI kickoff article: [https://designsystems.surf/articles/how-to-kick-start-of-your-design-system-with-ai](https://designsystems.surf/articles/how-to-kick-start-of-your-design-system-with-ai)
 - InJourney brand book: `INJ_BRAND_BOOK_UPDATEJULY (1).pdf` from Google Drive, used as a brand rationale and guardrail, not as an automatic token override.
 - Local Stitch skills: `stitch-design`, `taste-design`, and `design-md`
 
@@ -139,6 +139,8 @@ flowchart TD
   Performance --> PerformanceCore["Performance: my KPI, my team KPI, KPI library, KPI tree"]
   Performance --> PerformanceHQ["Performance Administration: KPI headquarter"]
 ```
+
+
 
 Design-system implication:
 
@@ -552,207 +554,207 @@ Do not install or overwrite shadcn components blindly. First compare the current
 
 ### Phase 0 - Inventory And Setup
 
-- [ ] Run shadcn project inventory and confirm component configuration, aliases, Tailwind version, primitive base, and icon library.
-- [ ] Compare Portal, Talent, and Performance `components/ui` folders for divergent components.
-- [ ] Confirm the exact `packages/shared-ui` export structure.
-- [ ] Decide the component source strategy: import/adapt from shadcn registry, rebuild from local Talent reference, or create a Rinjani-specific pattern.
-- [ ] Define acceptance states for each component: default, hover, focus, disabled, loading, error, empty, selected, active, and read-only where applicable.
+- Run shadcn project inventory and confirm component configuration, aliases, Tailwind version, primitive base, and icon library.
+- Compare Portal, Talent, and Performance `components/ui` folders for divergent components.
+- Confirm the exact `packages/shared-ui` export structure.
+- Decide the component source strategy: import/adapt from shadcn registry, rebuild from local Talent reference, or create a Rinjani-specific pattern.
+- Define acceptance states for each component: default, hover, focus, disabled, loading, error, empty, selected, active, and read-only where applicable.
 
 ### Phase 1 - Foundation Tokens And Utilities
 
-- [ ] Normalize token names and CSS variable documentation in `packages/shared-ui/src/theme.css`.
-- [x] Add or confirm shared utility exports such as `cn`.
-- [ ] Define shared focus-ring behavior.
-- [ ] Define typography utility guidance for tabular numeric data.
-- [ ] Define status color semantics for success, warning, attention, destructive, pending, approved, rejected, and draft.
+- Normalize token names and CSS variable documentation in `packages/shared-ui/src/theme.css`.
+- Add or confirm shared utility exports such as `cn`.
+- Define shared focus-ring behavior.
+- Define typography utility guidance for tabular numeric data.
+- Define status color semantics for success, warning, attention, destructive, pending, approved, rejected, and draft.
 
 ### Phase 2 - Core Actions
 
-- [x] `Button`: primary, secondary, destructive, outline, ghost, link, icon-only, loading.
-- [x] `IconButton`: compact action button with accessible label requirements.
-- [x] `ButtonGroup` or `ActionGroup`: grouped actions and toolbar actions.
-- [x] `ActionChip`: selected, removable, disabled, and filter-action states.
-- [x] `DropdownMenu`: contextual actions, destructive item, disabled item, group behavior.
+- `Button`: primary, secondary, destructive, outline, ghost, link, icon-only, loading.
+- `IconButton`: compact action button with accessible label requirements.
+- `ButtonGroup` or `ActionGroup`: grouped actions and toolbar actions.
+- `ActionChip`: selected, removable, disabled, and filter-action states.
+- `DropdownMenu`: contextual actions, destructive item, disabled item, group behavior.
 
 ### Phase 3 - Inputs And Forms
 
-- [x] `Field`: label, helper, error, required, optional, disabled, read-only.
-- [x] `Input`: default, focus, error, disabled, read-only.
-- [x] `Textarea`: default, focus, error, disabled.
-- [x] `Select`: single selection, grouped items, disabled, error.
-- [x] `Combobox`: searchable selection pattern if needed for employee/module lookup.
-- [x] `Checkbox`: checked, unchecked, indeterminate, disabled.
-- [x] `RadioGroup`: grouped single-choice pattern.
-- [x] `Switch`: immediate binary control.
-- [x] `DateInput` or date-picker wrapper: document first if implementation scope is uncertain.
-- [x] `SearchInput`: local table search and global-search-compatible visual pattern.
-- [ ] `InputOTP`: keep as low priority unless authentication or verification flows need it.
+- `Field`: label, helper, error, required, optional, disabled, read-only.
+- `Input`: default, focus, error, disabled, read-only.
+- `Textarea`: default, focus, error, disabled.
+- `Select`: single selection, grouped items, disabled, error.
+- `Combobox`: searchable selection pattern if needed for employee/module lookup.
+- `Checkbox`: checked, unchecked, indeterminate, disabled.
+- `RadioGroup`: grouped single-choice pattern.
+- `Switch`: immediate binary control.
+- `DateInput` or date-picker wrapper: document first if implementation scope is uncertain.
+- `SearchInput`: local table search and global-search-compatible visual pattern.
+- `InputOTP`: keep as low priority unless authentication or verification flows need it.
 
 ### Phase 4 - Feedback And Overlays
 
-- [x] `Alert`: info, success, warning, error.
-- [x] `Banner`: page-level information and warning states.
-- [x] `Toast`: use Sonner-compatible API and system status semantics.
-- [x] `EmptyState`: first-use, no data, filtered empty.
-- [x] `ErrorState`: inline, panel, page.
-- [x] `Dialog`: accessible title, description, footer actions.
-- [x] `AlertDialog`: destructive and high-impact confirmations.
-- [x] `Sheet`: right-side detail/edit panel.
-- [x] `Popover`: small contextual information.
-- [x] `Tooltip`: short non-critical helper text.
+- `Alert`: info, success, warning, error.
+- `Banner`: page-level information and warning states.
+- `Toast`: use Sonner-compatible API and system status semantics.
+- `EmptyState`: first-use, no data, filtered empty.
+- `ErrorState`: inline, panel, page.
+- `Dialog`: accessible title, description, footer actions.
+- `AlertDialog`: destructive and high-impact confirmations.
+- `Sheet`: right-side detail/edit panel.
+- `Popover`: small contextual information.
+- `Tooltip`: short non-critical helper text.
 
 ### Phase 5 - Navigation
 
-- [x] `Tabs`: sibling views and admin sub-sections.
-- [x] `Breadcrumbs`: nested admin and detail pages.
-- [x] `Pagination`: table/list pagination.
-- [ ] `NavigationMenu` or scoped nav helper only when not duplicating shell navigation.
-- [ ] `Command` pattern: optional global or module-scoped search result/action pattern.
+- `Tabs`: sibling views and admin sub-sections.
+- `Breadcrumbs`: nested admin and detail pages.
+- `Pagination`: table/list pagination.
+- `NavigationMenu` or scoped nav helper only when not duplicating shell navigation.
+- `Command` pattern: optional global or module-scoped search result/action pattern.
 
 ### Phase 6 - Data Display
 
-- [x] `Card`: default, elevated, interactive, selected.
-- [x] `Table`: base table styling and states.
-- [x] `DataTable`: shared pattern for search, sorting, pagination, empty state, and column visibility.
-- [x] `List`: compact and interactive record lists.
-- [x] `DescriptionList`: employee/object detail metadata.
-- [x] `DetailPanel`: inline and right-side inspection pattern.
-- [x] `ProfileSummary`: compact person identity display; keep generic, not domain-heavy.
-- [x] `Accordion`: secondary detail disclosure.
+- `Card`: default, elevated, interactive, selected.
+- `Table`: base table styling and states.
+- `DataTable`: shared pattern for search, sorting, pagination, empty state, and column visibility.
+- `List`: compact and interactive record lists.
+- `DescriptionList`: employee/object detail metadata.
+- `DetailPanel`: inline and right-side inspection pattern.
+- `ProfileSummary`: compact person identity display; keep generic, not domain-heavy.
+- `Accordion`: secondary detail disclosure.
 
 ### Phase 7 - Status And Loading
 
-- [x] `Badge`: neutral, info, success, warning, error, attention.
-- [x] `StatusLabel`: text-first status display.
-- [x] `Progress`: default, success, warning, error.
-- [x] `Skeleton`: text, card, table row.
-- [x] `Spinner`: button and inline loading.
-- [x] `LoadingState`: page or panel loading pattern.
+- `Badge`: neutral, info, success, warning, error, attention.
+- `StatusLabel`: text-first status display.
+- `Progress`: default, success, warning, error.
+- `Skeleton`: text, card, table row.
+- `Spinner`: button and inline loading.
+- `LoadingState`: page or panel loading pattern.
 
 ### Phase 8 - Analytics Patterns
 
-- [x] `MetricCard`: value, label, supporting text, trend, comparison.
-- [x] `ChartContainer`: chart title, description, legend, empty state.
-- [x] `BarChart`: x-axis, y-axis, hover tooltip, animated hover bars.
-- [x] `ProgressCluster`: grouped completion states.
-- [x] `RankingList`: ordered comparison display.
-- [ ] `KpiSummary`: future composite pattern only; do not expose as a global component yet.
+- `MetricCard`: value, label, supporting text, trend, comparison.
+- `ChartContainer`: chart title, description, legend, empty state.
+- `BarChart`: x-axis, y-axis, hover tooltip, animated hover bars.
+- `ProgressCluster`: grouped completion states.
+- `RankingList`: ordered comparison display.
+- `KpiSummary`: future composite pattern only; do not expose as a global component yet.
 
 ### Phase 9 - Preview And QA
 
-- [x] Create the admin-only `/#/design-system` route.
-- [ ] Add foundation preview: colors, typography, spacing, radius, elevation, naming conventions, semantics, primitives, and color theory.
-- [ ] Add component previews for all base components and key states.
-- [ ] Add prototype pattern previews: inline card, modal, right-side panel, popover, full page.
-- [ ] Add a clearly marked domain parking-lot section.
-- [ ] Run `npm run build`.
-- [ ] Visually inspect desktop and mobile layouts.
-- [ ] Product-designer review: confirm visual direction, density, hierarchy, state coverage, and which components need adjustment before migration.
+- Create the admin-only `/#/design-system` route.
+- Add foundation preview: colors, typography, spacing, radius, elevation, naming conventions, semantics, primitives, and color theory.
+- Add component previews for all base components and key states.
+- Add prototype pattern previews: inline card, modal, right-side panel, popover, full page.
+- Add a clearly marked domain parking-lot section.
+- Run `npm run build`.
+- Visually inspect desktop and mobile layouts.
+- Product-designer review: confirm visual direction, density, hierarchy, state coverage, and which components need adjustment before migration.
 
 ### Phase 10 - Shell Visual Redesign
 
-- [x] Review the approved Talent shell direction for navbar, sidebar, header, platform switcher, notifications, help, and profile menu.
-- [x] Create the focused AppShell redesign plan at `docs/design-system-overhaul-2026-04-07/APP_SHELL_REDESIGN_PLAN.md`.
-- [x] Create AppShell specifications and usage guidelines at `docs/design-system-overhaul-2026-04-07/APP_SHELL_GUIDELINES.md`.
-- [x] Import approved Rinjani logo and supergraphic assets into `apps/rinjani/public/brand/`.
-- [x] Removed incorrect kawung crop set, kept the master supergraphic, cleaned Factor 09 into the current approved extraction, and added a repeated tile preview in `/#/design-system`.
-- [x] Review Intent UI Sidebar reference and record applicable shell capabilities without adopting the library blindly.
-- [x] Translate the shell direction into shared shell tokens and component-level rules without changing product navigation behavior.
-- [x] Update `packages/shell/src/app-shell.tsx` with Talent-derived sidebar/topbar, compliant logo plate, warm kawung tile texture, rounded workspace corner, and data-driven integrated navigation.
-- [x] Preserve the existing integrated navigation ownership: shell owns global chrome; modules own page content only.
-- [ ] Validate the shell across Portal, Talent, Performance, and the admin-only design-system route.
+- Review the approved Talent shell direction for navbar, sidebar, header, platform switcher, notifications, help, and profile menu.
+- Create the focused AppShell redesign plan at `docs/design-system-overhaul-2026-04-07/APP_SHELL_REDESIGN_PLAN.md`.
+- Create AppShell specifications and usage guidelines at `docs/design-system-overhaul-2026-04-07/APP_SHELL_GUIDELINES.md`.
+- Import approved Rinjani logo and supergraphic assets into `apps/rinjani/public/brand/`.
+- Removed incorrect kawung crop set, kept the master supergraphic, cleaned Factor 09 into the current approved extraction, and added a repeated tile preview in `/#/design-system`.
+- Review Intent UI Sidebar reference and record applicable shell capabilities without adopting the library blindly.
+- Translate the shell direction into shared shell tokens and component-level rules without changing product navigation behavior.
+- Update `packages/shell/src/app-shell.tsx` with Talent-derived sidebar/topbar, compliant logo plate, warm kawung tile texture, rounded workspace corner, and data-driven integrated navigation.
+- Preserve the existing integrated navigation ownership: shell owns global chrome; modules own page content only.
+- Validate the shell across Portal, Talent, Performance, and the admin-only design-system route.
 
 ### Phase 11 - Migration Planning
 
-- [ ] Identify new screens that should use shared components first.
-- [ ] Identify high-touch HQ/admin screens for first migration.
-- [ ] Keep generated/Figma import surfaces out of the first migration unless explicitly selected.
-- [ ] Track remaining local component usage in Portal, Talent, and Performance.
-- [ ] Create a follow-up migration ExecPlan before refactoring existing screens.
+- Identify new screens that should use shared components first.
+- Identify high-touch HQ/admin screens for first migration.
+- Keep generated/Figma import surfaces out of the first migration unless explicitly selected.
+- Track remaining local component usage in Portal, Talent, and Performance.
+- Create a follow-up migration ExecPlan before refactoring existing screens.
 
 ## Progress
 
-- [x] Confirmed user intent: enhance the Talent-derived Rinjani design system, not redesign from scratch.
-- [x] Reviewed existing Stitch-oriented documentation and local design-system skills.
-- [x] Reviewed the current design-system baseline in `.stitch/DESIGN.md`.
-- [x] Reviewed current shared theme and shell structure.
-- [x] Completed static codebase review for common components, duplicated UI, token drift, inline style usage, and generated surfaces.
-- [x] Created this design-system overhaul ExecPlan.
-- [x] Added a high-level Mermaid sitemap overview for the integrated product navigation model.
-- [x] Added documentation inventory and archive-candidate guidance for the `docs` folder.
-- [x] Ran the first product-designer interview pass and captured decisions in a comprehensive blueprint.
-- [x] Created `docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM_BLUEPRINT.md` as the reviewable conclusion artifact before final documentation updates.
-- [x] Created `docs/README.md` as the active documentation index.
-- [x] Moved completed historical ExecPlans into `docs/archive/completed-execplans/`.
-- [x] Grouped the current design-system overhaul files into the dated session folder `docs/design-system-overhaul-2026-04-07/`.
-- [x] Moved living product architecture references into `docs/integrated-product-architecture/`.
-- [x] Moved the design consistency audit into the active design-system session folder.
-- [x] Updated blueprint decisions: final docs are English-only, preview route is permanently admin-only, and base components should be clean shared implementations informed by Talent.
-- [x] Read the InJourney brand book through Google Drive connector and used it as a brand rationale/guardrail.
-- [x] Confirmed serif typography is deferred; no serif family is approved for this phase.
-- [x] Created supplementary `docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM.md`.
-- [x] Created supplementary `docs/design-system-overhaul-2026-04-07/COMPONENT_LIBRARY.md`.
-- [x] Added pre-code action plan and component build task list.
-- [x] Implemented first shared-ui component batch: `cn`, `Button`, `IconButton`, `ActionGroup`, `Badge`, `Card`, `Field`, `Label`, `Input`, `Textarea`, and `Progress`.
-- [x] Added shared-ui source scanning to the app Tailwind entry file.
-- [x] Ran `npm run build` successfully after esbuild sandbox execution was escalated.
-- [x] Implemented second shared-ui component batch: `Alert`, `EmptyState`, `ErrorState`, `Separator`, `Skeleton`, `Spinner`, and `Tabs`.
-- [x] Added the admin-only `/#/design-system` preview route with a horizontal tab foundation.
-- [x] Ran `npm run build` successfully after the second component batch.
-- [x] Implemented third shared-ui input batch: `Select`, `Checkbox`, `RadioGroup`, and `Switch`.
-- [x] Replaced arbitrary success/warning badge text colors with semantic `success` and `warning` theme tokens.
-- [x] Implemented `ActionChip` as a larger interactive chip, keeping `Badge` compact for status labels.
-- [x] Implemented overlay/feedback batch: `DropdownMenu`, `Banner`, `Dialog`, `AlertDialog`, `Sheet`, `Popover`, and `Tooltip`.
-- [x] Ran `npm install` after adding direct shared-ui Radix dependencies; npm still reports 3 existing vulnerabilities.
-- [x] Ran `npm run build` successfully after the third component batch; existing large chunk warning remains.
-- [x] Ran `npm run build` successfully after adding `ActionChip`; existing large chunk warning remains.
-- [x] Ran `npm run build` successfully after adding the overlay/feedback batch; existing large chunk warning remains.
-- [x] Added explicit preview titles and descriptions for each visible component example on `/#/design-system`.
-- [x] Implemented navigation/data-display batch: `Breadcrumb`, `Pagination`, `Table`, `DescriptionList`, `DetailPanel`, and `LoadingState`.
-- [x] Ran `npm run build` successfully after the navigation/data-display batch; existing large chunk warning remains.
-- [x] Renamed the preview page title to `Rinjani 2.0 Design System`.
-- [x] Removed non-functional hero actions (`Review checklist`, `Approve batch`) from the preview page.
-- [x] Activated design-system foundation tabs for `Tokens`, `Typography`, and `Layout`.
-- [x] Adjusted component preview labels to use the design-system sans treatment instead of uppercase/tracking-heavy labels.
-- [x] Ran `npm run build` successfully after activating the foundation tabs; existing large chunk warning remains.
-- [x] Added JetBrains Mono usage preview for structured technical metadata in the Typography tab.
-- [x] Added component-category sidebar navigation inside the Components tab, including an `Implementation Status` entry.
-- [x] Updated the `Implementation Status` table to include implemented and backlog components with `Last updated` tracking.
-- [x] Added `Available states / variants` metadata to the `Implementation Status` table.
-- [x] Removed duplicated typography/data preview from the `Implementation Status` section because it is now covered by the Typography tab.
-- [x] Expanded the Layout tab with a coverage model for page shell, hierarchy, responsive grid, density, inspection patterns, and state coverage.
-- [x] Increased the global radius token from `0.5rem` to `0.75rem` for softer surfaces.
-- [x] Ran `npm run build` successfully after sidebar/category, monospace, layout, and radius updates; existing large chunk warning remains.
-- [x] Implemented `CommandMenu` for navbar-search-style command palette interactions.
-- [x] Implemented `DataTable` with search, sorting, column visibility, pagination, and empty state.
-- [x] Enhanced `Sheet` with slide animation, softer radius, floating presentation, blur overlay, and no-overlay option.
-- [x] Ran `npm install` and `npm run build` successfully after `CommandMenu`, `DataTable`, and enhanced `Sheet`; existing vulnerabilities and large chunk warning remain.
-- [x] Fixed `CommandMenuDialog` trigger placement and overlay preview spacing, then reran `npm run build` successfully; existing large chunk warning remains.
-- [x] Implemented analytics foundation components: `MetricCard`, `ChartContainer`, `ProgressCluster`, and `RankingList`.
-- [x] Ran `npm run build` successfully after the analytics foundation batch; existing large chunk warning remains.
-- [x] Removed `KpiSummary` from the global component library, compacted analytics preview spacing, and added `BarChart` with axis labels, hover tooltip, and hover animation.
-- [x] Ran `npm run build` successfully after the analytics refinement batch; existing large chunk warning remains.
-- [x] Standardized analytics preview spacing with `ComponentPreviewBlock` and changed preview stacks from auto-row grid to flex/content-start to prevent grid stretching gaps.
-- [x] Documented grid-versus-flex layout guidance in `DESIGN_SYSTEM.md` and `COMPONENT_LIBRARY.md`.
-- [x] Implemented `SearchInput`, `StatusLabel`, and `List`, then added them to the admin-only design-system preview.
-- [x] Ran `npm run build` successfully after `SearchInput`, `StatusLabel`, and `List`; existing large chunk warning remains.
-- [x] Implemented `Combobox`, `Toast`, and `Accordion`, then added them to the admin-only design-system preview.
-- [x] Ran `npm install` and `npm run build` successfully after `Combobox`, `Toast`, and `Accordion`; existing vulnerabilities and large chunk warning remain.
-- [x] Implemented `DateInput` and `ProfileSummary`, then added them to the admin-only design-system preview.
-- [x] Ran `npm run build` successfully after `DateInput` and `ProfileSummary`; existing large chunk warning remains.
-- [x] Adjusted `Badge` vertical alignment, moved `Toast` placement to bottom-right, and expanded table preview coverage with empty/loading states plus next-state recommendations.
-- [x] Captured the future review-loop idea: select a cluttered Talent module, redesign it using the new shared design-system components, and use the result to validate whether the system is ready before broad migration.
-- [x] Adjusted `ProfileSummary` preview to show an avatar icon sample, use an 8-digit numeric employee ID with monospace metadata styling, and avoid genericizing the Talent-only `Ready now` readiness badge.
-- [x] Added a reusable component documentation standard to `COMPONENT_LIBRARY.md` so migration readiness can be evaluated consistently.
-- [x] Reviewed the original Talent shell files and created a focused AppShell redesign plan before touching runtime shell code.
-- [x] Replaced the rough fourteen-factor crop preview with a cleaner Factor 09 extraction and repeated-pattern/sidebar silhouette trials.
-- [x] Added warm/red Factor 09 tile variants, updated the kawung preview to avoid teal-on-teal invisibility, and implemented the first runtime AppShell visual pass in `packages/shell/src/app-shell.tsx`.
-- [x] Identified a major AppShell visual failure: `packages/shell/src` was not included in Tailwind source scanning, kawung opacity/blending made the motif invisible, search was too low-contrast, and sidebar profile menu was rendered from the wrong anchor.
-- [x] Added `packages/shell/src` to Tailwind source scanning and corrected the AppShell pass with stronger search treatment, sidebar-anchored profile menu, warmer kawung visibility, and better topbar popover surfaces.
-- [x] Created `DESIGN_SYSTEM_CLEANUP_PLAN.md` to classify current source of truth, active legacy residue, unsafe deletions, and the migration sequence for package-local UI/token cleanup.
-- [x] Review and confirm the human-readable docs before `.stitch/DESIGN.md` updates.
-- [x] Update `.stitch/DESIGN.md` using the `design-md` skill structure after the shared theme and component library were stabilized.
-- [ ] Expand `/#/design-system` beyond components into typography, layout, naming conventions, semantics, primitives, and color theory tabs.
+- Confirmed user intent: enhance the Talent-derived Rinjani design system, not redesign from scratch.
+- Reviewed existing Stitch-oriented documentation and local design-system skills.
+- Reviewed the current design-system baseline in `.stitch/DESIGN.md`.
+- Reviewed current shared theme and shell structure.
+- Completed static codebase review for common components, duplicated UI, token drift, inline style usage, and generated surfaces.
+- Created this design-system overhaul ExecPlan.
+- Added a high-level Mermaid sitemap overview for the integrated product navigation model.
+- Added documentation inventory and archive-candidate guidance for the `docs` folder.
+- Ran the first product-designer interview pass and captured decisions in a comprehensive blueprint.
+- Created `docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM_BLUEPRINT.md` as the reviewable conclusion artifact before final documentation updates.
+- Created `docs/README.md` as the active documentation index.
+- Moved completed historical ExecPlans into `docs/archive/completed-execplans/`.
+- Grouped the current design-system overhaul files into the dated session folder `docs/design-system-overhaul-2026-04-07/`.
+- Moved living product architecture references into `docs/integrated-product-architecture/`.
+- Moved the design consistency audit into the active design-system session folder.
+- Updated blueprint decisions: final docs are English-only, preview route is permanently admin-only, and base components should be clean shared implementations informed by Talent.
+- Read the InJourney brand book through Google Drive connector and used it as a brand rationale/guardrail.
+- Confirmed serif typography is deferred; no serif family is approved for this phase.
+- Created supplementary `docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM.md`.
+- Created supplementary `docs/design-system-overhaul-2026-04-07/COMPONENT_LIBRARY.md`.
+- Added pre-code action plan and component build task list.
+- Implemented first shared-ui component batch: `cn`, `Button`, `IconButton`, `ActionGroup`, `Badge`, `Card`, `Field`, `Label`, `Input`, `Textarea`, and `Progress`.
+- Added shared-ui source scanning to the app Tailwind entry file.
+- Ran `npm run build` successfully after esbuild sandbox execution was escalated.
+- Implemented second shared-ui component batch: `Alert`, `EmptyState`, `ErrorState`, `Separator`, `Skeleton`, `Spinner`, and `Tabs`.
+- Added the admin-only `/#/design-system` preview route with a horizontal tab foundation.
+- Ran `npm run build` successfully after the second component batch.
+- Implemented third shared-ui input batch: `Select`, `Checkbox`, `RadioGroup`, and `Switch`.
+- Replaced arbitrary success/warning badge text colors with semantic `success` and `warning` theme tokens.
+- Implemented `ActionChip` as a larger interactive chip, keeping `Badge` compact for status labels.
+- Implemented overlay/feedback batch: `DropdownMenu`, `Banner`, `Dialog`, `AlertDialog`, `Sheet`, `Popover`, and `Tooltip`.
+- Ran `npm install` after adding direct shared-ui Radix dependencies; npm still reports 3 existing vulnerabilities.
+- Ran `npm run build` successfully after the third component batch; existing large chunk warning remains.
+- Ran `npm run build` successfully after adding `ActionChip`; existing large chunk warning remains.
+- Ran `npm run build` successfully after adding the overlay/feedback batch; existing large chunk warning remains.
+- Added explicit preview titles and descriptions for each visible component example on `/#/design-system`.
+- Implemented navigation/data-display batch: `Breadcrumb`, `Pagination`, `Table`, `DescriptionList`, `DetailPanel`, and `LoadingState`.
+- Ran `npm run build` successfully after the navigation/data-display batch; existing large chunk warning remains.
+- Renamed the preview page title to `Rinjani 2.0 Design System`.
+- Removed non-functional hero actions (`Review checklist`, `Approve batch`) from the preview page.
+- Activated design-system foundation tabs for `Tokens`, `Typography`, and `Layout`.
+- Adjusted component preview labels to use the design-system sans treatment instead of uppercase/tracking-heavy labels.
+- Ran `npm run build` successfully after activating the foundation tabs; existing large chunk warning remains.
+- Added JetBrains Mono usage preview for structured technical metadata in the Typography tab.
+- Added component-category sidebar navigation inside the Components tab, including an `Implementation Status` entry.
+- Updated the `Implementation Status` table to include implemented and backlog components with `Last updated` tracking.
+- Added `Available states / variants` metadata to the `Implementation Status` table.
+- Removed duplicated typography/data preview from the `Implementation Status` section because it is now covered by the Typography tab.
+- Expanded the Layout tab with a coverage model for page shell, hierarchy, responsive grid, density, inspection patterns, and state coverage.
+- Increased the global radius token from `0.5rem` to `0.75rem` for softer surfaces.
+- Ran `npm run build` successfully after sidebar/category, monospace, layout, and radius updates; existing large chunk warning remains.
+- Implemented `CommandMenu` for navbar-search-style command palette interactions.
+- Implemented `DataTable` with search, sorting, column visibility, pagination, and empty state.
+- Enhanced `Sheet` with slide animation, softer radius, floating presentation, blur overlay, and no-overlay option.
+- Ran `npm install` and `npm run build` successfully after `CommandMenu`, `DataTable`, and enhanced `Sheet`; existing vulnerabilities and large chunk warning remain.
+- Fixed `CommandMenuDialog` trigger placement and overlay preview spacing, then reran `npm run build` successfully; existing large chunk warning remains.
+- Implemented analytics foundation components: `MetricCard`, `ChartContainer`, `ProgressCluster`, and `RankingList`.
+- Ran `npm run build` successfully after the analytics foundation batch; existing large chunk warning remains.
+- Removed `KpiSummary` from the global component library, compacted analytics preview spacing, and added `BarChart` with axis labels, hover tooltip, and hover animation.
+- Ran `npm run build` successfully after the analytics refinement batch; existing large chunk warning remains.
+- Standardized analytics preview spacing with `ComponentPreviewBlock` and changed preview stacks from auto-row grid to flex/content-start to prevent grid stretching gaps.
+- Documented grid-versus-flex layout guidance in `DESIGN_SYSTEM.md` and `COMPONENT_LIBRARY.md`.
+- Implemented `SearchInput`, `StatusLabel`, and `List`, then added them to the admin-only design-system preview.
+- Ran `npm run build` successfully after `SearchInput`, `StatusLabel`, and `List`; existing large chunk warning remains.
+- Implemented `Combobox`, `Toast`, and `Accordion`, then added them to the admin-only design-system preview.
+- Ran `npm install` and `npm run build` successfully after `Combobox`, `Toast`, and `Accordion`; existing vulnerabilities and large chunk warning remain.
+- Implemented `DateInput` and `ProfileSummary`, then added them to the admin-only design-system preview.
+- Ran `npm run build` successfully after `DateInput` and `ProfileSummary`; existing large chunk warning remains.
+- Adjusted `Badge` vertical alignment, moved `Toast` placement to bottom-right, and expanded table preview coverage with empty/loading states plus next-state recommendations.
+- Captured the future review-loop idea: select a cluttered Talent module, redesign it using the new shared design-system components, and use the result to validate whether the system is ready before broad migration.
+- Adjusted `ProfileSummary` preview to show an avatar icon sample, use an 8-digit numeric employee ID with monospace metadata styling, and avoid genericizing the Talent-only `Ready now` readiness badge.
+- Added a reusable component documentation standard to `COMPONENT_LIBRARY.md` so migration readiness can be evaluated consistently.
+- Reviewed the original Talent shell files and created a focused AppShell redesign plan before touching runtime shell code.
+- Replaced the rough fourteen-factor crop preview with a cleaner Factor 09 extraction and repeated-pattern/sidebar silhouette trials.
+- Added warm/red Factor 09 tile variants, updated the kawung preview to avoid teal-on-teal invisibility, and implemented the first runtime AppShell visual pass in `packages/shell/src/app-shell.tsx`.
+- Identified a major AppShell visual failure: `packages/shell/src` was not included in Tailwind source scanning, kawung opacity/blending made the motif invisible, search was too low-contrast, and sidebar profile menu was rendered from the wrong anchor.
+- Added `packages/shell/src` to Tailwind source scanning and corrected the AppShell pass with stronger search treatment, sidebar-anchored profile menu, warmer kawung visibility, and better topbar popover surfaces.
+- Created `DESIGN_SYSTEM_CLEANUP_PLAN.md` to classify current source of truth, active legacy residue, unsafe deletions, and the migration sequence for package-local UI/token cleanup.
+- Review and confirm the human-readable docs before `.stitch/DESIGN.md` updates.
+- Update `.stitch/DESIGN.md` using the `design-md` skill structure after the shared theme and component library were stabilized.
+- Expand `/#/design-system` beyond components into typography, layout, naming conventions, semantics, primitives, and color theory tabs.
 
 ## Surprises & Discoveries
 
@@ -766,68 +768,53 @@ Do not install or overwrite shadcn components blindly. First compare the current
 ## Decision Log
 
 - Decision: Keep Talent as the canonical visual baseline.
-  Rationale: The product direction explicitly treats this as enhancement of the Rinjani Talent-derived system, not a redesign.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: The product direction explicitly treats this as enhancement of the Rinjani Talent-derived system, not a redesign.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Use `.stitch/DESIGN.md` as the primary AI-generation source of truth.
-  Rationale: The repo already uses Stitch metadata and skills, and the user wants Google Stitch / Stage-style design-system documentation compatibility.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: The repo already uses Stitch metadata and skills, and the user wants Google Stitch / Stage-style design-system documentation compatibility.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Categorize components by function and utility, not package ownership.
-  Rationale: The user wants AI and product design to see implementation options such as card, modal, side panel, popover, and full page when prototyping flows.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: The user wants AI and product design to see implementation options such as card, modal, side panel, popover, and full page when prototyping flows.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Park domain components for future phases.
-  Rationale: KPI, 9-box, employee profile, IDP, job tender, talent review, and performance-specific components need documentation context first, but should not be refactored in this plan.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: KPI, 9-box, employee profile, IDP, job tender, talent review, and performance-specific components need documentation context first, but should not be refactored in this plan.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Treat hardcoded style cleanup as a later migration, not a first-step refactor.
-  Rationale: The static scan shows significant drift, but the safest path is to define taxonomy and docs before touching runtime UI across copied snapshots.
-  Date/Author: 2026-04-07 / Codex
-
+Rationale: The static scan shows significant drift, but the safest path is to define taxonomy and docs before touching runtime UI across copied snapshots.
+Date/Author: 2026-04-07 / Codex
 - Decision: Add a high-level sitemap to this ExecPlan instead of creating a second route inventory.
-  Rationale: `docs/integrated-product-architecture/INTEGRATED_SITEMAP.md` already owns detailed route lists; this plan only needs the grand-picture navigation model for design-system context.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: `docs/integrated-product-architecture/INTEGRATED_SITEMAP.md` already owns detailed route lists; this plan only needs the grand-picture navigation model for design-system context.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Create a comprehensive blueprint instead of a separate interview notes file.
-  Rationale: The user wants one consumable document that combines interview decisions, existing design context, and best-practice synthesis before deriving final design-system docs.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: The user wants one consumable document that combines interview decisions, existing design context, and best-practice synthesis before deriving final design-system docs.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Archive completed historical ExecPlans into `docs/archive/completed-execplans/`.
-  Rationale: The docs folder needs a clearer active-vs-historical structure, and these two plans are completed decision-history artifacts rather than current working docs.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: The docs folder needs a clearer active-vs-historical structure, and these two plans are completed decision-history artifacts rather than current working docs.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Organize living docs by purpose-specific folders and archive completed historical work.
-  Rationale: The user needs to know which documents are active, which workstream they belong to, and which artifacts are only historical decision context.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: The user needs to know which documents are active, which workstream they belong to, and which artifacts are only historical decision context.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Final design-system docs should be English-only.
-  Rationale: The user confirmed the final documentation language after reviewing the blueprint.
-  Date/Author: 2026-04-07 / Product
-
+Rationale: The user confirmed the final documentation language after reviewing the blueprint.
+Date/Author: 2026-04-07 / Product
 - Decision: The design-system preview route should be permanently admin-only.
-  Rationale: The component/design-system library is useful for designers, engineers, and authorized reviewers, but should not be available to normal users.
-  Date/Author: 2026-04-07 / Product
-
+Rationale: The component/design-system library is useful for designers, engineers, and authorized reviewers, but should not be available to normal users.
+Date/Author: 2026-04-07 / Product
 - Decision: Build base shared components from a clean state while using Talent as the primary reference.
-  Rationale: The future library should become the source of truth, not a direct copy of inconsistent package-local variants; Talent remains the strongest visual and interaction reference.
-  Date/Author: 2026-04-07 / Product
-
+Rationale: The future library should become the source of truth, not a direct copy of inconsistent package-local variants; Talent remains the strongest visual and interaction reference.
+Date/Author: 2026-04-07 / Product
 - Decision: Keep Georgia replacement as a recommendation checkpoint, not a finalized implementation decision.
-  Rationale: The user wants a recommendation and alternatives before approving typography changes.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: The user wants a recommendation and alternatives before approving typography changes.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Defer serif usage for this phase.
-  Rationale: Data-heavy enterprise UI should rely on Plus Jakarta Sans with tabular numeric behavior and JetBrains Mono only for structured technical metadata; no serif family is needed for the current operational product scope.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: Data-heavy enterprise UI should rely on Plus Jakarta Sans with tabular numeric behavior and JetBrains Mono only for structured technical metadata; no serif family is needed for the current operational product scope.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Use the InJourney brand book as a guardrail, not as an automatic redesign source.
-  Rationale: The brand book explains the corporate rationale behind the current warm/cool palette and trust/care/excellence tone, but product UI tokens should not change blindly without product-designer confirmation.
-  Date/Author: 2026-04-07 / Product + Codex
-
+Rationale: The brand book explains the corporate rationale behind the current warm/cool palette and trust/care/excellence tone, but product UI tokens should not change blindly without product-designer confirmation.
+Date/Author: 2026-04-07 / Product + Codex
 - Decision: Create human-readable design-system docs before updating `.stitch/DESIGN.md`.
-  Rationale: The human docs hold the detailed technicalities and governance; `.stitch/DESIGN.md` should be the concise AI-generation derivative after those docs are reviewed.
-  Date/Author: 2026-04-07 / Product + Codex
+Rationale: The human docs hold the detailed technicalities and governance; `.stitch/DESIGN.md` should be the concise AI-generation derivative after those docs are reviewed.
+Date/Author: 2026-04-07 / Product + Codex
 
 ## Outcomes & Retrospective
 
@@ -845,3 +832,4 @@ Remaining work:
 - Review and confirm the human-readable design-system docs.
 - Convert accepted human-readable docs into concise updates for `.stitch/DESIGN.md`.
 - Plan and later implement a design-system dry-run preview page after documentation and taxonomy are approved.
+

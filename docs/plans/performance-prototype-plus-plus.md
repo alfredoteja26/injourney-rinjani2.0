@@ -84,14 +84,14 @@ Validation: build passes and the manual walkthrough covers Karyawan, Atasan, HC 
 
 ## Progress
 
-- [x] Read imported DIP files and gap review.
-- [x] Confirm current prototype structure under `packages/performance`.
-- [x] Resolve canonical policy and Prototype++ implementation decisions.
-- [x] Create this ExecPlan.
-- [x] Add shared domain layer and provider.
-- [x] Wire shared state into Performance screens.
-- [x] Run build verification.
-- [ ] Complete browser-based manual visual walkthrough.
+- Read imported DIP files and gap review.
+- Confirm current prototype structure under `packages/performance`.
+- Resolve canonical policy and Prototype++ implementation decisions.
+- Create this ExecPlan.
+- Add shared domain layer and provider.
+- Wire shared state into Performance screens.
+- Run build verification.
+- Complete browser-based manual visual walkthrough.
 
 ## Surprises & Discoveries
 
@@ -102,16 +102,14 @@ Validation: build passes and the manual walkthrough covers Karyawan, Atasan, HC 
 ## Decision Log
 
 - Decision: Treat the seven exported DIPs as canonical and update the Madya Struktural split to 40/60.
-  Rationale: The user selected the new DIPs as the policy source, and the gap review identifies 45/55 as legacy drift.
-  Date/Author: 2026-04-07 / Codex
-
+Rationale: The user selected the new DIPs as the policy source, and the gap review identifies 45/55 as legacy drift.
+Date/Author: 2026-04-07 / Codex
 - Decision: Implement typed in-memory mock services rather than Supabase-ready persistence.
-  Rationale: The requested target is Prototype++, and the goal is to demonstrate workflow coherence before backend design.
-  Date/Author: 2026-04-07 / Codex
-
+Rationale: The requested target is Prototype++, and the goal is to demonstrate workflow coherence before backend design.
+Date/Author: 2026-04-07 / Codex
 - Decision: Use a persona switcher instead of separate routes for role behavior.
-  Rationale: It gives product reviewers a faster way to validate Karyawan, Atasan, HC Admin, and HC Admin HO affordances inside the current prototype shell.
-  Date/Author: 2026-04-07 / Codex
+Rationale: It gives product reviewers a faster way to validate Karyawan, Atasan, HC Admin, and HC Admin HO affordances inside the current prototype shell.
+Date/Author: 2026-04-07 / Codex
 
 ## Outcomes & Retrospective
 

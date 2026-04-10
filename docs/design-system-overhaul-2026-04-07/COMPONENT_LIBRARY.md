@@ -15,82 +15,84 @@ Current stage:
 
 Implemented in `packages/shared-ui`:
 
-- [x] `cn` - `packages/shared-ui/src/utils.ts`
-- [x] `ActionChip` - `packages/shared-ui/src/action-chip.tsx`
-- [x] `Button` - `packages/shared-ui/src/button.tsx`
-- [x] `IconButton` - `packages/shared-ui/src/button.tsx`
-- [x] `ActionGroup` - `packages/shared-ui/src/button.tsx`
-- [x] `DropdownMenu` - `packages/shared-ui/src/dropdown-menu.tsx`
-- [x] `CommandMenu` - `packages/shared-ui/src/command-menu.tsx`
-- [x] `Badge` - `packages/shared-ui/src/badge.tsx`
-- [x] `Card` - `packages/shared-ui/src/card.tsx`
-- [x] `Field` - `packages/shared-ui/src/field.tsx`
-- [x] `FieldGroup` - `packages/shared-ui/src/field.tsx`
-- [x] `FieldLabel` - `packages/shared-ui/src/field.tsx`
-- [x] `FieldDescription` - `packages/shared-ui/src/field.tsx`
-- [x] `FieldError` - `packages/shared-ui/src/field.tsx`
-- [x] `Label` - `packages/shared-ui/src/label.tsx`
-- [x] `Input` - `packages/shared-ui/src/input.tsx`
-- [x] `SearchInput` - `packages/shared-ui/src/search-input.tsx`
-- [x] `Textarea` - `packages/shared-ui/src/textarea.tsx`
-- [x] `Select` - `packages/shared-ui/src/select.tsx`
-- [x] `Combobox` - `packages/shared-ui/src/combobox.tsx`
-- [x] `Checkbox` - `packages/shared-ui/src/checkbox.tsx`
-- [x] `RadioGroup` - `packages/shared-ui/src/radio-group.tsx`
-- [x] `Switch` - `packages/shared-ui/src/switch.tsx`
-- [x] `DateInput` - `packages/shared-ui/src/date-input.tsx`
-- [x] `Progress` - `packages/shared-ui/src/progress.tsx`
-- [x] `Alert` - `packages/shared-ui/src/alert.tsx`
-- [x] `Banner` - `packages/shared-ui/src/banner.tsx`
-- [x] `Toast` - `packages/shared-ui/src/toast.tsx`
-- [x] `Dialog` - `packages/shared-ui/src/dialog.tsx`
-- [x] `AlertDialog` - `packages/shared-ui/src/alert-dialog.tsx`
-- [x] `Sheet` - `packages/shared-ui/src/sheet.tsx`
-- [x] `Popover` - `packages/shared-ui/src/popover.tsx`
-- [x] `Tooltip` - `packages/shared-ui/src/tooltip.tsx`
-- [x] `EmptyState` - `packages/shared-ui/src/state.tsx`
-- [x] `ErrorState` - `packages/shared-ui/src/state.tsx`
-- [x] `Separator` - `packages/shared-ui/src/separator.tsx`
-- [x] `Skeleton` - `packages/shared-ui/src/skeleton.tsx`
-- [x] `Spinner` - `packages/shared-ui/src/spinner.tsx`
-- [x] `Tabs` - `packages/shared-ui/src/tabs.tsx`
-- [x] `Breadcrumb` - `packages/shared-ui/src/breadcrumb.tsx`
-- [x] `Pagination` - `packages/shared-ui/src/pagination.tsx`
-- [x] `Table` - `packages/shared-ui/src/table.tsx`
-- [x] `DataTable` - `packages/shared-ui/src/data-table.tsx`
-- [x] `DescriptionList` - `packages/shared-ui/src/description-list.tsx`
-- [x] `DetailPanel` - `packages/shared-ui/src/detail-panel.tsx`
-- [x] `List` - `packages/shared-ui/src/list.tsx`
-- [x] `ProfileSummary` - `packages/shared-ui/src/profile-summary.tsx`
-- [x] `Accordion` - `packages/shared-ui/src/accordion.tsx`
-- [x] `LoadingState` - `packages/shared-ui/src/loading-state.tsx`
-- [x] `StatusLabel` - `packages/shared-ui/src/status-label.tsx`
-- [x] `MetricCard` - `packages/shared-ui/src/analytics.tsx`
-- [x] `ChartContainer` - `packages/shared-ui/src/analytics.tsx`
-- [x] `BarChart` - `packages/shared-ui/src/analytics.tsx`
-- [x] `ProgressCluster` - `packages/shared-ui/src/analytics.tsx`
-- [x] `RankingList` - `packages/shared-ui/src/analytics.tsx`
+- `cn` - `packages/shared-ui/src/utils.ts`
+- `ActionChip` - `packages/shared-ui/src/action-chip.tsx`
+- `Button` - `packages/shared-ui/src/button.tsx`
+- `IconButton` - `packages/shared-ui/src/button.tsx`
+- `ActionGroup` - `packages/shared-ui/src/button.tsx`
+- `DropdownMenu` - `packages/shared-ui/src/dropdown-menu.tsx`
+- `CommandMenu` - `packages/shared-ui/src/command-menu.tsx`
+- `Badge` - `packages/shared-ui/src/badge.tsx`
+- `Card` - `packages/shared-ui/src/card.tsx`
+- `Field` - `packages/shared-ui/src/field.tsx`
+- `FieldGroup` - `packages/shared-ui/src/field.tsx`
+- `FieldLabel` - `packages/shared-ui/src/field.tsx`
+- `FieldDescription` - `packages/shared-ui/src/field.tsx`
+- `FieldError` - `packages/shared-ui/src/field.tsx`
+- `Label` - `packages/shared-ui/src/label.tsx`
+- `Input` - `packages/shared-ui/src/input.tsx`
+- `SearchInput` - `packages/shared-ui/src/search-input.tsx`
+- `Textarea` - `packages/shared-ui/src/textarea.tsx`
+- `Select` - `packages/shared-ui/src/select.tsx`
+- `Combobox` - `packages/shared-ui/src/combobox.tsx`
+- `Checkbox` - `packages/shared-ui/src/checkbox.tsx`
+- `RadioGroup` - `packages/shared-ui/src/radio-group.tsx`
+- `Switch` - `packages/shared-ui/src/switch.tsx`
+- `DateInput` - `packages/shared-ui/src/date-input.tsx`
+- `Progress` - `packages/shared-ui/src/progress.tsx`
+- `Alert` - `packages/shared-ui/src/alert.tsx`
+- `Banner` - `packages/shared-ui/src/banner.tsx`
+- `Toast` - `packages/shared-ui/src/toast.tsx`
+- `Dialog` - `packages/shared-ui/src/dialog.tsx`
+- `AlertDialog` - `packages/shared-ui/src/alert-dialog.tsx`
+- `Sheet` - `packages/shared-ui/src/sheet.tsx`
+- `Popover` - `packages/shared-ui/src/popover.tsx`
+- `Tooltip` - `packages/shared-ui/src/tooltip.tsx`
+- `EmptyState` - `packages/shared-ui/src/state.tsx`
+- `ErrorState` - `packages/shared-ui/src/state.tsx`
+- `Separator` - `packages/shared-ui/src/separator.tsx`
+- `Skeleton` - `packages/shared-ui/src/skeleton.tsx`
+- `Spinner` - `packages/shared-ui/src/spinner.tsx`
+- `Tabs` - `packages/shared-ui/src/tabs.tsx`
+- `Breadcrumb` - `packages/shared-ui/src/breadcrumb.tsx`
+- `Pagination` - `packages/shared-ui/src/pagination.tsx`
+- `Table` - `packages/shared-ui/src/table.tsx`
+- `DataTable` - `packages/shared-ui/src/data-table.tsx`
+- `DescriptionList` - `packages/shared-ui/src/description-list.tsx`
+- `DetailPanel` - `packages/shared-ui/src/detail-panel.tsx`
+- `List` - `packages/shared-ui/src/list.tsx`
+- `ProfileSummary` - `packages/shared-ui/src/profile-summary.tsx`
+- `EmployeeBriefCard` - `packages/shared-ui/src/employee-brief-card.tsx`
+- `Accordion` - `packages/shared-ui/src/accordion.tsx`
+- `LoadingState` - `packages/shared-ui/src/loading-state.tsx`
+- `StatusLabel` - `packages/shared-ui/src/status-label.tsx`
+- `MetricCard` - `packages/shared-ui/src/analytics.tsx`
+- `ChartContainer` - `packages/shared-ui/src/analytics.tsx`
+- `BarChart` - `packages/shared-ui/src/analytics.tsx`
+- `ProgressCluster` - `packages/shared-ui/src/analytics.tsx`
+- `RankingList` - `packages/shared-ui/src/analytics.tsx`
 
 Not implemented yet:
 
 - None for the current base component-library backlog. Deferred items remain below as future scope.
-- [x] Admin-only `/#/design-system` preview route - `apps/rinjani/src/design-system-page.tsx`
+- Admin-only `/#/design-system` preview route - `apps/rinjani/src/design-system-page.tsx`
 
 Latest validation:
 
-- [x] `npm install` completed after adding direct shared-ui Radix dependencies; npm still reports 3 existing vulnerabilities.
-- [x] `npm run build` passed after rerunning outside the sandbox because esbuild was blocked by `spawn EPERM` inside the sandbox.
-- [x] Build still reports the existing large chunk warning; this is not introduced by the component-library page.
-- [x] `npm run build` passed after adding the overlay/feedback batch; existing large chunk warning remains.
-- [x] `npm run build` passed after adding the navigation/data-display batch; existing large chunk warning remains.
-- [x] `npm run build` passed after adding `CommandMenu`, `DataTable`, and enhanced `Sheet` variants; existing large chunk warning remains.
-- [x] `npm run build` passed after adding analytics foundation components; existing large chunk warning remains.
-- [x] `npm run build` passed after compacting analytics spacing, removing `KpiSummary` from global scope, and adding interactive `BarChart`; existing large chunk warning remains.
-- [x] `npm run build` passed after adding `SearchInput`, `StatusLabel`, and `List`; existing large chunk warning remains.
-- [x] `npm install` completed after adding shared-ui `Accordion` and `Toast` dependencies; npm still reports 3 existing vulnerabilities.
-- [x] `npm run build` passed after adding `Combobox`, `Toast`, and `Accordion`; existing large chunk warning remains.
-- [x] `npm run build` passed after adding `DateInput` and `ProfileSummary`; existing large chunk warning remains.
-- [ ] Visual review is pending on the admin-only preview route: `/#/design-system`.
+- `npm install` completed after adding direct shared-ui Radix dependencies; npm still reports 3 existing vulnerabilities.
+- `npm run build` passed after rerunning outside the sandbox because esbuild was blocked by `spawn EPERM` inside the sandbox.
+- Build still reports the existing large chunk warning; this is not introduced by the component-library page.
+- `npm run build` passed after adding the overlay/feedback batch; existing large chunk warning remains.
+- `npm run build` passed after adding the navigation/data-display batch; existing large chunk warning remains.
+- `npm run build` passed after adding `CommandMenu`, `DataTable`, and enhanced `Sheet` variants; existing large chunk warning remains.
+- `npm run build` passed after adding analytics foundation components; existing large chunk warning remains.
+- `npm run build` passed after compacting analytics spacing, removing `KpiSummary` from global scope, and adding interactive `BarChart`; existing large chunk warning remains.
+- `npm run build` passed after adding `SearchInput`, `StatusLabel`, and `List`; existing large chunk warning remains.
+- `npm install` completed after adding shared-ui `Accordion` and `Toast` dependencies; npm still reports 3 existing vulnerabilities.
+- `npm run build` passed after adding `Combobox`, `Toast`, and `Accordion`; existing large chunk warning remains.
+- `npm run build` passed after adding `DateInput` and `ProfileSummary`; existing large chunk warning remains.
+- `npm run build` passed after standardizing badge/chip casing guidance, tightening table container rhythm, and adding `EmployeeBriefCard`; existing large chunk warning remains.
+- Visual review is pending on the admin-only preview route: `/#/design-system`.
 
 ## 1. Library Principles
 
@@ -210,7 +212,7 @@ import { ActionGroup, Button } from "@rinjani/shared-ui";
 
 ### `ActionChip`
 
-Use `ActionChip` for filter chips, compact command options, and selected/unselected prototype choices. It is intentionally larger than `Badge` because chips are interactive controls, while badges are compact status labels.
+Use `ActionChip` for filter chips, compact command options, and selected/unselected prototype choices. It is intentionally larger than `Badge` because chips are interactive controls, while badges are compact status labels. Preserve authored casing by default; do not force uppercase unless the chip is acting as a deliberate metadata label.
 
 Supported variants:
 
@@ -229,13 +231,13 @@ Supported sizes:
 import { ActionChip } from "@rinjani/shared-ui";
 
 <ActionChip>All employees</ActionChip>
-<ActionChip variant="selected">Ready now</ActionChip>
+<ActionChip variant="selected">Primary assignment</ActionChip>
 <ActionChip variant="attention">Needs review</ActionChip>
 ```
 
 ### `Badge`
 
-Use `Badge` for compact categorical state. Do not use color alone; badge text should carry the meaning.
+Use `Badge` for compact categorical state or short metadata state. Do not use color alone; badge text should carry the meaning. Preserve authored casing by default.
 
 Supported variants:
 
@@ -251,6 +253,7 @@ import { Badge } from "@rinjani/shared-ui";
 
 <Badge variant="success">Approved</Badge>
 <Badge variant="warning">Waiting review</Badge>
+<Badge variant="info">Talent mobility</Badge>
 <Badge variant="destructive">Rejected</Badge>
 ```
 
@@ -579,6 +582,13 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 
 Use `Table` for basic dense comparable records. Use `DataTable` when the admin flow needs search, sorting, column visibility, pagination, and empty-state behavior. Use `List` for compact vertical records, notifications, or related items. Use `DescriptionList` for structured metadata. Use `DetailPanel` for inline selected-record inspection. Use `LoadingState` for panel or page loading copy, not for short inline waits.
 
+Shared table rules:
+
+- Use a contained rounded table wrapper rather than exposing loose rows directly against the page.
+- Keep header-cell and body-cell horizontal padding aligned.
+- Allow body rows to feel slightly taller than headers for easier scanning.
+- Preserve authored casing in headers by default; do not force uppercase globally.
+
 ```tsx
 import { DataTable, DetailPanel, DescriptionList, List, LoadingState, Table } from "@rinjani/shared-ui";
 
@@ -620,6 +630,23 @@ import { ProfileSummary } from "@rinjani/shared-ui";
 ```
 
 ProfileSummary may show initials, an avatar icon, or a provided image node. Keep module-specific states such as Talent readiness outside the generic component unless the consuming screen explicitly owns that domain meaning.
+
+Use `EmployeeBriefCard` when the screen needs assignment-aware employee identity, especially when the same employee may appear in a primary role plus one or more secondary assignments such as talent mobility or project assignment.
+
+```tsx
+import { EmployeeBriefCard } from "@rinjani/shared-ui";
+
+<EmployeeBriefCard
+  name="Binavia Utama"
+  employeeId="24070418"
+  title="Senior Manager, Human Capital Strategy"
+  organization="Human Capital"
+  location="Head Office"
+  assignmentType="primary"
+/>
+```
+
+`EmployeeBriefCard` is the preferred shared primitive for compact employee identity with assignment context. Keep `ProfileSummary` generic.
 
 ### `StatusLabel`
 
@@ -668,14 +695,16 @@ Domain Components are documented as a parking lot only for the next phase.
 
 Actions trigger movement, decisions, commands, or workflow transitions.
 
-| Component | Purpose | Initial variants |
-| --- | --- | --- |
-| Button | Primary action trigger | Primary, secondary, destructive, outline, ghost, link |
-| Icon Button | Dense action trigger | Default, subtle, destructive, disabled |
-| Link Action | Navigation action inside content | Default, muted, external, back |
-| Menu Item | Dropdown or contextual action | Default, active, destructive, disabled |
-| Action Chip | Compact filter or command action | Default, selected, removable, disabled |
-| Action Group | Related command cluster | Inline, toolbar, sticky footer |
+
+| Component    | Purpose                          | Initial variants                                      |
+| ------------ | -------------------------------- | ----------------------------------------------------- |
+| Button       | Primary action trigger           | Primary, secondary, destructive, outline, ghost, link |
+| Icon Button  | Dense action trigger             | Default, subtle, destructive, disabled                |
+| Link Action  | Navigation action inside content | Default, muted, external, back                        |
+| Menu Item    | Dropdown or contextual action    | Default, active, destructive, disabled                |
+| Action Chip  | Compact filter or command action | Default, selected, removable, disabled                |
+| Action Group | Related command cluster          | Inline, toolbar, sticky footer                        |
+
 
 Usage patterns:
 
@@ -699,15 +728,17 @@ Required states:
 
 Feedback tells users what happened, what is happening, or what needs attention.
 
-| Component | Purpose | Initial variants |
-| --- | --- | --- |
-| Alert | Inline section feedback | Info, success, warning, error |
-| Banner | Page-level feedback | Info, warning, critical, maintenance |
-| Toast | Non-blocking confirmation | Success, info, warning, error |
-| Validation Message | Field or form feedback | Error, helper, success |
-| Confirmation Dialog | High-impact confirmation | Destructive, submit, approval |
-| Empty State | Data absence and recovery | First-use, no results, filtered empty |
-| Error State | Failed loading or blocked flow | Page, panel, inline |
+
+| Component           | Purpose                        | Initial variants                      |
+| ------------------- | ------------------------------ | ------------------------------------- |
+| Alert               | Inline section feedback        | Info, success, warning, error         |
+| Banner              | Page-level feedback            | Info, warning, critical, maintenance  |
+| Toast               | Non-blocking confirmation      | Success, info, warning, error         |
+| Validation Message  | Field or form feedback         | Error, helper, success                |
+| Confirmation Dialog | High-impact confirmation       | Destructive, submit, approval         |
+| Empty State         | Data absence and recovery      | First-use, no results, filtered empty |
+| Error State         | Failed loading or blocked flow | Page, panel, inline                   |
+
 
 Usage patterns:
 
@@ -729,19 +760,21 @@ Required states:
 
 Inputs collect or modify user-provided values.
 
-| Component | Purpose | Initial variants |
-| --- | --- | --- |
-| Text Input | Single-line text | Default, error, disabled, read-only |
-| Textarea | Multi-line text | Default, error, disabled |
-| Select | Choice from options | Single, grouped, disabled, error |
-| Combobox | Searchable choice | Single, multi, async future |
-| Checkbox | Multi-choice boolean | Default, checked, indeterminate, disabled |
-| Radio Group | Single choice | Default, disabled, error |
-| Switch | Immediate on/off control | Default, checked, disabled |
-| Date Input | Date capture | Single date, range future |
-| Search Input | Query entry | Global, local table, command entry |
-| OTP Input | Segmented secure input | Default, error, disabled |
-| Form Field | Label/helper/error wrapper | Required, optional, error |
+
+| Component    | Purpose                    | Initial variants                          |
+| ------------ | -------------------------- | ----------------------------------------- |
+| Text Input   | Single-line text           | Default, error, disabled, read-only       |
+| Textarea     | Multi-line text            | Default, error, disabled                  |
+| Select       | Choice from options        | Single, grouped, disabled, error          |
+| Combobox     | Searchable choice          | Single, multi, async future               |
+| Checkbox     | Multi-choice boolean       | Default, checked, indeterminate, disabled |
+| Radio Group  | Single choice              | Default, disabled, error                  |
+| Switch       | Immediate on/off control   | Default, checked, disabled                |
+| Date Input   | Date capture               | Single date, range future                 |
+| Search Input | Query entry                | Global, local table, command entry        |
+| OTP Input    | Segmented secure input     | Default, error, disabled                  |
+| Form Field   | Label/helper/error wrapper | Required, optional, error                 |
+
 
 Usage patterns:
 
@@ -764,15 +797,17 @@ Required behavior:
 
 Navigation orients users and moves them across modules or information hierarchy.
 
-| Component | Purpose | Initial variants |
-| --- | --- | --- |
-| Sidebar Item | Platform module navigation | Default, active, disabled |
-| Platform Switcher | Portal/Talent/Performance movement | Current platform, switch menu |
-| Tabs | Sibling view navigation | Default, underline, contained |
-| Breadcrumbs | Nested page orientation | Default, truncated |
-| Pagination | Table/list pagination | Default, compact |
-| Back Link | Return to previous context | Default, with icon |
-| Command/Search Result | Intent-based navigation | Page result, action result |
+
+| Component             | Purpose                            | Initial variants              |
+| --------------------- | ---------------------------------- | ----------------------------- |
+| Sidebar Item          | Platform module navigation         | Default, active, disabled     |
+| Platform Switcher     | Portal/Talent/Performance movement | Current platform, switch menu |
+| Tabs                  | Sibling view navigation            | Default, underline, contained |
+| Breadcrumbs           | Nested page orientation            | Default, truncated            |
+| Pagination            | Table/list pagination              | Default, compact              |
+| Back Link             | Return to previous context         | Default, with icon            |
+| Command/Search Result | Intent-based navigation            | Page result, action result    |
+
 
 Usage patterns:
 
@@ -790,15 +825,17 @@ Shell rule:
 
 Status Indicators communicate state, progress, availability, or readiness.
 
-| Component | Purpose | Initial variants |
-| --- | --- | --- |
-| Badge | Compact categorical state | Neutral, info, success, warning, error, attention |
-| Status Label | Text-first state | Same as badge |
-| Progress Bar | Completion against target | Default, success, warning, error |
-| Skeleton | Known-layout loading | Text, card, table row |
-| Loading Indicator | Short wait state | Inline, button, page |
-| Empty State Marker | Visual absence cue | No data, no results |
-| Error State Marker | Visual failure cue | Inline, panel, page |
+
+| Component          | Purpose                   | Initial variants                                  |
+| ------------------ | ------------------------- | ------------------------------------------------- |
+| Badge              | Compact categorical state | Neutral, info, success, warning, error, attention |
+| Status Label       | Text-first state          | Same as badge                                     |
+| Progress Bar       | Completion against target | Default, success, warning, error                  |
+| Skeleton           | Known-layout loading      | Text, card, table row                             |
+| Loading Indicator  | Short wait state          | Inline, button, page                              |
+| Empty State Marker | Visual absence cue        | No data, no results                               |
+| Error State Marker | Visual failure cue        | Inline, panel, page                               |
+
 
 Usage patterns:
 
@@ -818,16 +855,18 @@ Required behavior:
 
 Data Display presents structured information for scanning and comparison.
 
-| Component | Purpose | Initial variants |
-| --- | --- | --- |
-| Card | Surface grouping | Default, elevated, interactive, selected |
-| Table | Dense comparable records | Default, sortable future, selectable future |
-| List | Vertical record summary | Default, compact, interactive |
-| Description List | Object details | One-column, two-column |
-| Detail Panel | Contextual inspection | Inline panel, right-side panel |
-| Profile Summary | Compact person information | Inline, card, popover trigger |
-| Metadata Row | Small label/value group | Default, compact |
-| Accordion | Progressive disclosure | Default, nested future |
+
+| Component        | Purpose                    | Initial variants                            |
+| ---------------- | -------------------------- | ------------------------------------------- |
+| Card             | Surface grouping           | Default, elevated, interactive, selected    |
+| Table            | Dense comparable records   | Default, sortable future, selectable future |
+| List             | Vertical record summary    | Default, compact, interactive               |
+| Description List | Object details             | One-column, two-column                      |
+| Detail Panel     | Contextual inspection      | Inline panel, right-side panel              |
+| Profile Summary  | Compact person information | Inline, card, popover trigger               |
+| Metadata Row     | Small label/value group    | Default, compact                            |
+| Accordion        | Progressive disclosure     | Default, nested future                      |
+
 
 Usage patterns:
 
@@ -848,14 +887,16 @@ Required behavior:
 
 Analytics components present measurable progress, trend, distribution, or scoring.
 
-| Component | Purpose | Initial variants |
-| --- | --- | --- |
-| Metric Card | One important number | Default, trend, comparison |
-| Chart Container | Chart surface and heading | Line, bar, donut placeholder |
-| Score Card | Score with context | Numeric, rating, comparison |
-| KPI Summary | KPI state summary | Individual, team, unit future |
-| Ranking List | Ordered comparison | Default, compact |
-| Progress Cluster | Related progress scan | Horizontal, stacked |
+
+| Component        | Purpose                   | Initial variants              |
+| ---------------- | ------------------------- | ----------------------------- |
+| Metric Card      | One important number      | Default, trend, comparison    |
+| Chart Container  | Chart surface and heading | Line, bar, donut placeholder  |
+| Score Card       | Score with context        | Numeric, rating, comparison   |
+| KPI Summary      | KPI state summary         | Individual, team, unit future |
+| Ranking List     | Ordered comparison        | Default, compact              |
+| Progress Cluster | Related progress scan     | Horizontal, stacked           |
+
 
 Usage patterns:
 
@@ -875,16 +916,18 @@ Data-heavy typography:
 
 Shell components preserve the persistent integrated product frame.
 
-| Component | Purpose |
-| --- | --- |
-| App Shell | Global frame for the product |
-| Header | Search, platform switcher, notifications, profile |
-| Sidebar | Current-platform navigation |
-| Platform Switcher | Portal, Talent, Performance switching |
-| Global Search | Cross-platform discovery placeholder |
-| Notification Trigger | User notifications |
-| Profile Trigger | User controls |
-| Role Switcher | Prototype role switching |
+
+| Component            | Purpose                                           |
+| -------------------- | ------------------------------------------------- |
+| App Shell            | Global frame for the product                      |
+| Header               | Search, platform switcher, notifications, profile |
+| Sidebar              | Current-platform navigation                       |
+| Platform Switcher    | Portal, Talent, Performance switching             |
+| Global Search        | Cross-platform discovery placeholder              |
+| Notification Trigger | User notifications                                |
+| Profile Trigger      | User controls                                     |
+| Role Switcher        | Prototype role switching                          |
+
 
 Rules:
 
@@ -901,31 +944,37 @@ Prototype Patterns document implementation options without forcing immediate com
 
 Employee brief profile options:
 
-| Pattern | Use when |
-| --- | --- |
-| Inline card | The profile is part of the page scan |
-| Modal | The profile task is short and interruptive |
-| Right-side panel | Users need detail while preserving list context |
-| Popover | The information is small, non-critical, and dismissible |
+
+| Pattern          | Use when                                                |
+| ---------------- | ------------------------------------------------------- |
+| Inline card      | The profile is part of the page scan                    |
+| Modal            | The profile task is short and interruptive              |
+| Right-side panel | Users need detail while preserving list context         |
+| Popover          | The information is small, non-critical, and dismissible |
 | Full detail page | The content is complex, shareable, or navigation-worthy |
+
 
 KPI detail options:
 
-| Pattern | Use when |
-| --- | --- |
-| Row expansion | The table remains the main work surface |
-| Right-side panel | Users compare a KPI against the list |
-| Modal | The action is short and scoped |
-| Full page | The KPI has deep history, comments, or workflow steps |
+
+| Pattern          | Use when                                              |
+| ---------------- | ----------------------------------------------------- |
+| Row expansion    | The table remains the main work surface               |
+| Right-side panel | Users compare a KPI against the list                  |
+| Modal            | The action is short and scoped                        |
+| Full page        | The KPI has deep history, comments, or workflow steps |
+
 
 Approval task options:
 
-| Pattern | Use when |
-| --- | --- |
-| Compact card | The task is part of a dashboard queue |
-| Timeline | History and sequence are important |
-| Confirmation dialog | The action is high impact |
+
+| Pattern             | Use when                              |
+| ------------------- | ------------------------------------- |
+| Compact card        | The task is part of a dashboard queue |
+| Timeline            | History and sequence are important    |
+| Confirmation dialog | The action is high impact             |
 | Sticky workflow bar | Users work through a long review form |
+
 
 ## 12. Domain Component Parking Lot
 
@@ -1012,125 +1061,125 @@ Use this list as the coding backlog after the design-system docs are accepted. S
 
 ### Inventory And Setup
 
-- [x] Run shadcn project inventory and confirm aliases, Tailwind version, primitive base, and icon library.
-- [ ] Compare Portal, Talent, and Performance `components/ui` copies.
-- [x] Confirm `packages/shared-ui` export structure.
-- [x] Decide per component whether the source is shadcn registry adaptation, Talent reference rebuild, or Rinjani-specific pattern.
-- [ ] Define required states for each component before implementation.
+- Run shadcn project inventory and confirm aliases, Tailwind version, primitive base, and icon library.
+- Compare Portal, Talent, and Performance `components/ui` copies.
+- Confirm `packages/shared-ui` export structure.
+- Decide per component whether the source is shadcn registry adaptation, Talent reference rebuild, or Rinjani-specific pattern.
+- Define required states for each component before implementation.
 
 ### Foundation
 
-- [ ] Theme tokens and CSS variables.
-- [x] `cn` utility export if needed.
-- [ ] Shared focus-ring behavior.
-- [ ] Tabular numeric typography guidance.
-- [ ] Status color semantics.
+- Theme tokens and CSS variables.
+- `cn` utility export if needed.
+- Shared focus-ring behavior.
+- Tabular numeric typography guidance.
+- Status color semantics.
 
 ### Actions
 
-- [x] `Button`.
-- [x] `IconButton`.
-- [x] `ButtonGroup` or `ActionGroup`.
-- [x] `ActionChip` - `packages/shared-ui/src/action-chip.tsx`.
-- [x] `DropdownMenu` - `packages/shared-ui/src/dropdown-menu.tsx`.
+- `Button`.
+- `IconButton`.
+- `ButtonGroup` or `ActionGroup`.
+- `ActionChip` - `packages/shared-ui/src/action-chip.tsx`.
+- `DropdownMenu` - `packages/shared-ui/src/dropdown-menu.tsx`.
 
 ### Inputs And Forms
 
-- [x] `Field`.
-- [x] `Input`.
-- [x] `Textarea`.
-- [x] `Select` - `packages/shared-ui/src/select.tsx`.
-- [x] `Combobox` - `packages/shared-ui/src/combobox.tsx`.
-- [x] `Checkbox` - `packages/shared-ui/src/checkbox.tsx`.
-- [x] `RadioGroup` - `packages/shared-ui/src/radio-group.tsx`.
-- [x] `Switch` - `packages/shared-ui/src/switch.tsx`.
-- [x] `DateInput` - `packages/shared-ui/src/date-input.tsx`.
-- [x] `SearchInput` - `packages/shared-ui/src/search-input.tsx`.
-- [ ] `InputOTP` if required by auth or verification flows.
+- `Field`.
+- `Input`.
+- `Textarea`.
+- `Select` - `packages/shared-ui/src/select.tsx`.
+- `Combobox` - `packages/shared-ui/src/combobox.tsx`.
+- `Checkbox` - `packages/shared-ui/src/checkbox.tsx`.
+- `RadioGroup` - `packages/shared-ui/src/radio-group.tsx`.
+- `Switch` - `packages/shared-ui/src/switch.tsx`.
+- `DateInput` - `packages/shared-ui/src/date-input.tsx`.
+- `SearchInput` - `packages/shared-ui/src/search-input.tsx`.
+- `InputOTP` if required by auth or verification flows.
 
 ### Feedback And Overlays
 
-- [x] `Alert` - `packages/shared-ui/src/alert.tsx`.
-- [x] `Banner` - `packages/shared-ui/src/banner.tsx`.
-- [x] `Toast` - `packages/shared-ui/src/toast.tsx`.
-- [x] `EmptyState` - `packages/shared-ui/src/state.tsx`.
-- [x] `ErrorState` - `packages/shared-ui/src/state.tsx`.
-- [x] `Dialog` - `packages/shared-ui/src/dialog.tsx`.
-- [x] `AlertDialog` - `packages/shared-ui/src/alert-dialog.tsx`.
-- [x] `Sheet` - `packages/shared-ui/src/sheet.tsx`.
-- [x] `Popover` - `packages/shared-ui/src/popover.tsx`.
-- [x] `Tooltip` - `packages/shared-ui/src/tooltip.tsx`.
+- `Alert` - `packages/shared-ui/src/alert.tsx`.
+- `Banner` - `packages/shared-ui/src/banner.tsx`.
+- `Toast` - `packages/shared-ui/src/toast.tsx`.
+- `EmptyState` - `packages/shared-ui/src/state.tsx`.
+- `ErrorState` - `packages/shared-ui/src/state.tsx`.
+- `Dialog` - `packages/shared-ui/src/dialog.tsx`.
+- `AlertDialog` - `packages/shared-ui/src/alert-dialog.tsx`.
+- `Sheet` - `packages/shared-ui/src/sheet.tsx`.
+- `Popover` - `packages/shared-ui/src/popover.tsx`.
+- `Tooltip` - `packages/shared-ui/src/tooltip.tsx`.
 
 ### Navigation
 
-- [x] `Tabs` - `packages/shared-ui/src/tabs.tsx`.
-- [x] `Breadcrumb` - `packages/shared-ui/src/breadcrumb.tsx`.
-- [x] `Pagination` - `packages/shared-ui/src/pagination.tsx`.
-- [ ] `NavigationMenu` or scoped navigation helper if needed.
-- [ ] `Command` search/action pattern.
+- `Tabs` - `packages/shared-ui/src/tabs.tsx`.
+- `Breadcrumb` - `packages/shared-ui/src/breadcrumb.tsx`.
+- `Pagination` - `packages/shared-ui/src/pagination.tsx`.
+- `NavigationMenu` or scoped navigation helper if needed.
+- `Command` search/action pattern.
 
 ### Data Display
 
-- [x] `Card`.
-- [x] `Table` - `packages/shared-ui/src/table.tsx`.
-- [x] `DataTable` - `packages/shared-ui/src/data-table.tsx`.
-- [x] `List` - `packages/shared-ui/src/list.tsx`.
-- [x] `DescriptionList` - `packages/shared-ui/src/description-list.tsx`.
-- [x] `DetailPanel` - `packages/shared-ui/src/detail-panel.tsx`.
-- [x] `ProfileSummary` - `packages/shared-ui/src/profile-summary.tsx`.
-- [x] `Accordion` - `packages/shared-ui/src/accordion.tsx`.
+- `Card`.
+- `Table` - `packages/shared-ui/src/table.tsx`.
+- `DataTable` - `packages/shared-ui/src/data-table.tsx`.
+- `List` - `packages/shared-ui/src/list.tsx`.
+- `DescriptionList` - `packages/shared-ui/src/description-list.tsx`.
+- `DetailPanel` - `packages/shared-ui/src/detail-panel.tsx`.
+- `ProfileSummary` - `packages/shared-ui/src/profile-summary.tsx`.
+- `Accordion` - `packages/shared-ui/src/accordion.tsx`.
 
 ### Status And Loading
 
-- [x] `Badge`.
-- [x] `StatusLabel` - `packages/shared-ui/src/status-label.tsx`.
-- [x] `Progress`.
-- [x] `Skeleton` - `packages/shared-ui/src/skeleton.tsx`.
-- [x] `Spinner` - `packages/shared-ui/src/spinner.tsx`.
-- [x] `LoadingState` - `packages/shared-ui/src/loading-state.tsx`.
+- `Badge`.
+- `StatusLabel` - `packages/shared-ui/src/status-label.tsx`.
+- `Progress`.
+- `Skeleton` - `packages/shared-ui/src/skeleton.tsx`.
+- `Spinner` - `packages/shared-ui/src/spinner.tsx`.
+- `LoadingState` - `packages/shared-ui/src/loading-state.tsx`.
 
 ### Analytics
 
-- [x] `MetricCard` - `packages/shared-ui/src/analytics.tsx`.
-- [x] `ChartContainer` - `packages/shared-ui/src/analytics.tsx`.
-- [x] `BarChart` - `packages/shared-ui/src/analytics.tsx`.
-- [x] `ProgressCluster` - `packages/shared-ui/src/analytics.tsx`.
-- [x] `RankingList` - `packages/shared-ui/src/analytics.tsx`.
-- [ ] `KpiSummary` as a future composite pattern only, not a global component.
+- `MetricCard` - `packages/shared-ui/src/analytics.tsx`.
+- `ChartContainer` - `packages/shared-ui/src/analytics.tsx`.
+- `BarChart` - `packages/shared-ui/src/analytics.tsx`.
+- `ProgressCluster` - `packages/shared-ui/src/analytics.tsx`.
+- `RankingList` - `packages/shared-ui/src/analytics.tsx`.
+- `KpiSummary` as a future composite pattern only, not a global component.
 
 ### Preview And QA
 
-- [x] Admin-only `/#/design-system` route.
-- [ ] Foundation preview for typography, layout, naming conventions, semantics, primitives, and color theory.
-- [ ] Component state previews.
-- [ ] Prototype pattern previews.
-- [ ] Domain parking-lot preview section.
-- [ ] Build validation.
-- [ ] Desktop and mobile visual inspection.
-- [ ] Product-designer review: evaluate visual direction, density, hierarchy, component state coverage, and gaps before migration.
+- Admin-only `/#/design-system` route.
+- Foundation preview for typography, layout, naming conventions, semantics, primitives, and color theory.
+- Component state previews.
+- Prototype pattern previews.
+- Domain parking-lot preview section.
+- Build validation.
+- Desktop and mobile visual inspection.
+- Product-designer review: evaluate visual direction, density, hierarchy, component state coverage, and gaps before migration.
 
 ## Product-Designer Review Checklist
 
 Use this checklist after the preview route exists:
 
-- [ ] Review foundation previews: color, typography, spacing, radius, and elevation.
-- [ ] Review Actions: button hierarchy, icon-only affordance, loading state, and destructive treatment.
-- [ ] Review Inputs: label/helper/error behavior, focus state, disabled state, and form density.
-- [ ] Review Feedback: alert hierarchy, confirmation patterns, empty state tone, and error recovery.
-- [ ] Review Navigation: tabs, breadcrumbs, pagination, and whether shell ownership remains clear.
-- [ ] Review Status Indicators: badge semantics, progress colors, loading states, and whether color meanings are intuitive.
-- [ ] Review Data Display: card rhythm, table density, detail-panel options, and scanability.
-- [ ] Review Analytics: metric-card hierarchy, chart-container framing, and numeric readability.
-- [ ] Review Prototype Patterns: inline card, modal, right-side panel, popover, and full-page tradeoffs.
-- [ ] Decide which components are approved for migration and which require another iteration.
+- Review foundation previews: color, typography, spacing, radius, and elevation.
+- Review Actions: button hierarchy, icon-only affordance, loading state, and destructive treatment.
+- Review Inputs: label/helper/error behavior, focus state, disabled state, and form density.
+- Review Feedback: alert hierarchy, confirmation patterns, empty state tone, and error recovery.
+- Review Navigation: tabs, breadcrumbs, pagination, and whether shell ownership remains clear.
+- Review Status Indicators: badge semantics, progress colors, loading states, and whether color meanings are intuitive.
+- Review Data Display: card rhythm, table density, detail-panel options, and scanability.
+- Review Analytics: metric-card hierarchy, chart-container framing, and numeric readability.
+- Review Prototype Patterns: inline card, modal, right-side panel, popover, and full-page tradeoffs.
+- Decide which components are approved for migration and which require another iteration.
 
 ### Migration Planning
 
-- [ ] Identify new screens that should use shared components first.
-- [ ] Identify high-touch HQ/admin screens for first migration.
-- [ ] Exclude generated/Figma imports unless selected.
-- [ ] Track remaining local component usage across Portal, Talent, and Performance.
-- [ ] Create follow-up migration ExecPlan before refactoring existing screens.
+- Identify new screens that should use shared components first.
+- Identify high-touch HQ/admin screens for first migration.
+- Exclude generated/Figma imports unless selected.
+- Track remaining local component usage across Portal, Talent, and Performance.
+- Create follow-up migration ExecPlan before refactoring existing screens.
 
 ## 15. Preview Route Requirements
 
@@ -1162,3 +1211,4 @@ Validation when implemented:
 - Visually inspect the route on desktop and mobile.
 - Confirm shell remains single-owner.
 - Confirm all examples use design-system tokens and shared components.
+

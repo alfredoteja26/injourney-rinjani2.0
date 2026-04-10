@@ -1,3 +1,4 @@
+export { AppStickyFooter, type AppStickyFooterProps } from "./app-sticky-footer";
 export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion";
 export { ActionChip, actionChipVariants } from "./action-chip";
 export {
@@ -61,6 +62,7 @@ export {
   DropdownMenuSub,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+export { EmployeeBriefCard, type EmployeeAssignmentType, type EmployeeBriefCardProps } from "./employee-brief-card";
 export { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "./field";
 export { Input } from "./input";
 export { Label } from "./label";

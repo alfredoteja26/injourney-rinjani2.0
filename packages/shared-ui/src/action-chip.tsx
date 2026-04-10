@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "./utils";
 
 const actionChipVariants = cva(
-  "inline-flex min-h-8 w-fit shrink-0 items-center justify-center gap-2 rounded-full border px-3 text-sm font-medium leading-none outline-none transition-[background-color,border-color,color,box-shadow] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+  "inline-flex min-h-8 w-fit shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border px-3 text-sm font-medium leading-none normal-case outline-none transition-[background-color,border-color,color,box-shadow] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {

@@ -110,16 +110,18 @@ InJourney brand-book note:
 
 ### Type Scale
 
-| Role | Size | Weight | Line Height | Usage |
-| --- | ---: | ---: | ---: | --- |
-| Display | 48px | 700 | 1.20-1.25 | Rare top-level hero statements or large auth headlines |
-| Page title | 30px | 700 | 1.25-1.30 | Module and page titles |
-| Section title | 24px | 600 | 1.30-1.35 | Major content sections and dashboard groups |
-| Card title | 20px | 600 | 1.40-1.50 | Card headers and panel titles |
-| Large body | 18px | 400-500 | 1.50 | Important descriptions or empty states |
-| Body | 16px | 400 | 1.50 | Forms, paragraphs, readable interface copy |
-| UI default | 14px | 400-500 | 1.40-1.50 | Tables, controls, compact descriptions |
-| Caption | 12px | 400-500 | 1.40-1.50 | Helper text, metadata, badge text |
+
+| Role          | Size | Weight  | Line Height | Usage                                                  |
+| ------------- | ---- | ------- | ----------- | ------------------------------------------------------ |
+| Display       | 48px | 700     | 1.20-1.25   | Rare top-level hero statements or large auth headlines |
+| Page title    | 30px | 700     | 1.25-1.30   | Module and page titles                                 |
+| Section title | 24px | 600     | 1.30-1.35   | Major content sections and dashboard groups            |
+| Card title    | 20px | 600     | 1.40-1.50   | Card headers and panel titles                          |
+| Large body    | 18px | 400-500 | 1.50        | Important descriptions or empty states                 |
+| Body          | 16px | 400     | 1.50        | Forms, paragraphs, readable interface copy             |
+| UI default    | 14px | 400-500 | 1.40-1.50   | Tables, controls, compact descriptions                 |
+| Caption       | 12px | 400-500 | 1.40-1.50   | Helper text, metadata, badge text                      |
+
 
 ### Typography Rules
 
@@ -127,40 +129,45 @@ InJourney brand-book note:
 - Use weight and spacing to create emphasis before adding another typeface.
 - Keep table and KPI values readable; do not shrink data to force density.
 - Use all-caps sparingly for compact metadata labels, with wider tracking when needed.
+- Badges, action chips, and table headers should preserve authored casing by default. Do not force uppercase unless the screen deliberately uses a metadata-label treatment.
 - UI copy in final docs is English, but product screens can use formal Indonesian when required by product direction.
 
 ## 6. Color System
 
 ### Current Core Tokens
 
-| Role | Token | Value | Meaning |
-| --- | --- | --- | --- |
-| Background | `--background` | `#FFFFFF` | Default canvas and workspace |
-| Foreground | `--foreground` | `#101828` | Primary text |
-| Card | `--card` | `#FFFFFF` | Card and surface background |
-| Primary | `--primary` | `#006573` | Authority teal, primary actions, shell identity |
-| Secondary | `--secondary` | `#F47C20` | Warm orange, attention and hospitality accent |
-| Accent | `--accent` | `#90BC40` | Growth green, success and progress |
-| Destructive | `--destructive` | `#BC2419` | Error, destructive, rejected, negative |
-| Muted | `--muted` | `#F2F4F7` | Low-emphasis background |
-| Muted foreground | `--muted-foreground` | `#475467` | Secondary text |
-| Border | `--border` | `#EAECF0` | Dividers and card outlines |
-| Input | `--input` | `#D0D5DD` | Input borders |
-| Ring | `--ring` | `#006573` | Focus ring |
+
+| Role             | Token                | Value     | Meaning                                         |
+| ---------------- | -------------------- | --------- | ----------------------------------------------- |
+| Background       | `--background`       | `#FFFFFF` | Default canvas and workspace                    |
+| Foreground       | `--foreground`       | `#101828` | Primary text                                    |
+| Card             | `--card`             | `#FFFFFF` | Card and surface background                     |
+| Primary          | `--primary`          | `#006573` | Authority teal, primary actions, shell identity |
+| Secondary        | `--secondary`        | `#F47C20` | Warm orange, attention and hospitality accent   |
+| Accent           | `--accent`           | `#90BC40` | Growth green, success and progress              |
+| Destructive      | `--destructive`      | `#BC2419` | Error, destructive, rejected, negative          |
+| Muted            | `--muted`            | `#F2F4F7` | Low-emphasis background                         |
+| Muted foreground | `--muted-foreground` | `#475467` | Secondary text                                  |
+| Border           | `--border`           | `#EAECF0` | Dividers and card outlines                      |
+| Input            | `--input`            | `#D0D5DD` | Input borders                                   |
+| Ring             | `--ring`             | `#006573` | Focus ring                                      |
+
 
 ### Brand Book Reference Palette
 
 The InJourney brand book includes these relevant brand colors:
 
-| Brand role | Value | Product interpretation |
-| --- | --- | --- |
-| Brand red | `#EE3E31` | Warm brand energy; do not use as generic destructive without contrast review |
-| Brand teal | `#00A199` | Corporate teal; informs trust/comfort but does not replace Rinjani shell teal without approval |
-| Brand green | `#82AB40` | Growth and comfort reference |
-| Brand orange | `#F49220` | Warm hospitality reference |
-| Brand black | `#000000` | Brand mark and high-contrast collateral use |
-| Brand off-white | `#F4F4F4` | Neutral collateral background reference |
-| Dark teal | `#094A40` | Potential deep brand anchor, not approved as shell replacement |
+
+| Brand role      | Value     | Product interpretation                                                                         |
+| --------------- | --------- | ---------------------------------------------------------------------------------------------- |
+| Brand red       | `#EE3E31` | Warm brand energy; do not use as generic destructive without contrast review                   |
+| Brand teal      | `#00A199` | Corporate teal; informs trust/comfort but does not replace Rinjani shell teal without approval |
+| Brand green     | `#82AB40` | Growth and comfort reference                                                                   |
+| Brand orange    | `#F49220` | Warm hospitality reference                                                                     |
+| Brand black     | `#000000` | Brand mark and high-contrast collateral use                                                    |
+| Brand off-white | `#F4F4F4` | Neutral collateral background reference                                                        |
+| Dark teal       | `#094A40` | Potential deep brand anchor, not approved as shell replacement                                 |
+
 
 The current Rinjani palette is close to the brand-book logic but not identical. Keep the current Rinjani tokens unless a future visual review explicitly approves alignment changes.
 
@@ -262,6 +269,7 @@ Radius:
 - 6px for buttons and inputs.
 - 8px for standard cards, popovers, and dropdowns.
 - 12px for large panels, sheets, dialogs, and major containers.
+- 16px for large contained data surfaces in the shared library, especially rounded table wrappers and assignment summary cards.
 - Full radius only for avatars and deliberately circular controls.
 
 Elevation:
@@ -317,6 +325,9 @@ Minimum rules:
 - Disabled states should be visually distinct but still readable.
 - Inputs must show label, helper, required/optional, and error behavior when applicable.
 - Tables need clear headers and scannable row separation.
+- Shared tables should use a contained rounded surface, not loose floating rows against the page background.
+- Header cells and body cells should share the same horizontal inset from the table outline.
+- Body rows may use slightly larger vertical padding than headers to improve operational scanning.
 
 Motion:
 

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { createContext, startTransition, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, startTransition, useContext, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import {
   Bell,
@@ -53,6 +53,8 @@ interface AppShellProps {
   userEmail: string;
   onRoleChange: (role: UserRole) => void;
   onLogout: () => void;
+  /** Rendered in the teal header row (e.g. My KPI phase toggle), outside the white workspace. */
+  headerAccessory?: ReactNode;
 }
 
 type OpenMenu = "search" | "platforms" | "notifications" | "help" | "sidebarProfile" | null;
@@ -117,6 +119,7 @@ export function AppShell({
   userEmail,
   onRoleChange,
   onLogout,
+  headerAccessory,
 }: AppShellProps) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -185,6 +188,15 @@ export function AppShell({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const sidebarWidthCss = isSidebarCollapsed ? "4rem" : "250px";
+
+  useLayoutEffect(() => {
+    document.documentElement.style.setProperty("--rinjani-shell-sidebar-width", sidebarWidthCss);
+    return () => {
+      document.documentElement.style.removeProperty("--rinjani-shell-sidebar-width");
+    };
+  }, [sidebarWidthCss]);
+
   function toggleMenu(menu: Exclude<OpenMenu, null>) {
     setOpenMenu((current) => (current === menu ? null : menu));
   }
@@ -202,6 +214,10 @@ export function AppShell({
   function navigateFromMenu(routePath: string) {
     closeMenu();
     startTransition(() => navigate(routePath));
+  }
+
+  function toggleSidebarCollapsed() {
+    setIsSidebarCollapsed((value) => !value);
   }
 
   return (
@@ -276,10 +292,11 @@ export function AppShell({
                   {groupModules.map((module) => {
                     const isActive = navigationState.currentModuleId === module.id;
                     const Icon = resolveIcon(module.iconKey);
+                    const linkTarget = module.defaultChildRoute ?? module.routePath;
                     return (
                       <Link
                         key={module.id}
-                        to={module.routePath}
+                        to={linkTarget}
                         className={`group flex min-h-11 items-center gap-3 rounded-2xl px-3 py-2.5 transition-all ${
                           isActive
                             ? "bg-white/15 text-sidebar-foreground shadow-sm ring-1 ring-white/10"
@@ -333,7 +350,7 @@ export function AppShell({
           className={`absolute top-[96px] z-[70] flex size-8 items-center justify-center rounded-full border border-white/45 bg-secondary text-secondary-foreground shadow-xl shadow-black/25 transition-[left,transform] duration-300 ease-out hover:scale-105 ${
             isSidebarCollapsed ? "left-[50px]" : "left-[236px]"
           }`}
-          onClick={() => setIsSidebarCollapsed((value) => !value)}
+          onClick={toggleSidebarCollapsed}
           aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isSidebarCollapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
@@ -395,6 +412,8 @@ export function AppShell({
                 <span className="truncate text-sm font-medium text-white/90">Search modules, people, or policy</span>
                 <span className="ml-auto rounded-lg bg-white/15 px-2 py-1 text-[11px] font-semibold text-white/75">Ctrl K</span>
               </button>
+
+              {headerAccessory ? <div className="flex shrink-0 items-center">{headerAccessory}</div> : null}
 
               <div className="ml-auto flex items-center gap-2">
                 <div className="relative">
