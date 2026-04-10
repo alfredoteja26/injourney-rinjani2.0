@@ -1,4 +1,4 @@
-# Rinjani Integrated HCMS Application
+# Rinjani Integrated
 
 Rinjani Integrated is the consolidation workspace for the Rinjani 2.0 product experience. It brings three previously separate prototype streams into one browser app:
 
@@ -36,6 +36,8 @@ Talent is the largest functional area in the integrated prototype. It covers tal
 
 Performance covers KPI planning and monitoring flows such as individual KPI, team KPI, KPI library, KPI tree, and headquarter dashboards.
 
+A second-generation Performance package (`packages/performance-v2`) is now in active development. It introduces redesigned screens for My KPI (planning, check-in, year-end), My Team KPI (planning, monitoring, member portfolio review), KPI Library (browse, detail, submit), KPI Tree visualization, and KPI Headquarter policy dashboards. These screens are built on a dedicated domain store, fixture data layer, and shared UI primitives from `@rinjani/shared-ui`.
+
 ## Why This Repository Exists
 
 The standalone prototypes were useful for module-level exploration, but they created product-review problems:
@@ -64,7 +66,7 @@ At a high level, the repository is organized around one integrated app plus a sm
 ### Shared Packages
 
 - `packages/shared-types` defines shared contracts used across the integrated app and shell.
-- `packages/shared-ui` contains shared UI exports and the canonical theme stylesheet.
+- `packages/shared-ui` contains shared UI exports and the canonical theme stylesheet (`theme.css`), including reusable components such as `EmployeeBriefCard`, `AppStickyFooter`, `ActionChip`, and design-token-aware variants of `Button`, `Badge`, and `Table`.
 - `packages/shell` contains the integrated host shell.
 
 ### Copied Source Packages
@@ -74,8 +76,9 @@ The repo also contains copied module source in:
 - `packages/portal`
 - `packages/talent`
 - `packages/performance`
+- `packages/performance-v2`
 
-These directories are important, but they are not declared as root npm workspaces in the current setup. They act as integration-owned snapshots that the host app imports from directly. This is intentional: the integrated repository can patch and normalize module behavior without mutating the original standalone prototype repos.
+These directories are not declared as root npm workspaces. They act as integration-owned source trees that the host app imports directly via Vite aliases (e.g. `@performance-v2`). This is intentional: the integrated repository can patch and normalize module behavior without mutating the original standalone prototype repos.
 
 ## Navigation Model
 
@@ -96,13 +99,14 @@ For the current navigation map, see:
 ## Repository Structure
 
 ```text
-integrated-rinjani/
+injourney-rinjani2.0/
 ├── apps/
 │   └── rinjani/               # Integrated Vite application
-├── docs/                      # Architecture notes, exec plans, route docs
+├── docs/                      # Architecture notes, exec plans, design-system docs
 ├── packages/
-│   ├── portal/                # Copied Portal source snapshot
 │   ├── performance/           # Copied Performance source snapshot
+│   ├── performance-v2/        # Performance v2 modules (KPI redesign)
+│   ├── portal/                # Copied Portal source snapshot
 │   ├── shared-types/          # Shared contracts
 │   ├── shared-ui/             # Shared theme and reusable UI exports
 │   ├── shell/                 # Integrated host shell
@@ -122,7 +126,7 @@ The root `package.json` currently exposes these workspaces:
 - `packages/shared-ui`
 - `packages/shell`
 
-That means the integrated app and shared packages are managed as the active workspace surface. The copied Portal, Talent, and Performance packages still live in the repo and are imported by the app, but they are treated more like integration-owned source trees than independently managed workspace packages.
+That means the integrated app and shared packages are managed as the active workspace surface. The copied Portal, Talent, Performance, and Performance v2 packages still live in the repo and are imported by the app through Vite path aliases (`@portal`, `@talent`, `@performance`, `@performance-v2`), but they are treated as integration-owned source trees rather than independently managed workspace packages.
 
 ### Tooling
 
@@ -144,14 +148,9 @@ The integrated app currently uses:
 
 ### Install dependencies
 
-```bash
-npm install
-```
-
 Run this from the repository root:
 
 ```bash
-cd integrated-rinjani
 npm install
 ```
 
@@ -216,8 +215,17 @@ This root README is the front door. The deeper architectural decisions live in t
 - [`docs/integrated-product-architecture/TALENT_ROUTE_NORMALIZATION.md`](./docs/integrated-product-architecture/TALENT_ROUTE_NORMALIZATION.md)
   Captures the normalization of Talent routes into the integrated structure.
 
+- [`docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM.md`](./docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM.md)
+  The canonical design-system specification (tokens, typography, color, spacing).
+
+- [`docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM_BLUEPRINT.md`](./docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM_BLUEPRINT.md)
+  Product-level design decisions that inform token and component choices.
+
 - [`docs/design-system-overhaul-2026-04-07/DESIGN_CONSISTENCY_AUDIT.md`](./docs/design-system-overhaul-2026-04-07/DESIGN_CONSISTENCY_AUDIT.md)
   Records design-system consistency observations across the integrated product.
+
+- [`docs/plans/`](./docs/plans/)
+  Execution plans and sprint trackers for Performance v2, design-system cleanup, and related workstreams.
 
 ## Contribution Guidance
 
@@ -225,7 +233,7 @@ When you change this repository, treat the integrated shell as the product owner
 
 - Do not reintroduce package-local shells inside the integrated app.
 - Prefer updating the integrated route tree and manifests before adding ad hoc navigation.
-- Treat `packages/portal`, `packages/talent`, and `packages/performance` as copied integration surfaces, not as untouched vendor directories.
+- Treat `packages/portal`, `packages/talent`, `packages/performance`, and `packages/performance-v2` as integration-owned source surfaces, not as untouched vendor directories.
 - Preserve hash-router compatibility unless the host app deliberately migrates away from it.
 - Keep product-facing documentation current when you make architecture or navigation changes.
 
@@ -238,6 +246,7 @@ The current repository is strong as an integrated product prototype, but it stil
 - copied module packages still contain legacy assumptions from their standalone origins
 - some compatibility redirects exist because route normalization is still in progress
 - bundle-size optimization is still a follow-up concern
+- Performance v2 screens use fixture data and a client-side store; they are not yet connected to a backend API
 
 Those limitations are expected for the current phase of the project. The value of the repository is that it makes cross-platform product review and integration work concrete and testable in one place.
 
