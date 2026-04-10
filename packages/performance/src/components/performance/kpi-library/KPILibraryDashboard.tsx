@@ -8,6 +8,7 @@ import { kpiLibrary, KPILibraryItem, currentUser } from '../data';
 import { cn } from '../../ui/utils';
 import { SubmitKPIForm } from './SubmitKPIForm';
 import { KPIDetailView } from './KPIDetailView';
+import { PrototypeWorkflowPanel } from '../shared/PrototypeWorkflowPanel';
 
 export function KPILibraryDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -59,6 +60,8 @@ export function KPILibraryDashboard() {
            </Button>
         </div>
       </div>
+
+      <PrototypeWorkflowPanel variant="library" />
 
       {/* Search and Filters */}
       <div className="space-y-4">

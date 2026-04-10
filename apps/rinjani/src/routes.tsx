@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { Navigate, Outlet, createHashRouter, useParams } from "react-router";
+import { Navigate, Outlet, createHashRouter, useLocation, useParams } from "react-router";
 import { AppShell } from "@rinjani/shell";
 import { SessionProvider, useSession } from "./session";
+import { MyKpiPhaseToggle } from "./my-kpi-phase-toggle";
+import { MyTeamKpiPhaseToggle } from "./my-team-kpi-phase-toggle";
 import { platforms, sidebarModules } from "./manifests";
 import { globalSearchItems } from "./search-data";
 import type { UserRole } from "@rinjani/shared-types";
@@ -31,6 +33,22 @@ import {
   normalizePerformanceRoutes,
 } from "./performance-pages";
 import { talentPages } from "./talent-pages";
+import {
+  PerformanceV2IndexRedirect,
+  PerformanceV2KpiHqPage,
+  PerformanceV2KpiLibraryDetailPage,
+  PerformanceV2KpiLibraryPage,
+  PerformanceV2KpiLibrarySubmitPage,
+  PerformanceV2KpiTreePage,
+  PerformanceV2MemberPortfolioPage,
+  PerformanceV2MyKpiCheckInPage,
+  PerformanceV2MyKpiDashboardPage,
+  PerformanceV2MyKpiPlanningPage,
+  PerformanceV2MyKpiYearEndPage,
+  PerformanceV2MyTeamMonitoringPage,
+  PerformanceV2MyTeamPlanningPage,
+  PerformanceV2ShellLayout,
+} from "./performance-pages-v2";
 
 function Providers({ children }: { children: ReactNode }) {
   return <SessionProvider>{children}</SessionProvider>;
@@ -92,9 +110,19 @@ function AdminOnly({ children }: { children: ReactNode }) {
 
 function IntegratedShellLayout() {
   const { session, notifications, setNotifications, logout, setRole } = useSession();
+  const { pathname } = useLocation();
   if (!session) {
     return null;
   }
+
+  const headerAccessory =
+    pathname === "/performance-v2/my-kpi" ||
+    pathname.startsWith("/performance-v2/my-kpi/") ? (
+      <MyKpiPhaseToggle />
+    ) : pathname === "/performance-v2/my-team-kpi" ||
+      pathname.startsWith("/performance-v2/my-team-kpi/") ? (
+      <MyTeamKpiPhaseToggle />
+    ) : undefined;
 
   return (
     <AppShell
@@ -109,6 +137,7 @@ function IntegratedShellLayout() {
         logout();
         window.location.hash = "#/login";
       }}
+      headerAccessory={headerAccessory}
     >
       <Outlet />
     </AppShell>
@@ -350,7 +379,29 @@ export const router = createHashRouter([
                   { path: "performance/kpi-library/submit", element: <PerformanceLibrarySubmitPage /> },
                   { path: "performance/kpi-library/:kpiId", element: <PerformanceLibraryDetailPage /> },
                   { path: "performance/kpi-tree", element: <PerformanceTreePage /> },
-                  { path: "performance/kpi-headquarter", element: <AdminOnly><PerformanceHeadquarterPage /></AdminOnly> }
+                  { path: "performance/kpi-headquarter", element: <AdminOnly><PerformanceHeadquarterPage /></AdminOnly> },
+
+                  {
+                    path: "performance-v2",
+                    element: <PerformanceV2ShellLayout />,
+                    children: [
+                      { index: true, element: <PerformanceV2IndexRedirect /> },
+                      { path: "my-kpi", element: <PerformanceV2MyKpiDashboardPage /> },
+                      { path: "my-kpi/planning", element: <PerformanceV2MyKpiPlanningPage /> },
+                      { path: "my-kpi/check-in", element: <PerformanceV2MyKpiCheckInPage /> },
+                      { path: "my-kpi/year-end", element: <PerformanceV2MyKpiYearEndPage /> },
+                      { path: "my-team-kpi", element: <Navigate to="/performance-v2/my-team-kpi/planning" replace /> },
+                      { path: "my-team-kpi/planning", element: <PerformanceV2MyTeamPlanningPage /> },
+                      { path: "my-team-kpi/monitoring", element: <PerformanceV2MyTeamMonitoringPage /> },
+                      { path: "my-team-kpi/member", element: <Navigate to="/performance-v2/my-team-kpi/member/260102" replace /> },
+                      { path: "my-team-kpi/member/:memberId", element: <PerformanceV2MemberPortfolioPage /> },
+                      { path: "kpi-library", element: <PerformanceV2KpiLibraryPage /> },
+                      { path: "kpi-library/submit", element: <PerformanceV2KpiLibrarySubmitPage /> },
+                      { path: "kpi-library/:kpiId", element: <PerformanceV2KpiLibraryDetailPage /> },
+                      { path: "kpi-tree", element: <PerformanceV2KpiTreePage /> },
+                      { path: "kpi-headquarter", element: <AdminOnly><PerformanceV2KpiHqPage /></AdminOnly> },
+                    ],
+                  }
                 ]
               }
             ]

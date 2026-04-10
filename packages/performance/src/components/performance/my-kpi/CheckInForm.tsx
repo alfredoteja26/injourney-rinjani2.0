@@ -46,11 +46,11 @@ export function CheckInForm({ onBack }: CheckInFormProps) {
               <div className="text-sm font-medium text-blue-800">KPI Achievement Summary (Auto-calculated)</div>
               <div className="flex gap-6">
                  <div>
-                    <span className="block text-xs text-blue-600">KPI Bersama (45%)</span>
+                    <span className="block text-xs text-blue-600">KPI Bersama ({performanceStats.kpiBersamaWeight}%)</span>
                     <span className="font-bold text-xl text-blue-900">3.75</span>
                  </div>
                  <div>
-                    <span className="block text-xs text-blue-600">KPI Unit (55%)</span>
+                    <span className="block text-xs text-blue-600">KPI Unit ({performanceStats.kpiUnitWeight}%)</span>
                     <span className="font-bold text-xl text-blue-900">3.82</span>
                  </div>
                  <div className="pl-6 border-l border-blue-200">

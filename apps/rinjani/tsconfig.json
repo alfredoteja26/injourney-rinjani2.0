@@ -2,7 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@app/*": ["./src/*"]
+      "@app/*": ["./src/*"],
+      "@performance-v2": ["../../packages/performance-v2/src/index.ts"],
+      "@performance-v2/*": ["../../packages/performance-v2/src/*"]
     }
   },
   "include": ["src"]

@@ -9,7 +9,7 @@ const packagesRoot = path.resolve(workspaceRoot, "packages");
 const talentSrc = path.resolve(packagesRoot, "talent/src");
 
 function collectFigmaAssetAliases() {
-  const packageNames = ["portal", "talent", "performance"];
+  const packageNames = ["portal", "talent", "performance", "performance-v2"];
   const aliases: Record<string, string> = {};
 
   for (const packageName of packageNames) {
@@ -79,6 +79,7 @@ export default defineConfig({
       "@app": path.resolve(__dirname, "./src"),
       "@portal": path.resolve(packagesRoot, "portal/src"),
       "@performance": path.resolve(packagesRoot, "performance/src"),
+      "@performance-v2": path.resolve(packagesRoot, "performance-v2/src"),
       "@talent": path.resolve(packagesRoot, "talent/src"),
       "@/components/shell/Layout": path.resolve(__dirname, "./src/talent-layout-bridge.tsx"),
       "@/components/shell/AdminLayout": path.resolve(__dirname, "./src/talent-admin-layout-bridge.tsx"),

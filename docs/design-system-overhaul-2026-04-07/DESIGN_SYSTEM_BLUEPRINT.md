@@ -556,3 +556,4 @@ Review this blueprint first. After it is accepted:
 2. Review `docs/design-system-overhaul-2026-04-07/COMPONENT_LIBRARY.md`.
 3. Update `.stitch/DESIGN.md` with concise Stitch/Stage-compatible rules after the human-readable docs are accepted.
 4. Plan the `/#/design-system` preview route as a later implementation phase.
+

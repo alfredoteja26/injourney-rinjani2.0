@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@performance-v2/*": ["./src/*"],
+      "@rinjani/shared-ui": ["../../packages/shared-ui/src"],
+      "@rinjani/shared-types": ["../../packages/shared-types/src"],
+      "@talent/*": ["../../packages/talent/src/*"]
+    }
+  },
+  "include": ["src"]
+}

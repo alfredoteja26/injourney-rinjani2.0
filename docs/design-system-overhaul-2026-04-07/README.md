@@ -12,10 +12,24 @@ This folder contains the active planning and blueprint documents for the Rinjani
 - `APP_SHELL_REDESIGN_PLAN.md`: focused implementation plan for restoring the Talent-derived shell visual direction.
 - `APP_SHELL_GUIDELINES.md`: AppShell specifications, usage rules, brand asset guidance, and validation checklist.
 - `DESIGN_SYSTEM_CLEANUP_PLAN.md`: cleanup and migration plan for removing token/component/documentation residue safely.
+- `CANONICAL_REFERENCE_MAP.md`: explicit routing map for which design-system file is authoritative for each kind of task.
+
+## Canonical Routing
+
+This folder defines the canonical route for **repo-native implementation work**:
+
+1. `DESIGN_SYSTEM_BLUEPRINT.md` for product decisions and unresolved design-direction choices.
+2. `packages/shared-ui/src/theme.css` for runtime token truth.
+3. `DESIGN_SYSTEM.md` for the human-readable system rules.
+4. `COMPONENT_LIBRARY.md` for shared component usage, taxonomy, and API-level guidance.
+
+This route applies to agents editing code, shared components, or runtime design rules in the repository.
+
+Separate from that, the `.stitch/` folder supports the `Cursor -> Google Stage` prompt workflow. In that workflow, `.stitch/DESIGN.md` remains the prompt-facing brief and is not invalid just because it is not the repo-native implementation authority.
 
 ## Status
 
-Current phase: wrap-up cleanup audit plus parallel AppShell/design enhancement work. `.stitch/DESIGN.md` remains deferred while parallel Stitch work is running.
+Current phase: wrap-up cleanup audit plus parallel AppShell/design enhancement work. `.stitch/DESIGN.md` remains non-canonical for repo-native implementation work, but still valid for the dedicated Stage prompt workflow.
 
 Next outputs planned after documentation confirmation:
 

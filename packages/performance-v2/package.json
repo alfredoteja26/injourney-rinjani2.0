@@ -1,0 +1,10 @@
+{
+  "name": "@rinjani/performance-v2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "peerDependencies": {
+    "lucide-react": "^0.487.0"
+  }
+}

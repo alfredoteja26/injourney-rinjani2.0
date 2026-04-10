@@ -5,6 +5,7 @@ import { Input } from '../../ui/input';
 import { kpiTreeData, KPITreeNode } from '../data';
 import { TreeNode } from './TreeNode';
 import { Card, CardContent } from '../../ui/card';
+import { PrototypeWorkflowPanel } from '../shared/PrototypeWorkflowPanel';
 
 export function KPITreeView() {
   const [selectedNode, setSelectedNode] = useState<KPITreeNode | null>(null);
@@ -98,6 +99,8 @@ export function KPITreeView() {
            </Button>
         </div>
       </div>
+
+      <PrototypeWorkflowPanel variant="tree" />
 
       {/* Controls */}
       <div className="flex flex-wrap justify-between items-center bg-white p-4 rounded-xl border shadow-sm shrink-0 gap-4">
