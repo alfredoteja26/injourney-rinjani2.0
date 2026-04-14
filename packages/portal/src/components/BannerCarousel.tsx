@@ -79,21 +79,24 @@ export default function BannerCarousel() {
   if (bannerContents.length === 0) {
     // Fallback to default banner if no content is available
     return (
-      <div className="basis-0 grow h-full min-h-px min-w-px relative rounded-[24px] shrink-0" data-name="Injourney Banner">
+      <div
+        className="basis-0 grow h-full min-h-px min-w-px relative overflow-hidden rounded-[28px] border border-border bg-card shadow-sm shrink-0"
+        data-name="Injourney Banner"
+      >
         <ImageWithFallback
           src={defaultBannerImage}
           alt="Welcome to Rinjani"
-          className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none rounded-[24px] size-full"
+          className="absolute inset-0 size-full object-cover object-center pointer-events-none"
         />
-        <div className="flex flex-col items-center justify-end overflow-clip rounded-[inherit] size-full">
-          <div className="content-stretch flex flex-col gap-[10px] items-center justify-end p-[24px] relative size-full">
+        <div className="flex size-full flex-col items-center justify-end overflow-clip rounded-[inherit] bg-gradient-to-t from-background/35 via-transparent to-transparent">
+          <div className="content-stretch flex size-full flex-col items-center justify-end gap-[10px] p-6 relative">
             <div className="basis-0 content-stretch flex flex-col grow items-start justify-end min-h-px min-w-px relative shrink-0 w-full">
-              <div className="backdrop-blur-[20px] bg-[rgba(255,255,255,0.8)] overflow-clip relative rounded-[12px] shrink-0 w-full">
-                <div className="content-stretch flex flex-col gap-[8px] items-start p-[16px] relative w-full">
-                  <h2 className="text-2xl font-bold leading-[36px] text-foreground w-full">
+              <div className="overflow-clip relative w-full rounded-[20px] border border-border/70 bg-card/90 backdrop-blur-xl shadow-sm">
+                <div className="content-stretch flex flex-col gap-2 items-start p-4 relative w-full">
+                  <h2 className="text-2xl font-semibold leading-9 text-foreground w-full">
                     Welcome to Rinjani
                   </h2>
-                  <p className="text-sm font-normal leading-[20px] text-muted-foreground w-full">
+                  <p className="text-sm font-normal leading-5 text-muted-foreground w-full">
                     Your Integrated Talent Management System
                   </p>
                 </div>
@@ -109,19 +112,19 @@ export default function BannerCarousel() {
 
   return (
     <div 
-      className="basis-0 grow h-full min-h-px min-w-px relative rounded-[24px] shrink-0"
+      className="basis-0 grow h-full min-h-px min-w-px relative overflow-hidden rounded-[28px] border border-border bg-card shadow-sm shrink-0"
       data-name="Banner Carousel"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       {/* Banner Image */}
-      <div className="absolute inset-0 rounded-[24px] overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden">
         {currentBanner.imageUrl.startsWith("data:") ? (
           <img
             src={currentBanner.imageUrl}
             alt={currentBanner.title}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
               isTransitioning ? "opacity-0" : "opacity-100"
             }`}
           />
@@ -129,7 +132,7 @@ export default function BannerCarousel() {
           <ImageWithFallback
             src={currentBanner.imageUrl}
             alt={currentBanner.title}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
               isTransitioning ? "opacity-0" : "opacity-100"
             }`}
           />
@@ -137,35 +140,33 @@ export default function BannerCarousel() {
       </div>
 
       {/* Overlay Content */}
-      <div className="flex flex-col items-center justify-end overflow-clip rounded-[inherit] size-full">
-        <div className="content-stretch flex flex-col gap-[10px] items-center justify-end p-[24px] relative size-full">
+      <div className="flex size-full flex-col items-center justify-end overflow-clip rounded-[inherit] bg-gradient-to-t from-background/35 via-transparent to-transparent">
+        <div className="content-stretch flex size-full flex-col items-center justify-end gap-[10px] p-6 relative">
           {/* Content Card with Side Navigation */}
-          <div className="flex items-center gap-[24px] justify-center relative w-full">
+          <div className="flex items-center justify-center gap-6 relative w-full">
             {/* Left Arrow */}
             {bannerContents.length > 1 && (
               <button
                 onClick={goToPrevious}
                 disabled={isTransitioning}
-                className="bg-[rgba(0,0,0,0)] content-stretch flex items-start overflow-clip relative rounded-[12px] self-end shrink-0 hover:scale-110 transition-transform disabled:opacity-50 mb-[16px]"
+                className="mb-4 shrink-0 rounded-full transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <div className="bg-[rgba(26,26,26,0.4)] overflow-clip relative rounded-[12px] shrink-0 size-[62px] hover:bg-[rgba(26,26,26,0.6)] transition-colors">
-                  <div className="absolute left-1/2 size-[24px] top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                    <ChevronLeft className="size-full text-white" strokeWidth={2} />
+                <div className="flex size-[60px] items-center justify-center rounded-full border border-border/70 bg-foreground/70 text-background shadow-sm backdrop-blur-sm transition-colors hover:bg-foreground/80">
+                  <ChevronLeft className="size-6" strokeWidth={2} />
                   </div>
-                </div>
               </button>
             )}
 
             {/* Content Card */}
             <div className="flex-1 flex flex-col items-start justify-end">
-              <div className={`backdrop-blur-[20px] bg-[rgba(255,255,255,0.8)] overflow-clip relative rounded-[12px] shrink-0 w-full transition-all duration-300 ${
+              <div className={`overflow-clip relative w-full rounded-[20px] border border-border/70 bg-card/90 backdrop-blur-xl shadow-sm transition-all duration-300 ${
                 isTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
               }`}>
-                <div className="content-stretch flex flex-col gap-[8px] items-start p-[16px] relative w-full">
-                  <h2 className="text-2xl font-bold leading-[36px] text-foreground w-full">
+                <div className="content-stretch flex flex-col gap-2 items-start p-4 relative w-full">
+                  <h2 className="text-2xl font-semibold leading-9 text-foreground w-full">
                     {currentBanner.title}
                   </h2>
-                  <p className="text-sm font-normal leading-[20px] text-muted-foreground w-full">
+                  <p className="text-sm font-normal leading-5 text-muted-foreground w-full">
                     {currentBanner.description}
                   </p>
                 </div>
@@ -177,20 +178,18 @@ export default function BannerCarousel() {
               <button
                 onClick={goToNext}
                 disabled={isTransitioning}
-                className="bg-[rgba(0,0,0,0)] content-stretch flex items-start overflow-clip relative rounded-[12px] self-end shrink-0 hover:scale-110 transition-transform disabled:opacity-50 mb-[16px]"
+                className="mb-4 shrink-0 rounded-full transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <div className="bg-[rgba(26,26,26,0.4)] overflow-clip relative rounded-[12px] shrink-0 size-[62px] hover:bg-[rgba(26,26,26,0.6)] transition-colors">
-                  <div className="absolute left-1/2 size-[24px] top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                    <ChevronRight className="size-full text-white" strokeWidth={2} />
+                <div className="flex size-[60px] items-center justify-center rounded-full border border-border/70 bg-foreground/70 text-background shadow-sm backdrop-blur-sm transition-colors hover:bg-foreground/80">
+                  <ChevronRight className="size-6" strokeWidth={2} />
                   </div>
-                </div>
               </button>
             )}
           </div>
 
           {/* Pagination Dots */}
           {bannerContents.length > 1 && (
-            <div className="flex gap-[8px] items-center justify-center">
+            <div className="flex items-center justify-center gap-2">
               {bannerContents.map((_, index) => (
                 <button
                   key={index}
@@ -198,8 +197,8 @@ export default function BannerCarousel() {
                   disabled={isTransitioning}
                   className={`rounded-full transition-all duration-300 ${
                     index === currentIndex
-                      ? "bg-white w-[24px] h-[8px]"
-                      : "bg-white/50 w-[8px] h-[8px] hover:bg-white/80"
+                      ? "h-2 w-6 bg-card"
+                      : "h-2 w-2 bg-card/60 hover:bg-card/80"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />

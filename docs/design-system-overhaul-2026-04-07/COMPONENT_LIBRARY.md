@@ -65,6 +65,12 @@ Implemented in `packages/shared-ui`:
 - `EmployeeBriefCard` - `packages/shared-ui/src/employee-brief-card.tsx`
 - `Accordion` - `packages/shared-ui/src/accordion.tsx`
 - `LoadingState` - `packages/shared-ui/src/loading-state.tsx`
+- `PageHeader` - `packages/shared-ui/src/page-layout.tsx`
+- `SectionPanel` - `packages/shared-ui/src/page-layout.tsx`
+- `StatCard` - `packages/shared-ui/src/page-layout.tsx`
+- `StatCardGroup` - `packages/shared-ui/src/page-layout.tsx`
+- `FilterRail` - `packages/shared-ui/src/page-layout.tsx`
+- `StatusBadge` - `packages/shared-ui/src/page-layout.tsx`
 - `StatusLabel` - `packages/shared-ui/src/status-label.tsx`
 - `MetricCard` - `packages/shared-ui/src/analytics.tsx`
 - `ChartContainer` - `packages/shared-ui/src/analytics.tsx`
@@ -195,6 +201,60 @@ Promotion rule:
 
 - Keep filter rails as page-level composition first.
 - Promote a generic shared wrapper only after the pattern is clearly stable across modules and has a generic API.
+
+Current shared implementation:
+
+- `FilterRail` is now promoted into `packages/shared-ui/src/page-layout.tsx` for stable top-of-workspace search/filter/action rows.
+
+### Shared Page Framing Components
+
+The integrated Portal and Talent routes now use a small set of presentational-only wrappers to keep page framing consistent without changing domain APIs.
+
+#### `PageHeader`
+
+Use when:
+
+- a page needs consistent title, eyebrow, supporting copy, badge, and action placement
+- a route should opt into one of the approved page-level layout patterns: `dashboard`, `workspace`, or `governance`
+
+Notes:
+
+- Keep actions presentational-only.
+- Do not pass domain logic into the shared component.
+
+#### `SectionPanel`
+
+Use when:
+
+- a page needs a reusable bordered surface with optional title, description, and actions
+- repeated module sections drift visually even though they share the same information hierarchy
+
+Notes:
+
+- `SectionPanel` is the default shared surface wrapper for grouped content blocks.
+
+#### `StatCard` and `StatCardGroup`
+
+Use when:
+
+- a page needs a compact top summary strip
+- multiple metrics should read as one group with shared density and spacing
+
+Notes:
+
+- Use semantic `tone` variants instead of hardcoded status colors.
+
+#### `StatusBadge`
+
+Use when:
+
+- a domain screen needs a small semantic status label
+- local modules currently use ad hoc badge colors for draft, pending, success, warning, or destructive states
+
+Notes:
+
+- Prefer `status` mapping first.
+- Only override `variant` directly when the label is not a domain status string.
 
 ### Reusable Component Documentation Standard
 

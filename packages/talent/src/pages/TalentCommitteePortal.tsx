@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Layout } from '../components/shell/Layout';
-import { Calendar, FileText, Users, CheckCircle, Clock, XCircle, Gavel, AlertTriangle } from 'lucide-react';
+import { Calendar, FileText, CheckCircle, Clock, Gavel, AlertTriangle } from 'lucide-react';
+import {
+  Button,
+  FilterRail,
+  PageHeader,
+  SectionPanel,
+  StatCard,
+  StatCardGroup,
+  StatusBadge,
+} from '@rinjani/shared-ui';
 import { 
-  hcRecommendations, 
   tcSessions, 
   tcDecisions, 
   eligibleEmployees,
@@ -32,208 +40,143 @@ export default function TalentCommitteePortal() {
   const totalDecisions = completedDecisions.length;
   const approvedCount = completedDecisions.filter(d => d.decision_outcome === 'APPROVED').length;
 
+  const decisionBadge = (outcome: string) => {
+    switch (outcome) {
+      case 'APPROVED':
+        return <StatusBadge status="success">Approved</StatusBadge>;
+      case 'APPROVED_WITH_MODIFICATION':
+        return <StatusBadge status="warning">Modified</StatusBadge>;
+      case 'DEFERRED':
+        return <StatusBadge status="info">Deferred</StatusBadge>;
+      case 'REJECTED':
+        return <StatusBadge status="destructive">Rejected</StatusBadge>;
+      default:
+        return <StatusBadge status="neutral">{outcome.replace(/_/g, ' ')}</StatusBadge>;
+    }
+  };
+
   return (
     <Layout breadcrumbs={[
       { label: "Talent Management", href: "/talent" },
       { label: "Talent Committee Portal" }
     ]}>
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--color-muted)' }}>
-        {/* Header */}
-        <div style={{ backgroundColor: 'var(--color-card)' }} className="border-b border-[var(--color-border)]">
-          <div className="px-6 py-6">
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <Gavel className="w-8 h-8" style={{ color: 'var(--color-primary)' }} />
-                  <h1 style={{ 
-                    fontSize: 'var(--text-2xl)', 
-                    fontWeight: 'var(--font-weight-semibold)',
-                    color: 'var(--color-foreground)'
-                  }}>
-                    Talent Committee Portal
-                  </h1>
-                </div>
-                <p style={{ 
-                  fontSize: 'var(--text-sm)', 
-                  color: 'var(--color-muted-foreground)',
-                  marginTop: '4px'
-                }}>
-                  Review HC recommendations and make talent decisions
-                </p>
-              </div>
-              <button
-                className="px-4 py-2 rounded"
-                style={{
-                  backgroundColor: 'var(--color-primary)',
-                  color: 'var(--color-primary-foreground)',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 'var(--font-weight-semibold)'
-                }}
-              >
-                <Calendar className="inline-block w-4 h-4 mr-2" />
-                Schedule TC Session
-              </button>
+      <div className="mx-auto max-w-[var(--layout-max-width-workspace)] space-y-6 px-4 pb-10 pt-6 md:px-6 lg:px-8">
+        <PageHeader
+          variant="governance"
+          eyebrow="Talent Management"
+          title="Talent Committee Portal"
+          description="Review HC recommendations, track upcoming sessions, and keep the decision history in a more consistent governance cockpit."
+          badge={<StatusBadge status={totalPending > 0 ? "warning" : "success"}>{totalPending > 0 ? `${totalPending} pending` : "All clear"}</StatusBadge>}
+          actions={
+            <Button variant="primary">
+              <Calendar className="size-4" />
+              Schedule TC Session
+            </Button>
+          }
+        />
+
+        <StatCardGroup>
+          <StatCard
+            label="Pending Review"
+            value={totalPending}
+            description="Recommendations that still need TC attention."
+            icon={<Clock className="size-6" />}
+            tone="warning"
+          />
+          <StatCard
+            label="Scheduled Sessions"
+            value={scheduledSessions}
+            description="Upcoming TC sessions already planned."
+            icon={<Calendar className="size-6" />}
+            tone="info"
+          />
+          <StatCard
+            label="Decisions Made"
+            value={totalDecisions}
+            description="Historical decisions that have been recorded."
+            icon={<FileText className="size-6" />}
+            tone="neutral"
+          />
+          <StatCard
+            label="Approved"
+            value={approvedCount}
+            description="Decisions approved without or with minor adjustment."
+            icon={<CheckCircle className="size-6" />}
+            tone="success"
+          />
+        </StatCardGroup>
+
+        {totalPending > 0 ? (
+          <SectionPanel
+            title="Action Required"
+            description={`You have ${totalPending} recommendation${totalPending > 1 ? 's' : ''} pending TC review. Next TC session is ${
+              upcomingSessions[0]
+                ? new Date(upcomingSessions[0].session_date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+                : 'TBD'
+            }.`}
+            actions={<StatusBadge status="warning">Priority</StatusBadge>}
+          >
+            <div className="flex items-start gap-3 rounded-[20px] border border-warning/20 bg-warning/5 px-4 py-4">
+              <AlertTriangle className="mt-0.5 size-5 shrink-0 text-warning" />
+              <p className="text-sm leading-6 text-warning">
+                Action required items should be reviewed before the next committee session.
+              </p>
             </div>
+          </SectionPanel>
+        ) : null}
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="p-4 rounded" style={{ backgroundColor: 'var(--color-muted)', border: '1px solid var(--color-border)' }}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                      Pending Review
-                    </p>
-                    <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-warning)' }}>
-                      {totalPending}
-                    </p>
-                  </div>
-                  <Clock className="w-8 h-8" style={{ color: 'var(--color-warning)' }} />
-                </div>
-              </div>
-
-              <div className="p-4 rounded" style={{ backgroundColor: 'var(--color-muted)', border: '1px solid var(--color-border)' }}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                      Scheduled Sessions
-                    </p>
-                    <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-primary)' }}>
-                      {scheduledSessions}
-                    </p>
-                  </div>
-                  <Calendar className="w-8 h-8" style={{ color: 'var(--color-primary)' }} />
-                </div>
-              </div>
-
-              <div className="p-4 rounded" style={{ backgroundColor: 'var(--color-muted)', border: '1px solid var(--color-border)' }}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                      Decisions Made
-                    </p>
-                    <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-foreground)' }}>
-                      {totalDecisions}
-                    </p>
-                  </div>
-                  <FileText className="w-8 h-8" style={{ color: 'var(--color-muted-foreground)' }} />
-                </div>
-              </div>
-
-              <div className="p-4 rounded" style={{ backgroundColor: 'var(--color-muted)', border: '1px solid var(--color-border)' }}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                      Approved
-                    </p>
-                    <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-success)' }}>
-                      {approvedCount}
-                    </p>
-                  </div>
-                  <CheckCircle className="w-8 h-8" style={{ color: 'var(--color-success)' }} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Important Notice */}
-        {totalPending > 0 && (
-          <div className="px-6 pt-6">
-            <div 
-              className="p-4 rounded flex items-start gap-3"
-              style={{ 
-                backgroundColor: 'var(--color-warning-light)',
-                border: '1px solid var(--color-warning)'
-              }}
+        <FilterRail
+          title="Workspace views"
+          description="Switch between pending recommendations, TC sessions, and decision history."
+          actionsClassName="w-full"
+        >
+          <div className="flex w-full flex-wrap gap-2">
+            <Button
+              type="button"
+              onClick={() => setActiveTab('pending')}
+              variant={activeTab === 'pending' ? 'secondary' : 'outline'}
             >
-              <AlertTriangle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-warning)', marginTop: '2px' }} />
-              <div>
-                <p style={{ 
-                  fontSize: 'var(--text-sm)', 
-                  fontWeight: 'var(--font-weight-semibold)',
-                  color: 'var(--color-warning)',
-                  marginBottom: '4px'
-                }}>
-                  ⚠️ Action Required
-                </p>
-                <p style={{ 
-                  fontSize: 'var(--text-sm)', 
-                  color: 'var(--color-warning)'
-                }}>
-                  You have {totalPending} recommendation{totalPending > 1 ? 's' : ''} pending TC review. 
-                  Next TC session scheduled for {upcomingSessions[0] ? new Date(upcomingSessions[0].session_date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : 'TBD'}.
-                </p>
-              </div>
-            </div>
+              <Clock className="size-4" />
+              Pending Review
+              <StatusBadge status={activeTab === 'pending' ? 'info' : 'neutral'} className="ml-1 min-w-5 px-1.5 py-0 text-[10px]">
+                {totalPending}
+              </StatusBadge>
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setActiveTab('sessions')}
+              variant={activeTab === 'sessions' ? 'secondary' : 'outline'}
+            >
+              <Calendar className="size-4" />
+              TC Sessions
+              <StatusBadge status={activeTab === 'sessions' ? 'info' : 'neutral'} className="ml-1 min-w-5 px-1.5 py-0 text-[10px]">
+                {tcSessions.length}
+              </StatusBadge>
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setActiveTab('decisions')}
+              variant={activeTab === 'decisions' ? 'secondary' : 'outline'}
+            >
+              <Gavel className="size-4" />
+              Decisions
+              <StatusBadge status={activeTab === 'decisions' ? 'info' : 'neutral'} className="ml-1 min-w-5 px-1.5 py-0 text-[10px]">
+                {totalDecisions}
+              </StatusBadge>
+            </Button>
           </div>
-        )}
+        </FilterRail>
 
-        {/* Tabs */}
-        <div style={{ backgroundColor: 'var(--color-card)' }} className="border-b mt-6 border-[var(--color-border)]">
-          <div className="px-6">
-            <div className="flex gap-6">
-              <button
-                onClick={() => setActiveTab('pending')}
-                className="px-4 py-3 relative"
-                style={{
-                  color: activeTab === 'pending' ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                  fontWeight: 'var(--font-weight-medium)',
-                  fontSize: 'var(--text-sm)',
-                  borderBottom: activeTab === 'pending' ? '2px solid var(--color-primary)' : 'none'
-                }}
-              >
-                <Clock className="inline-block w-4 h-4 mr-2" />
-                Pending Review ({totalPending})
-              </button>
-              <button
-                onClick={() => setActiveTab('sessions')}
-                className="px-4 py-3 relative"
-                style={{
-                  color: activeTab === 'sessions' ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                  fontWeight: 'var(--font-weight-medium)',
-                  fontSize: 'var(--text-sm)',
-                  borderBottom: activeTab === 'sessions' ? '2px solid var(--color-primary)' : 'none'
-                }}
-              >
-                <Calendar className="inline-block w-4 h-4 mr-2" />
-                TC Sessions ({tcSessions.length})
-              </button>
-              <button
-                onClick={() => setActiveTab('decisions')}
-                className="px-4 py-3 relative"
-                style={{
-                  color: activeTab === 'decisions' ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                  fontWeight: 'var(--font-weight-medium)',
-                  fontSize: 'var(--text-sm)',
-                  borderBottom: activeTab === 'decisions' ? '2px solid var(--color-primary)' : 'none'
-                }}
-              >
-                <Gavel className="inline-block w-4 h-4 mr-2" />
-                Decisions ({totalDecisions})
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="px-6 py-6">
+        <div className="space-y-6">
           {activeTab === 'pending' && (
-            <div>
-              <h2 style={{ 
-                fontSize: 'var(--text-lg)', 
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-foreground)',
-                marginBottom: '16px'
-              }}>
-                HC Recommendations Pending TC Review
-              </h2>
-
+            <SectionPanel
+              title="HC Recommendations Pending TC Review"
+              description="Recommendations from HC that still require a committee decision."
+            >
               {pendingRecommendations.length === 0 ? (
-                <div className="text-center py-12 rounded" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-                  <CheckCircle className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-muted-foreground)' }} />
-                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
-                    No pending recommendations at this time
-                  </p>
+                <div className="rounded-[20px] border border-dashed border-border bg-muted/30 px-6 py-16 text-center">
+                  <CheckCircle className="mx-auto mb-4 size-12 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">No pending recommendations at this time</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">
@@ -246,26 +189,18 @@ export default function TalentCommitteePortal() {
                   ))}
                 </div>
               )}
-            </div>
+            </SectionPanel>
           )}
 
           {activeTab === 'sessions' && (
-            <div>
-              <h2 style={{ 
-                fontSize: 'var(--text-lg)', 
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-foreground)',
-                marginBottom: '16px'
-              }}>
-                TC Sessions
-              </h2>
-
+            <SectionPanel
+              title="TC Sessions"
+              description="Committee sessions already scheduled or in progress."
+            >
               {tcSessions.length === 0 ? (
-                <div className="text-center py-12 rounded" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-                  <Calendar className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-muted-foreground)' }} />
-                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
-                    No TC sessions scheduled
-                  </p>
+                <div className="rounded-[20px] border border-dashed border-border bg-muted/30 px-6 py-16 text-center">
+                  <Calendar className="mx-auto mb-4 size-12 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">No TC sessions scheduled</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">
@@ -277,26 +212,18 @@ export default function TalentCommitteePortal() {
                   ))}
                 </div>
               )}
-            </div>
+            </SectionPanel>
           )}
 
           {activeTab === 'decisions' && (
-            <div>
-              <h2 style={{ 
-                fontSize: 'var(--text-lg)', 
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-foreground)',
-                marginBottom: '16px'
-              }}>
-                TC Decisions History
-              </h2>
-
+            <SectionPanel
+              title="TC Decisions History"
+              description="Historical decisions made by the committee."
+            >
               {completedDecisions.length === 0 ? (
-                <div className="text-center py-12 rounded" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-                  <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-muted-foreground)' }} />
-                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
-                    No decisions recorded yet
-                  </p>
+                <div className="rounded-[20px] border border-dashed border-border bg-muted/30 px-6 py-16 text-center">
+                  <FileText className="mx-auto mb-4 size-12 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">No decisions recorded yet</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">
@@ -305,81 +232,45 @@ export default function TalentCommitteePortal() {
                     return (
                       <div 
                         key={decision.decision_id}
-                        className="p-5 rounded"
-                        style={{ 
-                          backgroundColor: 'var(--color-card)', 
-                          border: '1px solid var(--color-border)'
-                        }}
+                        className="rounded-[20px] border border-border bg-card p-5 shadow-sm"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-3">
-                              <h3 style={{ 
-                                fontSize: 'var(--text-lg)', 
-                                fontWeight: 'var(--font-weight-semibold)',
-                                color: 'var(--color-foreground)'
-                              }}>
+                              <h3 className="text-lg font-semibold text-foreground">
                                 {employee?.name || 'Unknown Employee'}
                               </h3>
-                              <span 
-                                className="px-2 py-1 rounded"
-                                style={{ 
-                                  backgroundColor: 'var(--color-success-light)',
-                                  color: 'var(--color-success)',
-                                  fontSize: 'var(--text-xs)',
-                                  fontWeight: 'var(--font-weight-medium)'
-                                }}
-                              >
-                                {decision.decision_outcome.replace(/_/g, ' ')}
-                              </span>
+                              {decisionBadge(decision.decision_outcome)}
                             </div>
                             <div className="grid grid-cols-3 gap-4 mb-3">
                               <div>
-                                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                                  Position
-                                </p>
-                                <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-foreground)' }}>
+                                <p className="text-xs text-muted-foreground">Position</p>
+                                <p className="text-sm font-medium text-foreground">
                                   {decision.approved_position_id || '-'}
                                 </p>
                               </div>
                               <div>
-                                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                                  Grade
-                                </p>
-                                <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-foreground)' }}>
+                                <p className="text-xs text-muted-foreground">Grade</p>
+                                <p className="text-sm font-medium text-foreground">
                                   {decision.approved_grade || '-'}
                                 </p>
                               </div>
                               <div>
-                                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                                  Decided Date
-                                </p>
-                                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-foreground)' }}>
+                                <p className="text-xs text-muted-foreground">Decided Date</p>
+                                <p className="text-sm text-foreground">
                                   {new Date(decision.decided_at).toLocaleDateString('id-ID')}
                                 </p>
                               </div>
                             </div>
-                            <div 
-                              className="p-3 rounded"
-                              style={{ backgroundColor: 'var(--color-muted)' }}
-                            >
-                              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)', marginBottom: '4px' }}>
-                                TC Rationale
-                              </p>
-                              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-foreground)' }}>
+                            <div className="rounded-[16px] border border-border bg-muted/40 p-3">
+                              <p className="mb-1 text-xs text-muted-foreground">TC Rationale</p>
+                              <p className="text-sm text-foreground">
                                 {decision.tc_rationale}
                               </p>
                             </div>
                           </div>
                           <button
-                            className="ml-6 px-4 py-2 rounded"
-                            style={{
-                              backgroundColor: 'var(--color-card)',
-                              border: '1px solid var(--color-border)',
-                              color: 'var(--color-foreground)',
-                              fontSize: 'var(--text-sm)',
-                              fontWeight: 'var(--font-weight-medium)'
-                            }}
+                            className="ml-6 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
                           >
                             View BA
                           </button>
@@ -389,7 +280,7 @@ export default function TalentCommitteePortal() {
                   })}
                 </div>
               )}
-            </div>
+            </SectionPanel>
           )}
         </div>
 

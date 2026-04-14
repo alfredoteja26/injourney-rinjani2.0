@@ -1,259 +1,135 @@
-import React from 'react';
-import { User, Building2, Award, TrendingUp, AlertTriangle, Calendar, FileText } from 'lucide-react';
-import { EligibleEmployee } from '../../data/mockTalentReviewData';
+import { AlertTriangle, Award, Building2, Calendar, FileText, TrendingUp, User } from "lucide-react";
+
+import { Button, Card, CardContent, StatusBadge } from "@rinjani/shared-ui";
+import { EligibleEmployee } from "../../data/mockTalentReviewData";
 
 interface EligibleEmployeeCardProps {
   employee: EligibleEmployee;
   onSubmitProposal: () => void;
 }
 
+const clusterMeta: Record<string, { label: string; variant: "info" | "success" | "warning" | "destructive" | "neutral" }> = {
+  HIGH_POTENTIAL: { label: "High Potential", variant: "info" },
+  PROMOTABLE: { label: "Promotable", variant: "success" },
+  SOLID_CONTRIBUTOR: { label: "Solid Contributor", variant: "neutral" },
+  SLEEPING_TIGER: { label: "Sleeping Tiger", variant: "warning" },
+  UNFIT: { label: "Unfit", variant: "destructive" },
+};
+
+const performanceMeta: Record<string, { label: string; variant: "info" | "success" | "warning" | "destructive" | "neutral" }> = {
+  OUTSTANDING: { label: "Outstanding", variant: "success" },
+  ABOVE_TARGET: { label: "Above Target", variant: "info" },
+  ON_TARGET: { label: "On Target", variant: "neutral" },
+  BELOW_TARGET: { label: "Below Target", variant: "warning" },
+  POOR: { label: "Poor", variant: "destructive" },
+};
+
+function getClusterMeta(cluster: string) {
+  return clusterMeta[cluster] ?? { label: cluster, variant: "neutral" as const };
+}
+
+function getPerformanceMeta(rating: string) {
+  return performanceMeta[rating] ?? { label: rating, variant: "neutral" as const };
+}
+
 export function EligibleEmployeeCard({ employee, onSubmitProposal }: EligibleEmployeeCardProps) {
-  // Cluster color mapping
-  const getClusterColor = (cluster: string): string => {
-    switch (cluster) {
-      case 'HIGH_POTENTIAL': return 'var(--color-nine-highpot)';
-      case 'PROMOTABLE': return 'var(--color-nine-emerging)';
-      case 'SOLID_CONTRIBUTOR': return 'var(--color-nine-solid)';
-      case 'SLEEPING_TIGER': return 'var(--color-nine-moderate)';
-      case 'UNFIT': return 'var(--color-nine-atrisk)';
-      default: return 'var(--color-muted)';
-    }
-  };
-
-  const getClusterLabel = (cluster: string): string => {
-    switch (cluster) {
-      case 'HIGH_POTENTIAL': return 'High Potential';
-      case 'PROMOTABLE': return 'Promotable';
-      case 'SOLID_CONTRIBUTOR': return 'Solid Contributor';
-      case 'SLEEPING_TIGER': return 'Sleeping Tiger';
-      case 'UNFIT': return 'Unfit';
-      default: return cluster;
-    }
-  };
-
-  const getPerformanceColor = (rating: string): string => {
-    switch (rating) {
-      case 'OUTSTANDING': return 'var(--color-success)';
-      case 'ABOVE_TARGET': return '#3B82F6'; // Keep blue for distinction
-      case 'ON_TARGET': return 'var(--color-warning)'; // Warning is orange-500, similar to amber
-      case 'BELOW_TARGET': return '#F97316'; // Orange-500
-      case 'POOR': return 'var(--color-destructive)';
-      default: return 'var(--color-muted-foreground)';
-    }
-  };
-
-  const getPerformanceLabel = (rating: string): string => {
-    switch (rating) {
-      case 'OUTSTANDING': return 'Outstanding';
-      case 'ABOVE_TARGET': return 'Above Target';
-      case 'ON_TARGET': return 'On Target';
-      case 'BELOW_TARGET': return 'Below Target';
-      case 'POOR': return 'Poor';
-      default: return rating;
-    }
-  };
+  const cluster = getClusterMeta(employee.cluster);
+  const performance = getPerformanceMeta(employee.performance_rating);
 
   return (
-    <div 
-      className="p-5 rounded transition-all hover:shadow-md"
-      style={{ 
-        backgroundColor: 'var(--color-card)', 
-        border: '1px solid var(--color-border)'
-      }}
-    >
-      <div className="flex items-start justify-between">
-        {/* Left Section - Employee Info */}
-        <div className="flex-1">
-          <div className="flex items-start gap-4">
-            {/* Avatar */}
-            <div 
-              className="w-12 h-12 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: 'var(--color-primary-light)' }}
-            >
-              <User className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
-            </div>
-
-            {/* Info */}
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h3 style={{ 
-                  fontSize: 'var(--text-lg)', 
-                  fontWeight: 'var(--font-weight-semibold)',
-                  color: 'var(--color-foreground)'
-                }}>
-                  {employee.name}
-                </h3>
-                <span 
-                  className="px-2 py-0.5 rounded"
-                  style={{ 
-                    backgroundColor: getClusterColor(employee.cluster) + '20',
-                    color: getClusterColor(employee.cluster),
-                    fontSize: 'var(--text-xs)',
-                    fontWeight: 'var(--font-weight-medium)'
-                  }}
-                >
-                  {getClusterLabel(employee.cluster)}
-                </span>
+    <Card className="overflow-hidden border-border/80 shadow-sm transition-shadow hover:shadow-md">
+      <CardContent className="p-5">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+          <div className="min-w-0 flex-1 space-y-5">
+            <div className="flex items-start gap-4">
+              <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <User className="size-6" />
               </div>
 
-              <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-3">
-                <div className="flex items-center gap-2">
-                  <Building2 className="w-4 h-4" style={{ color: 'var(--color-muted-foreground)' }} />
-                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
-                    NIK: {employee.nik}
-                  </span>
+              <div className="min-w-0 flex-1 space-y-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h3 className="text-lg font-semibold tracking-tight text-foreground">{employee.name}</h3>
+                  <StatusBadge variant={cluster.variant}>{cluster.label}</StatusBadge>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Award className="w-4 h-4" style={{ color: 'var(--color-muted-foreground)' }} />
-                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
-                    {employee.current_position}
-                  </span>
+
+                <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground sm:grid-cols-2">
+                  <div className="flex items-center gap-2">
+                    <Building2 className="size-4 shrink-0" />
+                    <span>NIK: {employee.nik}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Award className="size-4 shrink-0" />
+                    <span>{employee.current_position}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="size-4 shrink-0" />
+                    <span>
+                      Grade: {employee.current_grade} | PG: {employee.personal_grade}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>Company: {employee.company_id}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4" style={{ color: 'var(--color-muted-foreground)' }} />
-                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
-                    Grade: {employee.current_grade} | PG: {employee.personal_grade}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
-                    Company: {employee.company_id}
-                  </span>
-                </div>
+
+                {(employee.review_flags.position_tenure_3y || employee.review_flags.grade_tenure_3y || employee.review_flags.contract_expiry_soon) ? (
+                  <div className="flex flex-wrap gap-2">
+                    {employee.review_flags.position_tenure_3y ? (
+                      <StatusBadge variant="destructive">
+                        <AlertTriangle className="size-3.5" />
+                        Position ≥3 years
+                      </StatusBadge>
+                    ) : null}
+                    {employee.review_flags.grade_tenure_3y ? (
+                      <StatusBadge variant="warning">
+                        <AlertTriangle className="size-3.5" />
+                        Grade ≥3 years
+                      </StatusBadge>
+                    ) : null}
+                    {employee.review_flags.contract_expiry_soon ? (
+                      <StatusBadge variant="destructive">
+                        <Calendar className="size-3.5" />
+                        Contract expiry: {employee.contract_expiry_date}
+                      </StatusBadge>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
-
-              {/* Review Flags */}
-              {(employee.review_flags.position_tenure_3y || 
-                employee.review_flags.grade_tenure_3y || 
-                employee.review_flags.contract_expiry_soon) && (
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {employee.review_flags.position_tenure_3y && (
-                    <span 
-                      className="px-2 py-1 rounded flex items-center gap-1"
-                      style={{ 
-                        backgroundColor: 'var(--color-danger-light)',
-                        color: 'var(--color-destructive)',
-                        fontSize: 'var(--text-xs)',
-                        fontWeight: 'var(--font-weight-medium)'
-                      }}
-                    >
-                      <AlertTriangle className="w-3 h-3" />
-                      Position ≥3 years
-                    </span>
-                  )}
-                  {employee.review_flags.grade_tenure_3y && (
-                    <span 
-                      className="px-2 py-1 rounded flex items-center gap-1"
-                      style={{ 
-                        backgroundColor: 'var(--color-warning-light)',
-                        color: 'var(--color-warning)',
-                        fontSize: 'var(--text-xs)',
-                        fontWeight: 'var(--font-weight-medium)'
-                      }}
-                    >
-                      <AlertTriangle className="w-3 h-3" />
-                      Grade ≥3 years
-                    </span>
-                  )}
-                  {employee.review_flags.contract_expiry_soon && (
-                    <span 
-                      className="px-2 py-1 rounded flex items-center gap-1"
-                      style={{ 
-                        backgroundColor: 'var(--color-danger-light)',
-                        color: 'var(--color-destructive)',
-                        fontSize: 'var(--text-xs)',
-                        fontWeight: 'var(--font-weight-medium)'
-                      }}
-                    >
-                      <Calendar className="w-3 h-3" />
-                      Contract Expiry: {employee.contract_expiry_date}
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Section - Metrics & Actions */}
-        <div className="flex flex-col items-end gap-4 ml-6">
-          {/* Metrics */}
-          <div className="flex gap-6">
-            <div className="text-right">
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                EQS Score
-              </p>
-              <p style={{ 
-                fontSize: 'var(--text-xl)', 
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-primary)'
-              }}>
-                {employee.eqs_score.toFixed(1)}
-              </p>
-            </div>
-            <div className="text-right">
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                Performance
-              </p>
-              <p style={{ 
-                fontSize: 'var(--text-sm)', 
-                fontWeight: 'var(--font-weight-medium)',
-                color: getPerformanceColor(employee.performance_rating)
-              }}>
-                {getPerformanceLabel(employee.performance_rating)}
-              </p>
-            </div>
-            <div className="text-right">
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                Job Fit
-              </p>
-              <p style={{ 
-                fontSize: 'var(--text-sm)', 
-                fontWeight: 'var(--font-weight-medium)',
-                color: 'var(--color-foreground)'
-              }}>
-                {employee.job_fit_score}%
-              </p>
             </div>
           </div>
 
-          {/* Tenure Info */}
-          <div className="text-right">
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
+          <div className="flex shrink-0 flex-col gap-4 xl:min-w-[18rem] xl:items-end">
+            <div className="grid grid-cols-3 gap-3 sm:min-w-[16rem]">
+              <div className="rounded-2xl border border-border bg-muted/30 p-3 text-right">
+                <p className="text-xs font-medium text-muted-foreground">EQS Score</p>
+                <p className="mt-2 text-2xl font-bold tracking-tight text-primary">{employee.eqs_score.toFixed(1)}</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-muted/30 p-3 text-right">
+                <p className="text-xs font-medium text-muted-foreground">Performance</p>
+                <div className="mt-2 flex justify-end">
+                  <StatusBadge variant={performance.variant}>{performance.label}</StatusBadge>
+                </div>
+              </div>
+              <div className="rounded-2xl border border-border bg-muted/30 p-3 text-right">
+                <p className="text-xs font-medium text-muted-foreground">Job Fit</p>
+                <p className="mt-2 text-2xl font-bold tracking-tight text-foreground">{employee.job_fit_score}%</p>
+              </div>
+            </div>
+
+            <p className="text-right text-xs font-medium text-muted-foreground">
               Tenure: {employee.tenure_in_position_years.toFixed(1)}y (position) | {employee.tenure_in_grade_years.toFixed(1)}y (grade)
             </p>
-          </div>
 
-          {/* Actions */}
-          <div className="flex gap-2">
-            <button
-              onClick={onSubmitProposal}
-              className="px-4 py-2 rounded transition-colors"
-              style={{
-                backgroundColor: 'var(--color-primary)',
-                color: 'var(--color-primary-foreground)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 'var(--font-weight-semibold)'
-              }}
-            >
-              <FileText className="inline-block w-4 h-4 mr-2" />
-              Submit Proposal
-            </button>
-            <button
-              className="px-4 py-2 rounded transition-colors"
-              style={{
-                backgroundColor: 'var(--color-card)',
-                border: '1px solid var(--color-border)',
-                color: 'var(--color-foreground)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 'var(--font-weight-medium)'
-              }}
-            >
-              View Details
-            </button>
+            <div className="flex flex-wrap justify-end gap-2">
+              <Button onClick={onSubmitProposal}>
+                <FileText className="size-4" />
+                Submit Proposal
+              </Button>
+              <Button variant="outline">View Details</Button>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

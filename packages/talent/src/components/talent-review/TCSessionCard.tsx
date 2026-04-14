@@ -1,42 +1,43 @@
 import React from 'react';
 import { Calendar, Users, FileText, Clock, CheckCircle, MapPin } from 'lucide-react';
 import { TCSession, eligibleEmployees } from '../../data/mockTalentReviewData';
+import { Badge, Button, StatusBadge } from '@rinjani/shared-ui';
 
 interface TCSessionCardProps {
   session: TCSession;
 }
 
 export function TCSessionCard({ session }: TCSessionCardProps) {
-  const getStatusColor = (status: string): { bg: string; color: string; icon: React.ReactNode } => {
+  const getStatusColor = (status: string): { variant: React.ComponentProps<typeof StatusBadge>['status']; icon: React.ReactNode; label: string } => {
     switch (status) {
       case 'NOT_STARTED':
         return {
-          bg: 'var(--color-muted)',
-          color: 'var(--color-muted-foreground)',
+          variant: 'neutral',
+          label: 'Not Started',
           icon: <Clock className="w-4 h-4" />
         };
       case 'SCHEDULED':
         return {
-          bg: 'var(--color-primary-light)',
-          color: 'var(--color-primary)',
+          variant: 'info',
+          label: 'Scheduled',
           icon: <Calendar className="w-4 h-4" />
         };
       case 'IN_PROGRESS':
         return {
-          bg: 'var(--color-warning-light)',
-          color: 'var(--color-warning)',
+          variant: 'warning',
+          label: 'In Progress',
           icon: <Clock className="w-4 h-4" />
         };
       case 'COMPLETED':
         return {
-          bg: 'var(--color-success-light)',
-          color: 'var(--color-success)',
+          variant: 'success',
+          label: 'Completed',
           icon: <CheckCircle className="w-4 h-4" />
         };
       default:
         return {
-          bg: 'var(--color-muted)',
-          color: 'var(--color-muted-foreground)',
+          variant: 'neutral',
+          label: status.replace(/_/g, ' '),
           icon: <Clock className="w-4 h-4" />
         };
     }
@@ -45,52 +46,32 @@ export function TCSessionCard({ session }: TCSessionCardProps) {
   const statusInfo = getStatusColor(session.status);
 
   return (
-    <div 
-      className="p-5 rounded transition-all hover:shadow-md"
-      style={{ 
-        backgroundColor: 'var(--color-card)', 
-        border: '1px solid var(--color-border)'
-      }}
-    >
-      <div className="flex items-start justify-between mb-4">
+    <div className="rounded-[20px] border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
+      <div className="mb-4 flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <h3 style={{ 
-              fontSize: 'var(--text-lg)', 
-              fontWeight: 'var(--font-weight-semibold)',
-              color: 'var(--color-foreground)'
-            }}>
+            <h3 className="text-lg font-semibold text-foreground">
               {session.session_quarter} {session.session_year} - TC {session.tc_tier.replace('_', ' ')}
             </h3>
-            <span 
-              className="px-2 py-1 rounded flex items-center gap-1"
-              style={{ 
-                backgroundColor: statusInfo.bg,
-                color: statusInfo.color,
-                fontSize: 'var(--text-xs)',
-                fontWeight: 'var(--font-weight-medium)'
-              }}
-            >
+            <StatusBadge status={statusInfo.variant as any} className="flex items-center gap-1">
               {statusInfo.icon}
-              {session.status.replace('_', ' ')}
-            </span>
+              {statusInfo.label}
+            </StatusBadge>
           </div>
 
           <div className="grid grid-cols-3 gap-6 mb-4">
             <div className="flex items-start gap-2">
-              <Calendar className="w-4 h-4 mt-1" style={{ color: 'var(--color-muted-foreground)' }} />
+              <Calendar className="mt-1 size-4 text-muted-foreground" />
               <div>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                  Session Date
-                </p>
-                <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-foreground)' }}>
+                <p className="text-xs text-muted-foreground">Session Date</p>
+                <p className="text-sm font-medium text-foreground">
                   {new Date(session.session_date).toLocaleDateString('id-ID', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                   })}
                 </p>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
+                <p className="text-xs text-muted-foreground">
                   {new Date(session.session_date).toLocaleTimeString('id-ID', {
                     hour: '2-digit',
                     minute: '2-digit'
@@ -100,24 +81,20 @@ export function TCSessionCard({ session }: TCSessionCardProps) {
             </div>
 
             <div className="flex items-start gap-2">
-              <Users className="w-4 h-4 mt-1" style={{ color: 'var(--color-muted-foreground)' }} />
+              <Users className="mt-1 size-4 text-muted-foreground" />
               <div>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                  Agenda Items
-                </p>
-                <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-foreground)' }}>
+                <p className="text-xs text-muted-foreground">Agenda Items</p>
+                <p className="text-sm font-medium text-foreground">
                   {session.agenda_items.length} employees
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-2">
-              <FileText className="w-4 h-4 mt-1" style={{ color: 'var(--color-muted-foreground)' }} />
+              <FileText className="mt-1 size-4 text-muted-foreground" />
               <div>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                  Berita Acara
-                </p>
-                <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-foreground)' }}>
+                <p className="text-xs text-muted-foreground">Berita Acara</p>
+                <p className="text-sm font-medium text-foreground">
                   {session.berita_acara_id || 'Not generated'}
                 </p>
               </div>
@@ -125,95 +102,40 @@ export function TCSessionCard({ session }: TCSessionCardProps) {
           </div>
 
           {/* Committee Members */}
-          <div 
-            className="p-3 rounded"
-            style={{ backgroundColor: 'var(--color-muted)' }}
-          >
-            <p style={{ 
-              fontSize: 'var(--text-xs)', 
-              color: 'var(--color-muted-foreground)',
-              marginBottom: '8px'
-            }}>
-              Committee Members
-            </p>
+          <div className="rounded-[16px] border border-border bg-muted/40 p-3">
+            <p className="mb-2 text-xs text-muted-foreground">Committee Members</p>
             <div className="flex flex-wrap gap-2">
-              <span 
-                className="px-2 py-1 rounded"
-                style={{ 
-                  backgroundColor: 'var(--color-primary-light)',
-                  color: 'var(--color-primary)',
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 'var(--font-weight-medium)'
-                }}
-              >
+              <StatusBadge status="info">
                 Ketua: {session.chairman_id}
-              </span>
+              </StatusBadge>
               {session.members.map((member, index) => (
-                <span 
-                  key={index}
-                  className="px-2 py-1 rounded"
-                  style={{ 
-                    backgroundColor: 'var(--color-card)',
-                    border: '1px solid var(--color-border)',
-                    fontSize: 'var(--text-xs)',
-                    color: 'var(--color-foreground)'
-                  }}
-                >
+                <Badge key={index} variant="neutral">
                   {member}
-                </span>
+                </Badge>
               ))}
-              <span 
-                className="px-2 py-1 rounded"
-                style={{ 
-                  backgroundColor: 'var(--color-muted)',
-                  fontSize: 'var(--text-xs)',
-                  color: 'var(--color-muted-foreground)'
-                }}
-              >
+              <Badge variant="neutral">
                 Sekretaris: {session.secretary_id}
-              </span>
+              </Badge>
             </div>
           </div>
 
           {/* Agenda Items Preview */}
           {session.agenda_items.length > 0 && (
             <div className="mt-4">
-              <p style={{ 
-                fontSize: 'var(--text-xs)', 
-                color: 'var(--color-muted-foreground)',
-                marginBottom: '8px'
-              }}>
-                Employees on Agenda
-              </p>
+              <p className="mb-2 text-xs text-muted-foreground">Employees on Agenda</p>
               <div className="flex flex-wrap gap-2">
                 {session.agenda_items.slice(0, 5).map((empId) => {
                   const emp = eligibleEmployees.find(e => e.employee_id === empId);
                   return (
-                    <span 
-                      key={empId}
-                      className="px-2 py-1 rounded"
-                      style={{ 
-                        backgroundColor: 'var(--color-background)',
-                        border: '1px solid var(--color-border)',
-                        fontSize: 'var(--text-xs)',
-                        color: 'var(--color-foreground)'
-                      }}
-                    >
+                    <Badge key={empId} variant="neutral">
                       {emp?.name || empId}
-                    </span>
+                    </Badge>
                   );
                 })}
                 {session.agenda_items.length > 5 && (
-                  <span 
-                    className="px-2 py-1 rounded"
-                    style={{ 
-                      backgroundColor: 'var(--color-muted)',
-                      fontSize: 'var(--text-xs)',
-                      color: 'var(--color-muted-foreground)'
-                    }}
-                  >
+                  <Badge variant="neutral">
                     +{session.agenda_items.length - 5} more
-                  </span>
+                  </Badge>
                 )}
               </div>
             </div>
@@ -222,43 +144,18 @@ export function TCSessionCard({ session }: TCSessionCardProps) {
 
         <div className="flex flex-col gap-2 ml-6">
           {session.status === 'SCHEDULED' && (
-            <button
-              className="px-4 py-2 rounded transition-colors whitespace-nowrap"
-              style={{
-                backgroundColor: 'var(--color-primary)',
-                color: 'var(--color-primary-foreground)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 'var(--font-weight-semibold)'
-              }}
-            >
+            <Button className="whitespace-nowrap">
               Start Session
-            </button>
+            </Button>
           )}
           {session.status === 'COMPLETED' && session.berita_acara_id && (
-            <button
-              className="px-4 py-2 rounded transition-colors whitespace-nowrap"
-              style={{
-                backgroundColor: 'var(--color-primary)',
-                color: 'var(--color-primary-foreground)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 'var(--font-weight-semibold)'
-              }}
-            >
+            <Button className="whitespace-nowrap">
               View Berita Acara
-            </button>
+            </Button>
           )}
-          <button
-            className="px-4 py-2 rounded transition-colors whitespace-nowrap"
-            style={{
-              backgroundColor: 'var(--color-card)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-foreground)',
-              fontSize: 'var(--text-sm)',
-              fontWeight: 'var(--font-weight-medium)'
-            }}
-          >
+          <Button variant="outline" className="whitespace-nowrap">
             View Details
-          </button>
+          </Button>
         </div>
       </div>
     </div>

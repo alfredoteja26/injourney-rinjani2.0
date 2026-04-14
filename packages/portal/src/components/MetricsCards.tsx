@@ -1,4 +1,20 @@
-import { ArrowUpRight, TrendingUp, AlertCircle, BookOpen } from "lucide-react";
+import { ArrowUpRight, TrendingUp } from "lucide-react";
+
+import { Badge, Card } from "@rinjani/shared-ui";
+
+const metricToneClasses = {
+  info: "border-primary/20 bg-primary/5",
+  success: "border-success/20 bg-success-muted/70",
+  warning: "border-warning/20 bg-warning-muted/80",
+  destructive: "border-destructive/20 bg-destructive/5",
+} as const;
+
+const metricChangeVariants = {
+  info: "info",
+  success: "success",
+  warning: "warning",
+  destructive: "destructive",
+} as const;
 
 export function MetricsCards() {
   const metrics = [
@@ -7,64 +23,59 @@ export function MetricsCards() {
       value: "107.45",
       subtitle: "From Last Quarter",
       change: "+12.5%",
-      color: "bg-[#00A199]",
-      textColor: "text-white",
+      tone: "info",
     },
     {
       title: "Learning Progress",
       value: "85.83",
       subtitle: "Course Completion",
       change: "+8.2%",
-      color: "bg-[#5AE2C3]",
-      textColor: "text-white",
+      tone: "success",
     },
     {
       title: "Career Development",
       value: "On Track",
       subtitle: "Next Review: 2 months",
       change: "High",
-      color: "bg-[#FE9A00]",
-      textColor: "text-white",
+      tone: "warning",
     },
     {
       title: "Action Required",
       value: "3 Items",
       subtitle: "Pending Approval",
       change: "Urgent",
-      color: "bg-[#F04438]",
-      textColor: "text-white",
+      tone: "destructive",
     },
-  ];
+  ] as const;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {metrics.map((metric, index) => (
-        <div
-          key={index}
-          className={`${metric.color} rounded-xl p-6 relative overflow-hidden`}
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {metrics.map((metric) => (
+        <Card
+          key={metric.title}
+          className={`relative overflow-hidden rounded-[24px] border p-5 shadow-sm ${metricToneClasses[metric.tone]}`}
         >
           <div className="relative z-10">
-            <div className="flex items-start justify-between mb-4">
+            <div className="mb-4 flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <p className={`caption ${metric.textColor}/80`}>{metric.title}</p>
-                <h3 className={`${metric.textColor}`}>{metric.value}</h3>
+                <p className="text-sm font-medium text-muted-foreground">{metric.title}</p>
+                <h3 className="text-3xl font-bold tracking-tight text-foreground tabular-nums">{metric.value}</h3>
               </div>
-              <ArrowUpRight className={`w-5 h-5 ${metric.textColor}/60`} />
+              <ArrowUpRight className="size-5 text-muted-foreground" />
             </div>
-            
-            <div className="space-y-2">
-              <p className={`caption ${metric.textColor}/70`}>{metric.subtitle}</p>
-              <div className="flex items-center gap-1">
-                <TrendingUp className={`w-3 h-3 ${metric.textColor}`} />
-                <span className={`caption ${metric.textColor}`}>{metric.change}</span>
-              </div>
+
+            <div className="space-y-3">
+              <p className="text-sm leading-6 text-muted-foreground">{metric.subtitle}</p>
+              <Badge
+                variant={metricChangeVariants[metric.tone]}
+                className="inline-flex px-2.5 py-0 text-[10px] font-semibold uppercase tracking-[0.12em]"
+              >
+                <TrendingUp className="size-3" />
+                <span>{metric.change}</span>
+              </Badge>
             </div>
           </div>
-          
-          {/* Decorative Background Pattern */}
-          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full"></div>
-          <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full"></div>
-        </div>
+        </Card>
       ))}
     </div>
   );

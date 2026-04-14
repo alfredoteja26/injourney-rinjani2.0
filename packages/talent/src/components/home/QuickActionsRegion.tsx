@@ -13,42 +13,39 @@ export function QuickActionsRegion() {
       label: "Ajukan Aspirasi",
       href: "/talent/career-aspiration",
       icon: Target,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-      borderColor: "border-blue-100"
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       label: "Kelola IDP",
       href: "/talent/idp",
       icon: ClipboardList,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-50",
-      borderColor: "border-emerald-100"
+      color: "text-success",
+      bgColor: "bg-success-muted",
     },
     {
       label: "Jelajahi Lowongan",
       href: "/talent/explore",
       icon: Briefcase,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-100"
+      color: "text-secondary",
+      bgColor: "bg-secondary/10",
     }
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
       {actions.map((action) => (
         <Link 
           key={action.href} 
           to={action.href}
           className="group block"
         >
-          <Card className="h-full border border-border hover:border-primary/50 hover:shadow-md transition-all duration-200 bg-card">
-            <div className="p-4 flex flex-col items-center justify-center text-center gap-3 h-full">
-              <div className={cn("p-3 rounded-full transition-transform group-hover:scale-110 duration-200", action.bgColor, action.color)}>
+          <Card className="h-full rounded-[20px] border border-border bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+            <div className="flex h-full flex-col items-center justify-center gap-3 p-5 text-center">
+              <div className={cn("rounded-2xl p-3 transition-transform duration-200 group-hover:scale-105", action.bgColor, action.color)}>
                 <action.icon size={24} />
               </div>
-              <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+              <span className="text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
                 {action.label}
               </span>
             </div>
@@ -58,17 +55,17 @@ export function QuickActionsRegion() {
 
       {pendingAssessments > 0 && (
         <Link to="/talent/360-assessment/assigned" className="group block relative">
-          <Card className="h-full border border-border hover:border-orange-300 hover:shadow-md transition-all duration-200 bg-card overflow-hidden">
-            <div className="p-4 flex flex-col items-center justify-center text-center gap-3 h-full">
-              <div className="p-3 rounded-full bg-orange-50 text-orange-600 transition-transform group-hover:scale-110 duration-200">
+          <Card className="h-full overflow-hidden rounded-[20px] border border-border bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-secondary/40 hover:shadow-md">
+            <div className="flex h-full flex-col items-center justify-center gap-3 p-5 text-center">
+              <div className="rounded-2xl bg-warning-muted p-3 text-warning transition-transform duration-200 group-hover:scale-105">
                 <ClipboardCheck size={24} />
               </div>
-              <span className="text-sm font-semibold text-foreground group-hover:text-orange-600 transition-colors">
+              <span className="text-sm font-semibold text-foreground transition-colors group-hover:text-secondary">
                 Isi Assessment
               </span>
             </div>
             <div className="absolute top-3 right-3">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm animate-pulse">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white shadow-sm">
                 {pendingAssessments}
               </span>
             </div>

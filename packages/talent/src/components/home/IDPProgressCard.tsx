@@ -4,7 +4,8 @@ import { Progress } from "../ui/progress";
 import { cn } from "../ui/utils";
 import { homeData } from "../../data/homeData";
 import { Link } from "react-router";
-import { CheckCircle2, PlayCircle, Circle, Clock, Calendar } from "lucide-react";
+import { CheckCircle2, PlayCircle, Circle, Calendar } from "lucide-react";
+import { StatusBadge } from "@rinjani/shared-ui";
 
 export function IDPProgressCard() {
   const { idpRecord } = homeData;
@@ -27,18 +28,9 @@ export function IDPProgressCard() {
 
   const progressPercent = (idpRecord.completed_hours / idpRecord.total_hours) * 100;
   
-  const getStatusColor = (status: string) => {
-     switch(status) {
-         case "approved": return "bg-emerald-100 text-emerald-700 border-emerald-200";
-         case "pending_approval": return "bg-amber-100 text-amber-700 border-amber-200";
-         case "draft": return "bg-slate-100 text-slate-700 border-slate-200";
-         default: return "bg-slate-100 text-slate-700 border-slate-200";
-     }
-  };
-
   return (
     <Link to="/talent/idp" className="block h-full group">
-      <Card className="shadow-sm border-border bg-card h-full group-hover:border-primary/50 transition-colors">
+      <Card className="h-full border-border bg-card shadow-sm transition-colors group-hover:border-primary/50">
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
             Rencana Pengembangan
@@ -48,9 +40,9 @@ export function IDPProgressCard() {
           
           <div className="flex justify-between items-start">
              <div>
-                <Badge variant="outline" className={cn("mb-2", getStatusColor(idpRecord.status))}>
-                   {idpRecord.status_label}
-                </Badge>
+                <StatusBadge status={idpRecord.status} className="mb-2">
+                  {idpRecord.status_label}
+                </StatusBadge>
                 <div className="text-xs text-muted-foreground">{idpRecord.cycle_name}</div>
              </div>
              <div className="text-right">
@@ -61,18 +53,18 @@ export function IDPProgressCard() {
           </div>
           
           <div className="space-y-1">
-             <Progress value={progressPercent} className="h-2 bg-muted" indicatorClassName="bg-emerald-500" />
+             <Progress value={progressPercent} className="h-2 bg-muted" indicatorClassName="bg-success" />
              <div className="flex justify-between text-[10px] text-muted-foreground">
                 <span>{progressPercent.toFixed(0)}% Selesai</span>
                 {idpRecord.completed_hours < idpRecord.min_development_hours && (
-                   <span className="text-amber-600 font-medium">Min. {idpRecord.min_development_hours} jam</span>
+                   <span className="font-medium text-warning">Min. {idpRecord.min_development_hours} jam</span>
                 )}
              </div>
           </div>
 
-          <div className="flex justify-between gap-2 p-3 bg-muted/30 rounded-lg">
+          <div className="flex justify-between gap-2 rounded-xl bg-muted/40 p-3">
              <div className="flex flex-col items-center flex-1">
-                <div className="flex items-center gap-1 text-emerald-600 mb-1">
+                <div className="mb-1 flex items-center gap-1 text-success">
                    <CheckCircle2 size={14} />
                    <span className="font-bold">{idpRecord.activity_summary.completed}</span>
                 </div>
@@ -80,7 +72,7 @@ export function IDPProgressCard() {
              </div>
              <div className="w-px bg-border h-8 self-center" />
              <div className="flex flex-col items-center flex-1">
-                <div className="flex items-center gap-1 text-blue-600 mb-1">
+                <div className="mb-1 flex items-center gap-1 text-primary">
                    <PlayCircle size={14} />
                    <span className="font-bold">{idpRecord.activity_summary.in_progress}</span>
                 </div>
@@ -101,7 +93,7 @@ export function IDPProgressCard() {
           <div>
              <div className="text-xs text-muted-foreground uppercase tracking-wider mb-3">Aktivitas Terdekat</div>
              <div className="flex items-start gap-3">
-                <div className="p-2 bg-orange-50 rounded-md text-orange-600 shrink-0">
+                <div className="shrink-0 rounded-md bg-warning-muted p-2 text-warning">
                    <Calendar size={18} />
                 </div>
                 <div>
@@ -110,7 +102,7 @@ export function IDPProgressCard() {
                    </div>
                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span>{new Date(idpRecord.upcoming_activity.target_date).toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}</span>
-                      <Badge variant="outline" className="h-4 px-1 text-[10px] bg-amber-50 text-amber-700 border-amber-200">
+                      <Badge variant="outline" className="h-4 border-warning/20 bg-warning-muted px-1 text-[10px] text-warning">
                          {idpRecord.upcoming_activity.priority_label}
                       </Badge>
                    </div>

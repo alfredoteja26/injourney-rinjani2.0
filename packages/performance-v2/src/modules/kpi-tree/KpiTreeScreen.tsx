@@ -1,6 +1,6 @@
-import { startTransition, useDeferredValue, useMemo } from "react";
+import { startTransition, useDeferredValue, useMemo, type CSSProperties } from "react";
 import { Link, useSearchParams } from "react-router";
-import { AlertTriangle, ArrowRight, BarChart3, Building2, CheckCircle2, FileSpreadsheet, FolderTree, GitBranch, Info, Link2, ShieldAlert, UploadCloud, Users } from "lucide-react";
+import { AlertTriangle, BarChart3, Building2, CheckCircle2, FileSpreadsheet, FolderTree, GitBranch, Info, Link2, ShieldAlert, UploadCloud, Users } from "lucide-react";
 import {
   Badge,
   BarChart,
@@ -11,6 +11,11 @@ import {
   CardHeader,
   CardTitle,
   ChartContainer,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
   EmptyState,
   MetricCard,
   PageHeading,
@@ -57,9 +62,30 @@ type PositionSummary = PositionTreeNode & {
   waitingApprovalCount: number;
 };
 
+type KpiHierarchyNode = {
+  id: string;
+  item: KpiItem;
+  position?: PositionSummary;
+  parentId: string | null;
+  relationToParent?: CascadeRelation;
+  children: KpiHierarchyNode[];
+};
+
+type KpiHierarchyModel = {
+  roots: KpiHierarchyNode[];
+  index: Map<string, KpiHierarchyNode>;
+  stats: {
+    visibleCount: number;
+    rootCount: number;
+    relationCount: number;
+    bersamaCount: number;
+    unitCount: number;
+  };
+};
+
 const VIEW_OPTIONS: Array<{ value: TreeView; label: string; hint: string }> = [
   { value: "org", label: "Organization View", hint: "Lihat struktur unit, posisi, dan distribusi KPI." },
-  { value: "hierarchy", label: "Hierarchy View", hint: "Telusuri parent-child KPI dan warning alignment." },
+  { value: "hierarchy", label: "KPI Structure View", hint: "Telusuri struktur KPI parent-child dengan tree hierarkis." },
 ];
 
 const TAB_OPTIONS: Array<{ value: TreeTab; label: string; icon: typeof FolderTree }> = [
@@ -154,6 +180,188 @@ function statusToneForWarning(type: AlignmentWarning["type"]): "warning" | "dest
     default:
       return "info";
   }
+}
+
+const KPI_TYPE_BADGE_STYLES: Record<KpiItem["kpiType"], CSSProperties> = {
+  BERSAMA: {
+    borderColor: "color-mix(in srgb, var(--color-kpi-bersama) 22%, white)",
+    backgroundColor: "color-mix(in srgb, var(--color-kpi-bersama) 10%, white)",
+    color: "var(--color-kpi-bersama)",
+  },
+  UNIT: {
+    borderColor: "color-mix(in srgb, var(--color-kpi-unit) 22%, white)",
+    backgroundColor: "color-mix(in srgb, var(--color-kpi-unit) 10%, white)",
+    color: "var(--color-kpi-unit)",
+  },
+};
+
+function formatKpiTypeLabel(type: KpiItem["kpiType"]) {
+  return type === "BERSAMA" ? "KPI Bersama" : "KPI Unit";
+}
+
+function formatTargetSummary(item: KpiItem) {
+  if (item.targetValue == null) {
+    return "Belum diatur";
+  }
+  return `${item.targetValue} ${item.targetUnit}`.trim();
+}
+
+function hierarchySearchText(item: KpiItem, position?: PositionSummary) {
+  return [
+    item.title,
+    item.code,
+    item.description,
+    formatKpiTypeLabel(item.kpiType),
+    position?.title,
+    position?.incumbentName,
+    position?.orgUnitName,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function createKpiHierarchyModel({
+  items,
+  relations,
+  itemToPositionId,
+  positionMap,
+  search,
+}: {
+  items: KpiItem[];
+  relations: CascadeRelation[];
+  itemToPositionId: Map<string, string>;
+  positionMap: Map<string, PositionSummary>;
+  search: string;
+}): KpiHierarchyModel {
+  const itemMap = new Map(items.map((item) => [item.id, item]));
+  const childIdsByParent = new Map<string, Set<string>>();
+  const parentIdByChild = new Map<string, string>();
+  const relationToParentByChild = new Map<string, CascadeRelation | undefined>();
+
+  function connect(parentId: string, childId: string, relation?: CascadeRelation) {
+    if (parentId === childId || !itemMap.has(parentId) || !itemMap.has(childId)) {
+      return;
+    }
+    const existingParent = parentIdByChild.get(childId);
+    if (existingParent && existingParent !== parentId) {
+      return;
+    }
+    const siblings = childIdsByParent.get(parentId) ?? new Set<string>();
+    siblings.add(childId);
+    childIdsByParent.set(parentId, siblings);
+    parentIdByChild.set(childId, parentId);
+    if (relation && !relationToParentByChild.has(childId)) {
+      relationToParentByChild.set(childId, relation);
+    }
+  }
+
+  for (const item of items) {
+    if (item.parentKpiId) {
+      connect(item.parentKpiId, item.id);
+    }
+  }
+
+  for (const relation of relations) {
+    connect(relation.parentKpiId, relation.childKpiId, relation);
+  }
+
+  const searchTerm = search.trim().toLowerCase();
+  const index = new Map<string, KpiHierarchyNode>();
+
+  function buildNode(itemId: string, path: Set<string>): KpiHierarchyNode | null {
+    if (path.has(itemId)) {
+      return null;
+    }
+    const item = itemMap.get(itemId);
+    if (!item) {
+      return null;
+    }
+
+    const nextPath = new Set(path);
+    nextPath.add(itemId);
+
+    const childNodes = [...(childIdsByParent.get(itemId) ?? [])]
+      .map((childId) => buildNode(childId, nextPath))
+      .filter((node): node is KpiHierarchyNode => node != null);
+
+    const positionId = itemToPositionId.get(itemId);
+    const position = positionId ? positionMap.get(positionId) : undefined;
+    const ownMatch = !searchTerm || hierarchySearchText(item, position).includes(searchTerm);
+
+    if (searchTerm && !ownMatch && childNodes.length === 0) {
+      return null;
+    }
+
+    const node: KpiHierarchyNode = {
+      id: itemId,
+      item,
+      position,
+      parentId: parentIdByChild.get(itemId) ?? null,
+      relationToParent: relationToParentByChild.get(itemId),
+      children: childNodes,
+    };
+
+    index.set(itemId, node);
+    return node;
+  }
+
+  const roots: KpiHierarchyNode[] = [];
+  const attachedIds = new Set<string>();
+
+  function rememberBranch(node: KpiHierarchyNode) {
+    attachedIds.add(node.id);
+    for (const child of node.children) {
+      rememberBranch(child);
+    }
+  }
+
+  const candidateRootIds = items.map((item) => item.id).filter((id) => !parentIdByChild.has(id));
+  for (const rootId of candidateRootIds) {
+    const rootNode = buildNode(rootId, new Set());
+    if (!rootNode) {
+      continue;
+    }
+    roots.push(rootNode);
+    rememberBranch(rootNode);
+  }
+
+  for (const item of items) {
+    if (attachedIds.has(item.id)) {
+      continue;
+    }
+    const detachedNode = buildNode(item.id, new Set());
+    if (!detachedNode) {
+      continue;
+    }
+    roots.push(detachedNode);
+    rememberBranch(detachedNode);
+  }
+
+  let relationCount = 0;
+  let bersamaCount = 0;
+  let unitCount = 0;
+
+  for (const node of index.values()) {
+    relationCount += node.children.length;
+    if (node.item.kpiType === "BERSAMA") {
+      bersamaCount += 1;
+    } else {
+      unitCount += 1;
+    }
+  }
+
+  return {
+    roots,
+    index,
+    stats: {
+      visibleCount: index.size,
+      rootCount: roots.length,
+      relationCount,
+      bersamaCount,
+      unitCount,
+    },
+  };
 }
 
 export function KpiTreeScreen() {
@@ -263,6 +471,8 @@ export function KpiTreeScreen() {
     });
   }, [companyMap, itemMap, orgUnitMap, positionMasterMap, state.positionTreeNodes, state.positions]);
 
+  const positionSummaryMap = useMemo(() => new Map(positions.map((position) => [position.positionId, position])), [positions]);
+
   const filteredPositions = useMemo(() => {
     const selectedOrgSet = orgUnitId !== "all" ? orgUnitDescendantIds.get(orgUnitId) : null;
     return positions.filter((position) => {
@@ -314,51 +524,37 @@ export function KpiTreeScreen() {
 
   const job = useMemo(() => state.bulkUploadJobs.find((entry) => entry.id === jobId) ?? state.bulkUploadJobs[0] ?? null, [jobId, state.bulkUploadJobs]);
 
-  const cascadeRows = useMemo(() => {
-    const filtered = state.cascadeRelations
-      .map((relation) => {
-        const parent = itemMap.get(relation.parentKpiId);
-        const child = itemMap.get(relation.childKpiId);
-        const parentPosition = parent ? positions.find((position) => position.positionId === itemToPositionId.get(parent.id)) : undefined;
-        const childPosition = child ? positions.find((position) => position.positionId === itemToPositionId.get(child.id)) : undefined;
-        if (!parent || !child || !parentPosition || !childPosition) {
-          return null;
-        }
-        return { relation, parent, child, parentPosition, childPosition };
-      })
-      .filter(Boolean) as Array<{
-      relation: CascadeRelation;
-      parent: KpiItem;
-      child: KpiItem;
-      parentPosition: PositionSummary;
-      childPosition: PositionSummary;
-    }>;
+  const hierarchyModel = useMemo(
+    () =>
+      createKpiHierarchyModel({
+        items: state.kpiItems,
+        relations: state.cascadeRelations,
+        itemToPositionId,
+        positionMap: positionSummaryMap,
+        search: deferredSearch,
+      }),
+    [deferredSearch, itemToPositionId, positionSummaryMap, state.cascadeRelations, state.kpiItems]
+  );
 
-    if (!deferredSearch) {
-      return filtered;
-    }
-
-    return filtered.filter(({ parent, child, parentPosition, childPosition }) =>
-      [parent.title, child.title, parentPosition.title, childPosition.title]
-        .join(" ")
-        .toLowerCase()
-        .includes(deferredSearch)
-    );
-  }, [deferredSearch, itemMap, itemToPositionId, positions, state.cascadeRelations]);
-
-  const selectedHierarchy = useMemo(() => {
-    const fallback =
-      cascadeRows.find(({ parentPosition, childPosition }) => positionId != null && (parentPosition.positionId === positionId || childPosition.positionId === positionId)) ??
-      cascadeRows[0] ??
+  const selectedHierarchyNode = useMemo(() => {
+    const positionFallback =
+      [...hierarchyModel.index.values()].find((node) => positionId != null && node.position?.positionId === positionId) ??
+      hierarchyModel.roots[0] ??
       null;
+
     if (!kpiId) {
-      return fallback;
+      return positionFallback;
     }
-    return (
-      cascadeRows.find(({ parent, child }) => parent.id === kpiId || child.id === kpiId) ??
-      fallback
-    );
-  }, [cascadeRows, kpiId, positionId]);
+
+    return hierarchyModel.index.get(kpiId) ?? positionFallback;
+  }, [hierarchyModel, kpiId, positionId]);
+
+  const activeKpiDialogNode = useMemo(() => {
+    if (view !== "hierarchy" || tab !== "tree" || !kpiId) {
+      return null;
+    }
+    return hierarchyModel.index.get(kpiId) ?? null;
+  }, [hierarchyModel, kpiId, tab, view]);
 
   const changeLogsForSelectedPosition = useMemo(() => {
     if (!selectedPosition) {
@@ -565,8 +761,7 @@ export function KpiTreeScreen() {
             />
           ) : (
             <HierarchyWorkspace
-              rows={cascadeRows}
-              selectedHierarchy={selectedHierarchy}
+              hierarchy={hierarchyModel}
               selectedPositionId={positionId}
               selectedKpiId={kpiId}
               onSelectPosition={openPosition}
@@ -630,6 +825,17 @@ export function KpiTreeScreen() {
           ) : null}
         </SheetContent>
       </Sheet>
+
+      <Dialog open={activeKpiDialogNode != null} onOpenChange={(open) => (!open ? updateParams({ kpiId: null }) : undefined)}>
+        {activeKpiDialogNode ? (
+          <KpiDetailDialog
+            node={activeKpiDialogNode}
+            hierarchy={hierarchyModel}
+            onSelectKpi={(nextKpiId) => updateParams({ kpiId: nextKpiId })}
+            onSelectPosition={openPosition}
+          />
+        ) : null}
+      </Dialog>
     </PerformanceV2PageFrame>
   );
 }
@@ -816,136 +1022,68 @@ function OrgNodeCard({
 }
 
 function HierarchyWorkspace({
-  rows,
-  selectedHierarchy,
+  hierarchy,
   selectedPositionId,
   selectedKpiId,
   onSelectPosition,
   onSelectKpi,
 }: {
-  rows: Array<{
-    relation: CascadeRelation;
-    parent: KpiItem;
-    child: KpiItem;
-    parentPosition: PositionSummary;
-    childPosition: PositionSummary;
-  }>;
-  selectedHierarchy: {
-    relation: CascadeRelation;
-    parent: KpiItem;
-    child: KpiItem;
-    parentPosition: PositionSummary;
-    childPosition: PositionSummary;
-  } | null;
+  hierarchy: KpiHierarchyModel;
   selectedPositionId: string | null;
   selectedKpiId: string | null;
   onSelectPosition: (positionId: string) => void;
   onSelectKpi: (kpiId: string) => void;
 }) {
   return (
-    <div className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.9fr)]">
-      <Card>
-        <CardHeader>
-          <CardTitle>Hierarchy View</CardTitle>
-          <CardDescription>Telusuri relasi langsung dan tidak langsung antar KPI dalam pohon organisasi.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {selectedHierarchy ? (
-            <div className="rounded-2xl border border-border bg-muted/20 p-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="info">
-                  <GitBranch className="size-3.5" />
-                  {selectedHierarchy.relation.cascadeMethod}
-                </Badge>
-                {selectedHierarchy.relation.accumulationEnabled ? <Badge variant="neutral">Accumulation enabled</Badge> : null}
-              </div>
-              <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-                <HierarchyNodeCard
-                  title="Parent KPI"
-                  item={selectedHierarchy.parent}
-                  position={selectedHierarchy.parentPosition}
-                  active={selectedKpiId === selectedHierarchy.parent.id || selectedPositionId === selectedHierarchy.parentPosition.positionId}
-                  onSelectPosition={() => onSelectPosition(selectedHierarchy.parentPosition.positionId)}
-                  onSelectKpi={() => onSelectKpi(selectedHierarchy.parent.id)}
-                />
-                <div className="flex items-center justify-center">
-                  <ArrowRight className="size-5 text-muted-foreground" />
-                </div>
-                <HierarchyNodeCard
-                  title="Child KPI"
-                  item={selectedHierarchy.child}
-                  position={selectedHierarchy.childPosition}
-                  active={selectedKpiId === selectedHierarchy.child.id || selectedPositionId === selectedHierarchy.childPosition.positionId}
-                  onSelectPosition={() => onSelectPosition(selectedHierarchy.childPosition.positionId)}
-                  onSelectKpi={() => onSelectKpi(selectedHierarchy.child.id)}
-                />
-              </div>
-            </div>
-          ) : (
-            <EmptyState title="Belum ada relasi cascade" description="Fixture belum memiliki relasi KPI yang cocok dengan filter saat ini." />
-          )}
-
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Parent</TableHead>
-                <TableHead>Child</TableHead>
-                <TableHead>Metode</TableHead>
-                <TableHead>Posisi child</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows.map(({ relation, parent, child, childPosition }) => (
-                <TableRow key={relation.id}>
-                  <TableCell>
-                    <button type="button" className="text-left hover:text-primary" onClick={() => onSelectKpi(parent.id)}>
-                      <div className="font-medium">{parent.title}</div>
-                      <div className="text-xs text-muted-foreground">{parent.code ?? parent.id}</div>
-                    </button>
-                  </TableCell>
-                  <TableCell>
-                    <button type="button" className="text-left hover:text-primary" onClick={() => onSelectKpi(child.id)}>
-                      <div className="font-medium">{child.title}</div>
-                      <div className="text-xs text-muted-foreground">{child.code ?? child.id}</div>
-                    </button>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={relation.cascadeMethod === "DIRECT" ? "info" : "neutral"}>{relation.cascadeMethod}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <button type="button" className="text-left hover:text-primary" onClick={() => onSelectPosition(childPosition.positionId)}>
-                      <div>{childPosition.title}</div>
-                      <div className="text-xs text-muted-foreground">{childPosition.incumbentName ?? "Vacant"}</div>
-                    </button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Cascade legend</CardTitle>
-          <CardDescription>Interpretasi visual untuk review cepat bersama stakeholder.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <LegendRow label="Direct" description="Child KPI jelas turunan langsung dari KPI atasannya." badgeVariant="info" />
-          <LegendRow label="Indirect" description="Child KPI mendukung parent melalui KPI antara atau relasi lintas unit." badgeVariant="neutral" />
-          <LegendRow label="Accumulation" description="Realisasi child ikut memengaruhi parent melalui akumulasi hasil." badgeVariant="warning" />
-          <Separator />
-          <div className="rounded-xl border border-border bg-muted/30 p-4">
-            <p className="font-medium text-foreground">Checklist reviewer</p>
-            <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
-              <li>Pastikan child KPI punya owner posisi yang jelas.</li>
-              <li>Cek apakah parent KPI masih relevan dengan target tahunan direksi.</li>
-              <li>Tindak warning orphan dan weight mismatch sebelum finalisasi.</li>
-            </ul>
+    <Card>
+      <CardHeader className="gap-4">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <CardTitle>KPI Structure View</CardTitle>
+            <CardDescription>Lihat KPI dalam tree hierarkis, bukan hanya daftar relasi parent-child.</CardDescription>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          <div className="flex flex-wrap gap-2">
+            <KpiTypeBadge type="BERSAMA" />
+            <KpiTypeBadge type="UNIT" />
+            <Badge variant="info">Direct</Badge>
+            <Badge variant="neutral">Indirect</Badge>
+            <Badge variant="warning">Accumulation</Badge>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <SummaryChip label="KPI terlihat" value={hierarchy.stats.visibleCount} />
+          <SummaryChip label="Root KPI" value={hierarchy.stats.rootCount} />
+          <SummaryChip label="Relasi cascade" value={hierarchy.stats.relationCount} tone="success" />
+          <SummaryChip label="Bersama / Unit" value={`${hierarchy.stats.bersamaCount} / ${hierarchy.stats.unitCount}`} />
+        </div>
+
+        <div className="flex flex-wrap gap-3 rounded-xl border border-border bg-muted/20 px-4 py-3 text-xs text-muted-foreground">
+          <span>Klik judul KPI untuk membuka modal detail relasi.</span>
+          <span>KPI Bersama dan KPI Unit dibedakan dengan warna badge.</span>
+          <span>Label `Direct`, `Indirect`, dan `Accumulation` tetap tampil di dekat header agar mudah dibaca.</span>
+        </div>
+
+        {hierarchy.roots.length > 0 ? (
+          <div className="space-y-4">
+            {hierarchy.roots.map((node) => (
+              <HierarchyTreeBranch
+                key={node.id}
+                node={node}
+                depth={0}
+                selectedKpiId={selectedKpiId}
+                selectedPositionId={selectedPositionId}
+                onSelectKpi={onSelectKpi}
+                onSelectPosition={onSelectPosition}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyState title="Belum ada struktur KPI" description="Filter saat ini belum menampilkan node KPI yang bisa dirangkai menjadi tree." />
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -1422,36 +1560,210 @@ function PositionDetailSheetContent({
   );
 }
 
-function HierarchyNodeCard({
-  title,
-  item,
-  position,
-  active,
+function KpiTypeBadge({ type }: { type: KpiItem["kpiType"] }) {
+  return (
+    <Badge variant="neutral" className="px-1.5 text-[10px] leading-4" style={KPI_TYPE_BADGE_STYLES[type]}>
+      {formatKpiTypeLabel(type)}
+    </Badge>
+  );
+}
+
+function KpiDetailDialog({
+  node,
+  hierarchy,
+  onSelectKpi,
+  onSelectPosition,
+}: {
+  node: KpiHierarchyNode;
+  hierarchy: KpiHierarchyModel;
+  onSelectKpi: (kpiId: string) => void;
+  onSelectPosition: (positionId: string) => void;
+}) {
+  const parentNode = node.parentId ? hierarchy.index.get(node.parentId) ?? null : null;
+
+  return (
+    <DialogContent className="max-w-3xl">
+      <DialogHeader>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="neutral">{node.parentId ? "Child KPI" : "Root KPI"}</Badge>
+          <KpiTypeBadge type={node.item.kpiType} />
+          {node.relationToParent ? (
+            <Badge variant={node.relationToParent.cascadeMethod === "DIRECT" ? "info" : "neutral"}>
+              <GitBranch className="size-3.5" />
+              {node.relationToParent.cascadeMethod}
+            </Badge>
+          ) : null}
+        </div>
+        <DialogTitle className="pr-8">{node.item.title}</DialogTitle>
+        <DialogDescription>
+          {node.item.code ?? node.item.id} · Target {formatTargetSummary(node.item)} · {node.item.monitoringPeriod}
+        </DialogDescription>
+      </DialogHeader>
+
+      <div className="space-y-4">
+        {node.item.description ? (
+          <div className="rounded-xl border border-border bg-muted/20 px-4 py-3 text-sm text-muted-foreground">{node.item.description}</div>
+        ) : null}
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <SummaryChip label="Tipe KPI" value={formatKpiTypeLabel(node.item.kpiType)} />
+          <SummaryChip label="Target" value={formatTargetSummary(node.item)} />
+          <SummaryChip label="Monitoring" value={node.item.monitoringPeriod} />
+          <SummaryChip label="Child KPI" value={node.children.length} />
+        </div>
+
+        {node.position ? (
+          <div className="rounded-xl border border-border bg-card px-4 py-3">
+            <div className="text-xs uppercase tracking-wide text-muted-foreground">Owner position</div>
+            <button type="button" className="mt-2 text-left" onClick={() => onSelectPosition(node.position!.positionId)}>
+              <div className="font-medium text-foreground hover:text-primary">{node.position.title}</div>
+              <div className="text-xs text-muted-foreground">
+                {node.position.incumbentName ?? "Vacant"} · {node.position.orgUnitName}
+              </div>
+            </button>
+          </div>
+        ) : null}
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="rounded-xl border border-border bg-card px-4 py-3">
+            <div className="text-xs uppercase tracking-wide text-muted-foreground">Parent KPI</div>
+            {parentNode ? (
+              <button type="button" className="mt-2 w-full rounded-lg border border-border bg-muted/20 px-3 py-3 text-left transition-colors hover:bg-muted/40" onClick={() => onSelectKpi(parentNode.item.id)}>
+                <div className="flex flex-wrap items-center gap-2">
+                  <KpiTypeBadge type={parentNode.item.kpiType} />
+                  {parentNode.relationToParent ? (
+                    <Badge variant={parentNode.relationToParent.cascadeMethod === "DIRECT" ? "info" : "neutral"}>
+                      {parentNode.relationToParent.cascadeMethod}
+                    </Badge>
+                  ) : null}
+                </div>
+                <div className="mt-2 font-medium text-foreground">{parentNode.item.title}</div>
+                <div className="text-xs text-muted-foreground">{parentNode.item.code ?? parentNode.item.id}</div>
+              </button>
+            ) : (
+              <p className="mt-2 text-sm text-muted-foreground">KPI ini berada di level root.</p>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-border bg-card px-4 py-3">
+            <div className="text-xs uppercase tracking-wide text-muted-foreground">Child KPI</div>
+            {node.children.length > 0 ? (
+              <div className="mt-2 space-y-2">
+                {node.children.map((childNode) => (
+                  <button
+                    key={childNode.id}
+                    type="button"
+                    onClick={() => onSelectKpi(childNode.item.id)}
+                    className="w-full rounded-lg border border-border bg-muted/20 px-3 py-3 text-left transition-colors hover:bg-muted/40"
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <KpiTypeBadge type={childNode.item.kpiType} />
+                      {childNode.relationToParent ? (
+                        <Badge variant={childNode.relationToParent.cascadeMethod === "DIRECT" ? "info" : "neutral"}>
+                          {childNode.relationToParent.cascadeMethod}
+                        </Badge>
+                      ) : null}
+                    </div>
+                    <div className="mt-2 font-medium text-foreground">{childNode.item.title}</div>
+                    <div className="text-xs text-muted-foreground">{childNode.item.code ?? childNode.item.id}</div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-muted-foreground">Belum ada child KPI yang terkait.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </DialogContent>
+  );
+}
+
+function HierarchyTreeBranch({
+  node,
+  depth,
+  selectedKpiId,
+  selectedPositionId,
   onSelectPosition,
   onSelectKpi,
 }: {
-  title: string;
-  item: KpiItem;
-  position: PositionSummary;
-  active: boolean;
-  onSelectPosition: () => void;
-  onSelectKpi: () => void;
+  node: KpiHierarchyNode;
+  depth: number;
+  selectedKpiId: string | null;
+  selectedPositionId: string | null;
+  onSelectPosition: (positionId: string) => void;
+  onSelectKpi: (kpiId: string) => void;
 }) {
+  const isActive = selectedKpiId === node.item.id || (node.position != null && selectedPositionId === node.position.positionId);
+  const metaParts = [
+    node.item.code ?? node.item.id,
+    node.position?.title,
+    node.position?.incumbentName ?? (node.position ? "Vacant" : undefined),
+    `Target ${formatTargetSummary(node.item)}`,
+    `${node.children.length} child`,
+  ].filter(Boolean);
+
   return (
-    <div className={cn("rounded-2xl border p-4", active ? "border-primary bg-primary/5" : "border-border bg-background")}>
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="neutral">{title}</Badge>
-        <Badge variant={item.kpiType === "BERSAMA" ? "info" : "neutral"}>{item.kpiType}</Badge>
+    <div className="space-y-3">
+      <div
+        className={cn(
+          "rounded-xl border px-3 py-2.5",
+          isActive ? "border-primary bg-primary/5 shadow-sm" : "border-border bg-card"
+        )}
+        style={{ marginLeft: depth * 18 }}
+      >
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0 space-y-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <Badge variant="neutral" className="px-1.5 text-[10px] leading-4">
+                {node.parentId ? "Child" : "Root"}
+              </Badge>
+              <KpiTypeBadge type={node.item.kpiType} />
+              {node.relationToParent ? (
+                <Badge
+                  variant={node.relationToParent.cascadeMethod === "DIRECT" ? "info" : "neutral"}
+                  className="px-1.5 text-[10px] leading-4"
+                >
+                  {node.relationToParent.cascadeMethod}
+                </Badge>
+              ) : null}
+            </div>
+            <button type="button" onClick={() => onSelectKpi(node.item.id)} className="min-w-0 text-left">
+              <div className="truncate text-sm font-semibold text-foreground hover:text-primary">{node.item.title}</div>
+            </button>
+            <p className="truncate text-[11px] text-muted-foreground">{metaParts.join(" · ")}</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+            <Badge variant="neutral" className="px-1.5 text-[10px] leading-4">
+              {node.item.monitoringPeriod}
+            </Badge>
+            {node.position ? (
+              <Button type="button" size="sm" variant="outline" className="h-7 px-2 text-xs" onClick={() => onSelectPosition(node.position!.positionId)}>
+                Posisi
+              </Button>
+            ) : null}
+          </div>
+        </div>
       </div>
-      <button type="button" onClick={onSelectKpi} className="mt-3 text-left">
-        <div className="font-semibold text-foreground hover:text-primary">{item.title}</div>
-        <div className="text-xs text-muted-foreground">{item.code ?? item.id}</div>
-      </button>
-      <Separator className="my-3" />
-      <button type="button" onClick={onSelectPosition} className="text-left">
-        <div className="text-sm font-medium text-foreground hover:text-primary">{position.title}</div>
-        <div className="text-xs text-muted-foreground">{position.incumbentName ?? "Vacant"}</div>
-      </button>
+
+      {node.children.length > 0 ? (
+        <div
+          className="space-y-2 border-l border-border/70 pl-3"
+          style={{ marginLeft: depth * 18 + 10 }}
+        >
+          {node.children.map((childNode) => (
+            <HierarchyTreeBranch
+              key={childNode.id}
+              node={childNode}
+              depth={depth + 1}
+              selectedKpiId={selectedKpiId}
+              selectedPositionId={selectedPositionId}
+              onSelectPosition={onSelectPosition}
+              onSelectKpi={onSelectKpi}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

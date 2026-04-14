@@ -1,5 +1,6 @@
 import React from "react";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@rinjani/shared-ui";
 
 interface Announcement {
   id: string;
@@ -28,35 +29,15 @@ export function AnnouncementList({
   onAnnouncementClick
 }: AnnouncementListProps) {
   
-  const getCategoryColor = (iconType?: string) => {
-    const colors: Record<string, { bg: string; text: string; border: string }> = {
-      learning: { 
-        bg: 'rgba(90, 226, 195, 0.1)', 
-        text: '#31C6B1', 
-        border: 'rgba(90, 226, 195, 0.2)' 
-      },
-      talent: { 
-        bg: 'rgba(0, 101, 115, 0.1)', 
-        text: '#006573', 
-        border: 'rgba(0, 101, 115, 0.2)' 
-      },
-      performance: { 
-        bg: 'rgba(0, 133, 138, 0.1)', 
-        text: '#00858A', 
-        border: 'rgba(0, 133, 138, 0.2)' 
-      },
-      ai: { 
-        bg: 'rgba(0, 184, 219, 0.1)', 
-        text: '#007595', 
-        border: 'rgba(0, 184, 219, 0.2)' 
-      },
-      general: { 
-        bg: 'rgba(107, 114, 128, 0.1)', 
-        text: '#6B7280', 
-        border: 'rgba(107, 114, 128, 0.2)' 
-      }
+  const getCategoryVariant = (iconType?: string) => {
+    const variants: Record<string, React.ComponentProps<typeof Badge>["variant"]> = {
+      learning: "success",
+      talent: "info",
+      performance: "warning",
+      ai: "attention",
+      general: "neutral"
     };
-    return colors[iconType || 'general'] || colors.general;
+    return variants[iconType || "general"] || "neutral";
   };
 
   const getCategoryLabel = (iconType?: string) => {
@@ -82,79 +63,55 @@ export function AnnouncementList({
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-['Inter:Semi_Bold',sans-serif] font-semibold text-[20px] text-[#414651] leading-[30px]">
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <h2 className="text-xl font-semibold leading-7 text-foreground">
           Pengumuman Terbaru
         </h2>
         <div className="flex items-center gap-2">
-          <span className="font-['Inter:Regular',sans-serif] font-normal text-[14px] text-[#717680]">
+          <span className="text-sm font-medium text-muted-foreground">
             Page {currentPage} of {totalPages}
           </span>
         </div>
       </div>
 
       {/* Announcements List */}
-      <div className="flex flex-col gap-3 mb-6">
+      <div className="mb-6 flex flex-col gap-3">
         {announcements.length === 0 ? (
-          <div className="bg-white rounded-[12px] p-12 text-center border border-[var(--border)]">
-            <p className="font-['Inter:Regular',sans-serif] text-[16px] text-[#717680]">
+          <div className="rounded-[24px] border border-border bg-card p-12 text-center shadow-sm">
+            <p className="text-base text-muted-foreground">
               Belum ada pengumuman
             </p>
           </div>
         ) : (
           announcements.map((announcement) => {
-            const categoryColor = getCategoryColor(announcement.iconType);
+            const categoryVariant = getCategoryVariant(announcement.iconType);
             const categoryLabel = getCategoryLabel(announcement.iconType);
 
             return (
               <div
                 key={announcement.id}
                 onClick={() => onAnnouncementClick?.(announcement)}
-                className="bg-white rounded-[12px] p-4 border border-[var(--border)] hover:border-[#00858A] transition-all cursor-pointer shadow-[0px_2px_4px_-2px_rgba(10,13,18,0.06)]"
-                style={{ 
-                  display: 'flex',
-                  gap: '16px',
-                  alignItems: 'flex-start'
-                }}
+                className="flex cursor-pointer items-start gap-4 rounded-[24px] border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/30 hover:bg-muted/20"
               >
                 {/* Left: Icon/Badge */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
-                  <div 
-                    className="rounded-[6px] px-3 py-1"
-                    style={{ 
-                      backgroundColor: categoryColor.bg,
-                      border: `1px solid ${categoryColor.border}`
-                    }}
-                  >
-                    <p 
-                      className="font-['Inter:Medium',sans-serif] font-medium text-[10px] leading-[13.333px]"
-                      style={{ color: categoryColor.text }}
-                    >
-                      {categoryLabel}
-                    </p>
-                  </div>
+                <div className="flex shrink-0 flex-col items-start gap-2">
+                  <Badge variant={categoryVariant} className="px-2.5 py-0 text-[10px] font-semibold uppercase tracking-[0.12em]">
+                    {categoryLabel}
+                  </Badge>
                   <div className="flex items-center gap-1">
-                    <Calendar style={{ width: '12px', height: '12px', color: '#717680' }} />
-                    <p className="font-['Inter:Regular',sans-serif] font-normal text-[11px] text-[#717680] leading-[16px]">
+                    <Calendar className="size-3 text-muted-foreground" />
+                    <p className="text-[11px] leading-4 text-muted-foreground">
                       {formatDate(announcement.timestamp)}
                     </p>
                   </div>
                 </div>
 
                 {/* Middle: Content */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <h3 className="font-['Inter:Semi_Bold',sans-serif] font-semibold text-[16px] text-[#414651] leading-[24px]">
+                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                  <h3 className="text-base font-semibold leading-6 text-foreground">
                     {announcement.title}
                   </h3>
-                  <p 
-                    className="font-['Inter:Regular',sans-serif] font-normal text-[14px] text-[#717680] leading-[20px]"
-                    style={{ 
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden'
-                    }}
-                  >
+                  <p className="line-clamp-2 text-sm leading-6 text-muted-foreground">
                     {announcement.description}
                   </p>
                   {announcement.linkAttachment && (
@@ -162,7 +119,7 @@ export function AnnouncementList({
                       href={announcement.linkAttachment}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#00858A] hover:underline inline-block mt-1"
+                      className="mt-1 inline-block text-sm font-medium text-primary hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >
                       Lihat Selengkapnya →
@@ -172,14 +129,11 @@ export function AnnouncementList({
 
                 {/* Right: Image (if exists) */}
                 {announcement.imageUrl && (
-                  <div 
-                    className="rounded-[8px] overflow-hidden flex-shrink-0"
-                    style={{ width: '80px', height: '80px' }}
-                  >
+                  <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-[16px] border border-border bg-muted">
                     <img 
                       src={announcement.imageUrl} 
                       alt={announcement.title}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                 )}
@@ -195,10 +149,9 @@ export function AnnouncementList({
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-2 rounded-lg border border-[var(--border)] bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[rgba(0,133,138,0.05)] transition-colors"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            className="flex items-center justify-center rounded-xl border border-border bg-card p-2 text-foreground transition-colors hover:bg-muted/40 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <ChevronLeft style={{ width: '20px', height: '20px', color: '#414651' }} />
+            <ChevronLeft className="size-5" />
           </button>
 
           {/* Page Numbers */}
@@ -218,7 +171,7 @@ export function AnnouncementList({
                 return (
                   <span 
                     key={`ellipsis-${page}`}
-                    className="px-2 font-['Inter:Regular',sans-serif] text-[14px] text-[#717680]"
+                    className="px-2 text-sm text-muted-foreground"
                   >
                     ...
                   </span>
@@ -231,10 +184,10 @@ export function AnnouncementList({
                 <button
                   key={page}
                   onClick={() => onPageChange(page)}
-                  className={`px-4 py-2 rounded-lg font-['Inter:Medium',sans-serif] font-medium text-[14px] transition-colors ${
+                  className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
                     currentPage === page
-                      ? 'bg-[#00858A] text-white'
-                      : 'bg-white text-[#414651] border border-[var(--border)] hover:bg-[rgba(0,133,138,0.05)]'
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border bg-card text-foreground hover:bg-muted/40'
                   }`}
                 >
                   {page}
@@ -246,10 +199,9 @@ export function AnnouncementList({
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-lg border border-[var(--border)] bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[rgba(0,133,138,0.05)] transition-colors"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            className="flex items-center justify-center rounded-xl border border-border bg-card p-2 text-foreground transition-colors hover:bg-muted/40 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <ChevronRight style={{ width: '20px', height: '20px', color: '#414651' }} />
+            <ChevronRight className="size-5" />
           </button>
         </div>
       )}

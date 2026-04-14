@@ -21,9 +21,6 @@ export function DevelopmentHoursRing({
   const dashOffset = circumference - (percentage / 100) * circumference;
   
   const isBelowMin = totalHours < minHours;
-  // Using global CSS variables for colors where possible, or tailwind classes
-  // Warning: var(--color-warning) / #ff9220
-  // Primary: var(--color-primary) / #00495d
   
   return (
     <div className={cn("relative flex items-center justify-center", className)} style={{ width: size, height: size }}>
@@ -49,10 +46,7 @@ export function DevelopmentHoursRing({
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
-          className={cn(
-            "transition-all duration-1000 ease-in-out",
-            isBelowMin ? "text-[#00495d]" : "text-[#00495d]" // Always dark teal in design? Or warning color?
-          )}
+          className={cn("transition-all duration-1000 ease-in-out", isBelowMin ? "text-warning" : "text-primary")}
         />
       </svg>
       
@@ -65,7 +59,7 @@ export function DevelopmentHoursRing({
             {totalHours}
             </span>
         </div>
-        <span className="text-[10px] text-muted-foreground font-medium uppercase mt-1">
+        <span className="mt-1 text-[10px] font-medium uppercase text-muted-foreground">
           of {minHours} jam
         </span>
       </div>

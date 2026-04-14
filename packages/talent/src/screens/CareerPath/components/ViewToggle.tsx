@@ -88,7 +88,7 @@ export function ViewToggle() {
     <div className="flex items-center justify-end gap-3">
       <Badge 
         variant="outline" 
-        className="bg-[var(--color-primary-light)] border-[var(--color-primary)] text-[var(--color-primary)] px-3 py-1 font-medium"
+        className="border-primary/20 bg-primary/10 px-3 py-1 font-medium text-primary"
       >
         PROTOTYPE MODE
       </Badge>
@@ -97,33 +97,33 @@ export function ViewToggle() {
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="gap-2 min-w-[200px] justify-start bg-[var(--color-card)] border-[var(--color-border)] hover:bg-[var(--color-muted)]"
+            className="min-w-[200px] justify-start gap-2 border-border bg-background hover:bg-muted"
           >
             <Avatar className="w-6 h-6 flex-shrink-0">
               <AvatarImage src={currentTestUser?.image} alt={currentTestUser?.name} />
-              <AvatarFallback className="bg-[var(--color-primary-light)] text-[var(--color-primary)] text-xs">
+              <AvatarFallback className="bg-primary/10 text-xs text-primary">
                 <IconComponent className="w-3 h-3" />
               </AvatarFallback>
             </Avatar>
             <span className="flex-1 text-left truncate">{currentTestUser?.name}</span>
-            <ChevronDown className="w-4 h-4 text-[var(--color-muted-foreground)] flex-shrink-0" />
+            <ChevronDown className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent 
           align="end" 
-          className="w-[320px] bg-[var(--color-popover)] border-[var(--color-border)] shadow-md"
+          className="w-[320px] border-border bg-popover shadow-md"
           sideOffset={8}
         >
           <DropdownMenuLabel>
             <div className="flex flex-col gap-1">
               <span className="font-semibold">Switch View</span>
-              <p className="text-xs text-[var(--color-muted-foreground)] font-normal">
+              <p className="text-xs font-normal text-muted-foreground">
                 Select a user perspective to test
               </p>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator className="bg-[var(--color-border)]" />
+          <DropdownMenuSeparator className="bg-border" />
 
           <DropdownMenuGroup>
             {TEST_USERS.map((user) => {
@@ -136,33 +136,33 @@ export function ViewToggle() {
                   onClick={() => handleUserSwitch(user.id, user.role)}
                   className={`
                     cursor-pointer p-3 mb-1 rounded-md transition-colors
-                    ${isActive ? 'bg-[var(--color-primary-light)]' : 'hover:bg-[var(--color-muted)]'}
+                    ${isActive ? 'bg-primary/10' : 'hover:bg-muted'}
                   `}
                 >
                   <div className="flex items-start gap-3 w-full">
                     <Avatar className="w-10 h-10 flex-shrink-0">
                       <AvatarImage src={user.image} alt={user.name} />
                       <AvatarFallback 
-                        className={isActive ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)]" : "bg-[var(--color-muted)] text-[var(--color-muted-foreground)]"}
+                        className={isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}
                       >
                         <UserIcon className="w-5 h-5" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--color-muted)] text-[var(--color-muted-foreground)] font-medium">
+                        <span className="rounded bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
                           {user.label}
                         </span>
                         {isActive && (
-                          <Badge className="text-[10px] px-2 py-0.5 bg-[var(--color-primary)] text-[var(--color-primary-foreground)]">
+                          <Badge className="bg-primary px-2 py-0.5 text-[10px] text-primary-foreground">
                             Active
                           </Badge>
                         )}
                       </div>
-                      <p className="font-semibold text-sm leading-tight mb-0.5 text-[var(--color-foreground)]">
+                      <p className="mb-0.5 text-sm font-semibold leading-tight text-foreground">
                         {user.name}
                       </p>
-                      <p className="text-xs text-[var(--color-muted-foreground)] truncate">
+                      <p className="truncate text-xs text-muted-foreground">
                         {user.position} • Grade {user.grade}
                       </p>
                     </div>

@@ -50,6 +50,9 @@ const posGhPlanning = "pos-gh-hc-planning";
 const posGhPolicy = "pos-gh-hc-policy";
 const posGhOd = "pos-gh-org-dev";
 const posSeniorOfficerPlanning = "pos-senior-officer-hc-planning";
+const posManagerPolicyImplementation = "pos-manager-policy-implementation";
+const posLeadPolicyGovernance = "pos-lead-policy-governance";
+const posOfficerPolicyMonitoring = "pos-officer-policy-monitoring";
 
 export const performanceV2Positions: Position[] = [
   {
@@ -110,6 +113,51 @@ export const performanceV2Positions: Position[] = [
     status: "FILLED",
     incumbent_employee_id: "emp-260103",
     reports_to_position_id: posVp,
+    job_description: "[TBD]",
+  },
+  {
+    position_id: posManagerPolicyImplementation,
+    title: "Manager Policy Implementation",
+    job_family: "HUMAN_RESOURCES",
+    position_type: "STRUKTURAL",
+    grade_jabatan: 3,
+    band_jabatan: "Band Muda",
+    company_id: companyId,
+    org_unit_id: "ou-hc-strat",
+    location_id: locId,
+    status: "FILLED",
+    incumbent_employee_id: "emp-260105",
+    reports_to_position_id: posGhPolicy,
+    job_description: "[TBD]",
+  },
+  {
+    position_id: posLeadPolicyGovernance,
+    title: "Lead Policy Governance",
+    job_family: "HUMAN_RESOURCES",
+    position_type: "NON_STRUKTURAL",
+    grade_jabatan: 3,
+    band_jabatan: "Band Muda",
+    company_id: companyId,
+    org_unit_id: "ou-hc-strat",
+    location_id: locId,
+    status: "FILLED",
+    incumbent_employee_id: "emp-260106",
+    reports_to_position_id: posManagerPolicyImplementation,
+    job_description: "[TBD]",
+  },
+  {
+    position_id: posOfficerPolicyMonitoring,
+    title: "Officer Policy Monitoring",
+    job_family: "HUMAN_RESOURCES",
+    position_type: "NON_STRUKTURAL",
+    grade_jabatan: 2,
+    band_jabatan: "Band Pratama",
+    company_id: companyId,
+    org_unit_id: "ou-hc-strat",
+    location_id: locId,
+    status: "FILLED",
+    incumbent_employee_id: "emp-260107",
+    reports_to_position_id: posLeadPolicyGovernance,
     job_description: "[TBD]",
   },
   {
@@ -195,5 +243,8 @@ export const performanceV2Employees: Employee[] = [
   employee("emp-260101", "260101", "Dimas Sayyid", posVp, null, dimasAvatarUrl),
   employee("emp-260102", "260102", "Binavia Wardhani", posGhPlanning, "emp-260101", binaviaAvatarUrl),
   employee("emp-260103", "260103", "Fajar Nugraha", posGhPolicy, "emp-260101"),
+  employee("emp-260105", "260105", "Arif Prasetyo", posManagerPolicyImplementation, "emp-260103"),
+  employee("emp-260106", "260106", "Nadia Putri", posLeadPolicyGovernance, "emp-260105"),
+  employee("emp-260107", "260107", "Raka Mahendra", posOfficerPolicyMonitoring, "emp-260106"),
   employee("emp-260104", "260104", "Sinta Maharani", posGhOd, "emp-260101"),
 ];

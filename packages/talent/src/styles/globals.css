@@ -32,9 +32,9 @@
   --sidebar-border: #ffffff;
   --sidebar-ring: #90bc40;
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-serif: Georgia, serif;
+  --font-serif: var(--font-sans);
   --font-mono: "JetBrains Mono", monospace;
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   --shadow-x: 0px;
   --shadow-y: 2px;
   --shadow-blur: 10px;
@@ -87,9 +87,9 @@
   --sidebar-border: #ffffff;
   --sidebar-ring: #90bc40;
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-serif: Georgia, serif;
+  --font-serif: var(--font-sans);
   --font-mono: "JetBrains Mono", monospace;
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   --shadow-x: 0px;
   --shadow-y: 4px;
   --shadow-blur: 15px;

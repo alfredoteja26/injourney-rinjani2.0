@@ -8,20 +8,25 @@ import { IDPProgressCard } from "../components/home/IDPProgressCard";
 import { JobApplicationsCard } from "../components/home/JobApplicationsCard";
 import { TeamSummaryCard } from "../components/home/TeamSummaryCard";
 import { PeriodAlertsRegion } from "../components/home/PeriodAlertsRegion";
+import { SectionPanel } from "@rinjani/shared-ui";
 
 export function Home() {
   return (
     <Layout>
-      <div className="p-6 space-y-8 max-w-7xl mx-auto font-sans p-[0px]">
-        
-        {/* Greeting & Header */}
-        <div>
+      <div className="mx-auto max-w-[var(--layout-max-width-dashboard)] space-y-6 px-4 pb-10 pt-6 md:px-6 lg:px-8">
+        <div className="space-y-4">
           <GreetingRegion />
-          <QuickActionsRegion />
+          <SectionPanel
+            title="Aksi cepat"
+            description="Akses modul yang paling sering dipakai tanpa mengubah alur kerja yang sudah ada."
+            contentClassName="pt-0"
+          >
+            <QuickActionsRegion />
+          </SectionPanel>
         </div>
 
         {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           
           {/* Row 1: Career Status (Full Width) */}
           <div className="md:col-span-2">
@@ -52,10 +57,12 @@ export function Home() {
         </div>
 
         {/* Alerts Section */}
-        <div className="pt-4 border-t border-border">
+        <SectionPanel
+          title="Periode & perhatian"
+          description="Ringkasan pengingat periode aktif dan agenda yang perlu ditindaklanjuti."
+        >
           <PeriodAlertsRegion />
-        </div>
-
+        </SectionPanel>
       </div>
     </Layout>
   );

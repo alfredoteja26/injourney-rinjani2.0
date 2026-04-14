@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import { FilterRail, PageHeader } from "@rinjani/shared-ui";
 import { Layout } from '../../components/shell/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { User, Users, Target, Building, BarChart3 } from 'lucide-react';
@@ -21,110 +22,81 @@ import { UnitAspirationView } from './UnitAspiration/UnitAspirationView';
 import { AdminDashboardView } from './Admin/AdminDashboardView';
 
 export function CareerAspirationPage({ embedded = false }: { embedded?: boolean }) {
+  const tabTriggerClassName =
+    "gap-2 rounded-full border border-transparent bg-transparent px-4 py-2 text-muted-foreground transition-colors data-[state=active]:border-border data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm hover:bg-background/80 hover:text-foreground";
+  const contentSurfaceClassName = "rounded-[24px] border border-border bg-card p-4 shadow-sm sm:p-6";
+
   const content = (
     <CareerPathProvider>
-      {/* Main Page Content */}
-      <div className="min-h-screen bg-[var(--color-background)]">
-        {/* Header */}
-        <div className="bg-[var(--color-card)] border-b border-[var(--color-border)] p-[0px]">
-          <div className="flex items-start justify-between gap-4 pt-[0px] pr-[0px] pb-[12px] pl-[0px] p-[0px] mt-[0px] mr-[0px] mb-[6px] ml-[0px]">
-            <div className="flex flex-col gap-2">
-              <h1 className="text-3xl font-heading font-semibold text-[var(--color-foreground)] font-bold">Career Aspiration</h1>
-              <p className="text-sm text-[var(--color-muted-foreground)] font-body max-w-2xl">
-                Kelola aspirasi karir karyawan dari berbagai sumber: Individual, Supervisor, Job Holder, dan Unit untuk perencanaan karir yang lebih baik.
-              </p>
-            </div>
-            
-            {/* View Toggle (Prototype Feature) */}
-            <ViewToggle />
-          </div>
-        </div>
+      <div className={embedded ? "flex h-full flex-col gap-6" : "mx-auto flex w-full max-w-[var(--layout-max-width-workspace)] flex-col gap-6 px-4 pb-10 pt-6 md:px-6 lg:px-8"}>
+        <PageHeader
+          variant="workspace"
+          eyebrow="My Talent Journey"
+          title="Career Aspiration"
+          description="Kelola aspirasi karir karyawan dari berbagai sumber: Individual, Supervisor, Job Holder, dan Unit untuk perencanaan karir yang lebih baik."
+          actions={<ViewToggle />}
+        />
 
-        <div className="p-6 p-[0px]">
-          {/* Main Tabs */}
-          <Tabs defaultValue="individual" className="w-full space-y-6">
-            <div className="bg-[var(--color-card)] rounded-lg border border-[var(--color-border)] w-fit pt-[0px] pr-[4px] pb-[0px] pl-[0px] mt-[12px] mr-[0px] mb-[24px] ml-[0px] p-[0px]">
-              <TabsList 
-                className="flex bg-transparent p-0 gap-1 h-auto"
-              >
-                <TabsTrigger 
-                  value="individual"
-                  className="gap-2 px-4 py-2 rounded-md data-[state=active]:bg-[var(--color-primary-light)] data-[state=active]:text-[var(--color-primary)] data-[state=active]:shadow-none hover:bg-[var(--color-muted)] transition-colors"
-                >
-                  <User className="w-4 h-4" />
-                  <span className="font-medium">Individual</span>
-                </TabsTrigger>
-                
-                <TabsTrigger 
-                  value="supervisor"
-                  className="gap-2 px-4 py-2 rounded-md data-[state=active]:bg-[var(--color-primary-light)] data-[state=active]:text-[var(--color-primary)] data-[state=active]:shadow-none hover:bg-[var(--color-muted)] transition-colors"
-                >
-                  <Users className="w-4 h-4" />
-                  <span className="font-medium">Supervisor</span>
-                </TabsTrigger>
-                
-                <TabsTrigger 
-                  value="jobholder"
-                  className="gap-2 px-4 py-2 rounded-md data-[state=active]:bg-[var(--color-primary-light)] data-[state=active]:text-[var(--color-primary)] data-[state=active]:shadow-none hover:bg-[var(--color-muted)] transition-colors"
-                >
-                  <Target className="w-4 h-4" />
-                  <span className="font-medium">Job Holder</span>
-                </TabsTrigger>
-                
-                <TabsTrigger 
-                  value="unit"
-                  className="gap-2 px-4 py-2 rounded-md data-[state=active]:bg-[var(--color-primary-light)] data-[state=active]:text-[var(--color-primary)] data-[state=active]:shadow-none hover:bg-[var(--color-muted)] transition-colors"
-                >
-                  <Building className="w-4 h-4" />
-                  <span className="font-medium">Unit</span>
-                </TabsTrigger>
-                
-                <TabsTrigger 
-                  value="consolidation"
-                  className="gap-2 px-4 py-2 rounded-md data-[state=active]:bg-[var(--color-primary-light)] data-[state=active]:text-[var(--color-primary)] data-[state=active]:shadow-none hover:bg-[var(--color-muted)] transition-colors"
-                >
-                  <BarChart3 className="w-4 h-4" />
-                  <span className="font-medium">Aspiration Analytic</span>
-                </TabsTrigger>
-              </TabsList>
-            </div>
+        <Tabs defaultValue="individual" className="w-full space-y-6">
+          <FilterRail
+            title="Aspiration source"
+            description="Pilih sumber aspirasi untuk berpindah konteks kerja tanpa meninggalkan route aktif."
+            actionsClassName="w-full"
+          >
+            <TabsList className="h-auto w-full flex-wrap justify-start gap-2 rounded-[20px] bg-muted/70 p-2">
+              <TabsTrigger value="individual" className={tabTriggerClassName}>
+                <User className="h-4 w-4" />
+                <span className="font-medium">Individual</span>
+              </TabsTrigger>
+              <TabsTrigger value="supervisor" className={tabTriggerClassName}>
+                <Users className="h-4 w-4" />
+                <span className="font-medium">Supervisor</span>
+              </TabsTrigger>
+              <TabsTrigger value="jobholder" className={tabTriggerClassName}>
+                <Target className="h-4 w-4" />
+                <span className="font-medium">Job Holder</span>
+              </TabsTrigger>
+              <TabsTrigger value="unit" className={tabTriggerClassName}>
+                <Building className="h-4 w-4" />
+                <span className="font-medium">Unit</span>
+              </TabsTrigger>
+              <TabsTrigger value="consolidation" className={tabTriggerClassName}>
+                <BarChart3 className="h-4 w-4" />
+                <span className="font-medium">Aspiration Analytic</span>
+              </TabsTrigger>
+            </TabsList>
+          </FilterRail>
 
-            {/* Individual Aspiration Tab Content */}
-            <TabsContent value="individual" className="mt-0 focus-visible:outline-none">
-              <div className="bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] shadow-sm pt-[12px] pr-[24px] pb-[24px] pl-[24px] px-[24px] py-[12px]">
-                <IndividualAspirationView />
-              </div>
-            </TabsContent>
+          <TabsContent value="individual" className="mt-0 focus-visible:outline-none">
+            <section className={contentSurfaceClassName}>
+              <IndividualAspirationView />
+            </section>
+          </TabsContent>
 
-            {/* Supervisor Aspiration Tab Content */}
-            <TabsContent value="supervisor" className="mt-0 focus-visible:outline-none">
-              <div className="bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] p-6 shadow-sm">
-                <SupervisorAspirationView />
-              </div>
-            </TabsContent>
+          <TabsContent value="supervisor" className="mt-0 focus-visible:outline-none">
+            <section className={contentSurfaceClassName}>
+              <SupervisorAspirationView />
+            </section>
+          </TabsContent>
 
-            {/* Job Holder Aspiration Tab Content */}
-            <TabsContent value="jobholder" className="mt-0 focus-visible:outline-none">
-              <div className="bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] p-6 shadow-sm">
-                <JobHolderAspirationView />
-              </div>
-            </TabsContent>
+          <TabsContent value="jobholder" className="mt-0 focus-visible:outline-none">
+            <section className={contentSurfaceClassName}>
+              <JobHolderAspirationView />
+            </section>
+          </TabsContent>
 
-            {/* Unit Aspiration Tab Content */}
-            <TabsContent value="unit" className="mt-0 focus-visible:outline-none">
-              <div className="bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] p-6 shadow-sm">
-                <UnitAspirationView />
-              </div>
-            </TabsContent>
+          <TabsContent value="unit" className="mt-0 focus-visible:outline-none">
+            <section className={contentSurfaceClassName}>
+              <UnitAspirationView />
+            </section>
+          </TabsContent>
 
-            {/* Aspiration Consolidation Tab Content */}
-            <TabsContent value="consolidation" className="mt-0 focus-visible:outline-none">
-              <div className="bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] p-6 shadow-sm">
-                <AdminDashboardView />
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+          <TabsContent value="consolidation" className="mt-0 focus-visible:outline-none">
+            <section className={contentSurfaceClassName}>
+              <AdminDashboardView />
+            </section>
+          </TabsContent>
+        </Tabs>
       </div>
     </CareerPathProvider>
   );

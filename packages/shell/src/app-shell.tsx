@@ -272,9 +272,9 @@ export function AppShell({
                 />
               </div>
               {!isSidebarCollapsed ? (
-                <div className="min-w-0 leading-none text-[#53565a]">
-                  <p className="text-[24px] font-medium leading-none tracking-normal">Rinjani</p>
-                  <p className="mt-1 whitespace-nowrap text-[11px] font-medium leading-none tracking-normal">InJourney HCMS</p>
+                <div className="min-w-0 leading-none text-foreground/80">
+                  <p className="text-[24px] font-semibold leading-none tracking-tight text-foreground">Rinjani</p>
+                  <p className="mt-1 whitespace-nowrap text-[11px] font-medium leading-none tracking-[0.08em] text-muted-foreground">InJourney HCMS</p>
                 </div>
               ) : null}
             </div>
@@ -540,7 +540,7 @@ export function AppShell({
           </header>
 
           <main className="min-h-0 flex-1 overflow-y-auto bg-primary">
-            <div className="relative min-h-full overflow-hidden rounded-tl-[32px] bg-background shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
+            <div className="relative min-h-full overflow-hidden rounded-tl-[32px] border-l border-white/20 bg-background shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_20px_60px_rgba(16,24,40,0.08)]">
               {children}
             </div>
           </main>

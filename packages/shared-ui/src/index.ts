@@ -69,6 +69,19 @@ export { Label } from "./label";
 export { List, ListItem, ListItemContent, ListItemDescription, ListItemMeta, ListItemTitle } from "./list";
 export { LoadingState } from "./loading-state";
 export { PageHeading } from "./page-heading";
+export {
+  FilterRail,
+  PageHeader,
+  SectionPanel,
+  StatCard,
+  StatCardGroup,
+  StatusBadge,
+  type FilterRailProps,
+  type PageHeaderProps,
+  type SectionPanelProps,
+  type StatCardProps,
+  type StatusBadgeProps,
+} from "./page-layout";
 export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination";
 export { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "./popover";
 export { ProfileSummary, type ProfileSummaryProps } from "./profile-summary";

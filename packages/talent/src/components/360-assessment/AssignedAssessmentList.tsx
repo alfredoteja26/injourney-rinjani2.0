@@ -5,11 +5,10 @@ import { id } from "date-fns/locale";
 import { 
   assessmentCycles, 
   assessorAssignments, 
-  assessmentSubmissions, 
   currentUser,
   employees
 } from "../../lib/360-assessment/data";
-import { StatusBadge } from "./StatusBadge";
+import { Badge, Button, SectionPanel, StatusBadge } from "@rinjani/shared-ui";
 import { CheckCircle2, Play, ChevronRight, X, User, Users, Briefcase, UserCheck } from "lucide-react";
 import { cn } from "../../components/ui/utils";
 
@@ -104,89 +103,90 @@ export function AssignedAssessmentList() {
 
   if (groupedData.length === 0) {
     return (
-      <div className="p-8 text-center border border-dashed border-border rounded-lg bg-muted/30">
-        <p className="text-muted-foreground">Tidak ada penilaian yang perlu Anda isi.</p>
-      </div>
+      <SectionPanel
+        title="Penilaian yang Ditugaskan"
+        description="Tidak ada penilaian yang perlu Anda isi saat ini."
+      >
+        <div className="rounded-[20px] border border-dashed border-border bg-muted/30 px-6 py-16 text-center">
+          <p className="text-sm text-muted-foreground">Tidak ada penilaian yang perlu Anda isi.</p>
+        </div>
+      </SectionPanel>
     );
   }
 
   return (
-    <>
-      <div className="border border-border rounded-lg overflow-hidden bg-card shadow-sm">
+    <SectionPanel
+      title="Penilaian yang Ditugaskan"
+      description="Assessment yang menunggu Anda isi untuk periode aktif."
+      contentClassName="p-0"
+    >
+      <div className="overflow-hidden rounded-[20px] border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-muted/50 border-b border-border text-muted-foreground font-medium">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-border bg-muted/50 font-medium text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Nama Assessment</th>
-                <th className="px-4 py-3 w-[150px]">Tipe</th>
-                <th className="px-4 py-3 w-[180px]">Target Dinilai</th>
-                <th className="px-4 py-3 w-[150px]">Batas Waktu</th>
-                <th className="px-4 py-3 w-[150px]">Aksi</th>
+                <th className="w-[150px] px-4 py-3">Tipe</th>
+                <th className="w-[180px] px-4 py-3">Target Dinilai</th>
+                <th className="w-[150px] px-4 py-3">Batas Waktu</th>
+                <th className="w-[150px] px-4 py-3">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {groupedData.map((item) => (
-                <tr key={item.cycle.id} className="hover:bg-muted/20 transition-colors">
+                <tr key={item.cycle.id} className="transition-colors hover:bg-muted/20">
                   <td className="px-4 py-3">
                     <div className="font-medium text-foreground">{item.cycle.name}</div>
-                    {item.cycle.description && (
-                      <div className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
-                        {item.cycle.description}
-                      </div>
-                    )}
+                    {item.cycle.description ? (
+                      <div className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">{item.cycle.description}</div>
+                    ) : null}
                   </td>
                   <td className="px-4 py-3">
-                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border
-                      ${item.cycle.assessment_type === 'behavioral' ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-indigo-50 text-indigo-700 border-indigo-200'}`}>
-                      {item.cycle.assessment_type === 'behavioral' ? 'Perilaku' : 'Kompetensi'}
-                    </span>
+                    <Badge variant={item.cycle.assessment_type === "behavioral" ? "info" : "neutral"}>
+                      {item.cycle.assessment_type === "behavioral" ? "Perilaku" : "Kompetensi"}
+                    </Badge>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-col gap-1.5">
                       <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">{item.completed} / {item.total} Selesai</span>
+                        <span className="text-muted-foreground">
+                          {item.completed} / {item.total} Selesai
+                        </span>
                         <span className="font-medium">{Math.round((item.completed / item.total) * 100)}%</span>
                       </div>
-                      <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full transition-all duration-500 ${item.completed === item.total ? 'bg-emerald-500' : 'bg-primary'}`}
-                          style={{ width: `${(item.completed / item.total) * 100}%` }} 
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${item.completed === item.total ? "bg-success" : "bg-primary"}`}
+                          style={{ width: `${(item.completed / item.total) * 100}%` }}
                         />
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm ${item.isOverdue ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
+                      <span className={`text-sm ${item.isOverdue ? "font-medium text-destructive" : "text-muted-foreground"}`}>
                         {item.cycle.end_date && format(new Date(item.cycle.end_date), "dd MMM yyyy", { locale: id })}
                       </span>
-                      {item.isOverdue && (
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-destructive text-destructive-foreground">
-                          TERLAMBAT
-                        </span>
-                      )}
+                      {item.isOverdue ? <StatusBadge status="destructive">TERLAMBAT</StatusBadge> : null}
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    {item.status === 'completed' ? (
-                      <button disabled className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md cursor-default opacity-80">
+                    {item.status === "completed" ? (
+                      <Button variant="outline" disabled className="w-full justify-center border-success/20 bg-success/5 text-success">
                         <CheckCircle2 size={14} />
                         Selesai
-                      </button>
+                      </Button>
                     ) : (
-                      <button 
+                      <Button
+                        type="button"
                         onClick={() => handleOpenModal(item.cycle.id)}
-                        disabled={item.isOverdue && item.status !== 'in_progress'} // Allow if specific assignment is somehow in progress? No, block cycle if overdue generally, unless spec says otherwise.
-                        className={`w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white rounded-md transition-colors shadow-sm
-                          ${item.isOverdue 
-                            ? 'bg-muted-foreground hover:bg-muted-foreground/90 cursor-not-allowed'
-                            : 'bg-primary hover:bg-primary/90'
-                          }
-                        `}
+                        disabled={item.isOverdue && item.status !== "in_progress"}
+                        className="w-full justify-center"
+                        variant={item.isOverdue ? "outline" : "primary"}
                       >
                         <Play size={14} fill="currentColor" />
                         Isi Penilaian
-                      </button>
+                      </Button>
                     )}
                   </td>
                 </tr>
@@ -198,11 +198,11 @@ export function AssignedAssessmentList() {
 
       {/* Target Selection Modal */}
       {selectedCycleId && selectedCycleGroup && groupedAssignments && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-background rounded-xl shadow-xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-border flex flex-col max-h-[90vh]">
-            <div className="flex items-center justify-between p-6 border-b border-border shrink-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xl animate-in zoom-in-95 duration-200">
+            <div className="flex shrink-0 items-center justify-between border-b border-border bg-muted/40 p-6">
               <div>
-                <h2 className="text-xl font-bold text-foreground">Pilih Target Penilaian</h2>
+                <h2 className="text-xl font-semibold text-foreground">Pilih Target Penilaian</h2>
                 <p className="text-sm text-muted-foreground">{selectedCycleGroup.cycle.name}</p>
               </div>
               <button 
@@ -213,7 +213,7 @@ export function AssignedAssessmentList() {
               </button>
             </div>
             
-            <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
               <div className="grid gap-6">
                  {/* Atasan */}
                  {groupedAssignments.superior.length > 0 && (
@@ -285,18 +285,19 @@ export function AssignedAssessmentList() {
               </div>
             </div>
             
-            <div className="p-4 border-t border-border bg-muted/20 flex justify-end shrink-0">
-              <button
+            <div className="flex shrink-0 justify-end border-t border-border bg-muted/20 p-4">
+              <Button
+                type="button"
                 onClick={handleCloseModal}
-                className="px-4 py-2 text-sm font-medium text-foreground bg-background border border-border rounded-md hover:bg-muted transition-colors"
+                variant="outline"
               >
                 Tutup
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       )}
-    </>
+    </SectionPanel>
   );
 }
 

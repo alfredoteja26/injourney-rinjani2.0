@@ -71,6 +71,7 @@ const navigationGroups: NavGroup[] = [
     title: "My Talent Journey",
     items: [
       { label: "Home", path: "/talent", icon: Home, description: "Personalized Dashboard" },
+      { label: "My Team", path: "/talent/supervisor-portal", icon: Users, description: "Line manager workspace" },
       { label: "Career Aspiration", path: "/talent/career-aspiration", icon: Target, description: "Kelola Aspirasi Karir Pekerja" },
       { label: "Development Plan", path: "/talent/idp", icon: ClipboardList, description: "Individual Development" },
       { label: "360 Assessment", path: "/talent/360-assessment", icon: PieChart, description: "Multi-source Feedback" },

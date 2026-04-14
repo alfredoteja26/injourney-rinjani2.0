@@ -1,18 +1,40 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Layout } from "../../components/shell/Layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../../components/ui/dialog";
-import { Checkbox } from "../../components/ui/checkbox";
-import { Input } from "../../components/ui/input";
-import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
-import { Users, User, Briefcase, Building, ChevronRight, Search, Info, CheckCircle2, AlertTriangle, FileText, TrendingUp, BarChart3, Plus, X } from "lucide-react";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  EmptyState,
+  FilterRail,
+  Input,
+  PageHeader,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SectionPanel,
+  StatCard,
+  StatCardGroup,
+  StatusBadge,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@rinjani/shared-ui";
+import { Briefcase, Building, FileText, Plus, User, Users } from "lucide-react";
 import { toast } from "sonner";
-import { ScrollArea } from "../../components/ui/scroll-area";
 
 // --- MOCK DATA ---
 
@@ -71,8 +93,8 @@ const RELATIONSHIPS = [
   { supervisor: "EMP007", subordinate: "EMP009" },
   { supervisor: "EMP011", subordinate: "EMP012" },
   { supervisor: "EMP011", subordinate: "EMP013" },
-  { supervisor: "EMP016", subordinate: "EMP017" }, // PT Hotel Indonesia Natour
-  { supervisor: "EMP018", subordinate: "EMP019" }, // PT Integrasi Aviasi Solusi
+  { supervisor: "EMP016", subordinate: "EMP017" },
+  { supervisor: "EMP018", subordinate: "EMP019" },
 ];
 
 const INITIAL_ASPIRATIONS_DATA = [
@@ -89,150 +111,234 @@ const INITIAL_UNIT_REQUESTS = [
 
 // --- LOGIC HELPERS ---
 
-const getGradeValue = (grade: string | number) => {
-  if (typeof grade === 'number') return grade;
-  return 0; 
-};
-
 const getAspirationType = (currentGrade: number, targetGrade: number) => {
   if (targetGrade > currentGrade) return "PROMOSI";
   return "ROTASI";
+};
+
+const VIEW_OPTIONS = [
+  { value: "EMP004", label: "Budi Santoso", role: "Employee" },
+  { value: "EMP003", label: "Ratna Wijaya", role: "Supervisor" },
+  { value: "EMP001", label: "Sri Mulyani", role: "Job Holder" },
+  { value: "EMP010", label: "Bambang Sugiarto", role: "Unit Lead" },
+  { value: "EMP014", label: "Linda Sari", role: "HC Admin" },
+  { value: "EMP016", label: "Rudi Hermawan", role: "Ops Manager" },
+] as const;
+
+const getSourceVariant = (source: string) => {
+  switch (source) {
+    case "INDIVIDUAL":
+      return "info" as const;
+    case "SUPERVISOR":
+      return "warning" as const;
+    case "JOB_HOLDER":
+      return "success" as const;
+    case "UNIT":
+      return "neutral" as const;
+    default:
+      return "neutral" as const;
+  }
+};
+
+const getAspirationTypeVariant = (type: string): "success" | "info" => (type === "PROMOSI" ? "success" : "info");
+
+const getCurrentViewLabel = (value: string) => VIEW_OPTIONS.find((option) => option.value === value);
+
+const getViewRoleVariant = (role?: string) => {
+  switch (role) {
+    case "Supervisor":
+      return "warning" as const;
+    case "Job Holder":
+      return "success" as const;
+    case "Unit Lead":
+      return "neutral" as const;
+    case "HC Admin":
+      return "attention" as const;
+    default:
+      return "info" as const;
+  }
+};
+
+const getViewRoleSummary = (role?: string) => {
+  switch (role) {
+    case "Supervisor":
+      return "Tinjau aspirasi anggota tim dan ajukan nominasi dari konteks line manager.";
+    case "Job Holder":
+      return "Tentukan kandidat penerus untuk posisi kritikal yang sedang Anda emban.";
+    case "Unit Lead":
+      return "Ajukan kebutuhan talenta lintas unit tanpa mengubah alur permintaan yang ada.";
+    case "HC Admin":
+      return "Pantau seluruh aspirasi organisasi dari ringkasan administratif yang lebih rapi.";
+    case "Ops Manager":
+      return "Gunakan persona alternatif untuk melihat perilaku halaman pada konteks manager lain.";
+    default:
+      return "Kelola aspirasi karier personal Anda dari workspace yang lebih konsisten.";
+  }
 };
 
 // --- SUB-COMPONENTS (Views) ---
 
 function AdminView({ aspirations }: { aspirations: any[] }) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Admin Dashboard</CardTitle>
-        <CardDescription>Overview of all aspirations across the organization.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Employee</TableHead>
-                <TableHead>Target Position</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Source</TableHead>
-                <TableHead>Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {aspirations.map((asp) => {
-                const emp = EMPLOYEES.find(e => e.id === asp.emp_id);
-                const pos = POSITIONS.find(p => p.id === asp.pos_id);
-                return (
-                  <TableRow key={asp.id}>
-                    <TableCell>{emp?.name}</TableCell>
-                    <TableCell>{pos?.name}</TableCell>
-                    <TableCell><Badge variant="outline">{asp.type}</Badge></TableCell>
-                    <TableCell><Badge>{asp.source}</Badge></TableCell>
-                    <TableCell>{asp.submitted}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
+    <SectionPanel
+      title="Aspirasi organisasi"
+      description="Ringkasan seluruh aspirasi karier pada organisasi dalam surface yang seragam dengan modul Talent terbaru."
+      actions={<StatusBadge variant="info">{aspirations.length} records</StatusBadge>}
+    >
+      <div className="overflow-hidden rounded-[20px] border border-border bg-card shadow-sm">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Employee</TableHead>
+              <TableHead>Target Position</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Source</TableHead>
+              <TableHead>Date</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {aspirations.map((asp) => {
+              const emp = EMPLOYEES.find((employee) => employee.id === asp.emp_id);
+              const pos = POSITIONS.find((position) => position.id === asp.pos_id);
+              return (
+                <TableRow key={asp.id}>
+                  <TableCell className="font-medium text-foreground">{emp?.name}</TableCell>
+                  <TableCell>{pos?.name}</TableCell>
+                  <TableCell>
+                    <StatusBadge variant={getAspirationTypeVariant(asp.type)}>{asp.type}</StatusBadge>
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge variant={getSourceVariant(asp.source)}>{asp.source}</StatusBadge>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{asp.submitted}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </SectionPanel>
   );
 }
 
-function EmployeeView({ currentUser, aspirations, onSaveAspiration }: { currentUser: any, aspirations: any[], onSaveAspiration: (asp: any) => void }) {
+function EmployeeView({
+  currentUser,
+  aspirations,
+  availablePositions,
+  onSaveAspiration,
+}: {
+  currentUser: any;
+  aspirations: any[];
+  availablePositions: any[];
+  onSaveAspiration: (asp: any) => void;
+}) {
   const [selectedPositionId, setSelectedPositionId] = useState("");
-  
-  // Filter available positions based on rules (mocked simply here)
-  const availablePositions = useMemo(() => {
-    return POSITIONS.filter(p => p.id !== "POS001" && p.id !== "POS002" && p.id !== "POS003"); // Exclude BOD for direct staff application in this mock
-  }, []);
-
-  const myAspirations = aspirations.filter(a => a.emp_id === currentUser.id && a.source === "INDIVIDUAL");
+  const myAspirations = aspirations.filter((asp) => asp.emp_id === currentUser.id && asp.source === "INDIVIDUAL");
 
   const handleApply = () => {
     if (!selectedPositionId) {
       toast.error("Please select a position");
       return;
     }
-    const targetPos = POSITIONS.find(p => p.id === selectedPositionId);
+    const targetPos = POSITIONS.find((position) => position.id === selectedPositionId);
     if (targetPos) {
       onSaveAspiration({
         pos_id: selectedPositionId,
-        type: getAspirationType(currentUser.grade_jabatan, targetPos.grade_jabatan)
+        type: getAspirationType(currentUser.grade_jabatan, targetPos.grade_jabatan),
       });
       setSelectedPositionId("");
     }
   };
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>My Aspirations</CardTitle>
-          <CardDescription>Submit your career aspirations for the next cycle.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-4">
+    <SectionPanel
+      title="Individual aspirations"
+      description="Ajukan aspirasi karier untuk siklus berikutnya tanpa mengubah alur pengisian yang sudah ada."
+      actions={<StatusBadge variant="info">{myAspirations.length} submitted</StatusBadge>}
+    >
+      <FilterRail
+        title="Buat aspirasi"
+        description="Pilih posisi tujuan, lalu simpan aspirasi pada siklus aktif."
+        actionsClassName="w-full"
+      >
+        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Posisi tujuan</label>
             <Select value={selectedPositionId} onValueChange={setSelectedPositionId}>
-              <SelectTrigger className="w-[300px]">
-                <SelectValue placeholder="Select Target Position" />
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih posisi tujuan" />
               </SelectTrigger>
               <SelectContent>
-                {availablePositions.map(p => (
-                  <SelectItem key={p.id} value={p.id}>{p.name} ({p.unit})</SelectItem>
+                {availablePositions.map((position) => (
+                  <SelectItem key={position.id} value={position.id}>
+                    {position.name} ({position.unit})
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <Button onClick={handleApply}><Plus className="w-4 h-4 mr-2" /> Add Aspiration</Button>
           </div>
+          <div className="flex items-end">
+            <Button onClick={handleApply} className="w-full lg:w-auto">
+              <Plus className="size-4" />
+              Simpan Aspirasi
+            </Button>
+          </div>
+        </div>
+      </FilterRail>
 
-          <div className="rounded-md border mt-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Target Position</TableHead>
-                  <TableHead>Unit</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {myAspirations.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground">No aspirations submitted yet.</TableCell>
-                  </TableRow>
-                ) : (
-                  myAspirations.map(asp => {
-                    const pos = POSITIONS.find(p => p.id === asp.pos_id);
-                    return (
-                      <TableRow key={asp.id}>
-                        <TableCell className="font-medium">{pos?.name}</TableCell>
-                        <TableCell>{pos?.unit}</TableCell>
-                        <TableCell><Badge variant="secondary">{asp.type}</Badge></TableCell>
-                        <TableCell>Submitted</TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
+      <div className="mt-5 overflow-hidden rounded-[20px] border border-border bg-background shadow-sm">
+        {myAspirations.length === 0 ? (
+          <div className="p-6">
+            <EmptyState
+              title="Belum ada aspirasi yang dikirim"
+              description="Aspirasi yang Anda simpan akan muncul di tabel ini untuk memudahkan peninjauan siklus karier."
+            />
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Posisi tujuan</TableHead>
+                <TableHead>Unit</TableHead>
+                <TableHead>Tipe</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {myAspirations.map((asp) => {
+                const pos = POSITIONS.find((position) => position.id === asp.pos_id);
+                return (
+                  <TableRow key={asp.id}>
+                    <TableCell className="font-medium text-foreground">{pos?.name}</TableCell>
+                    <TableCell>{pos?.unit}</TableCell>
+                    <TableCell>
+                      <StatusBadge variant={getAspirationTypeVariant(asp.type)}>{asp.type}</StatusBadge>
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status="completed">Submitted</StatusBadge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
+      </div>
+    </SectionPanel>
   );
 }
 
-function SupervisorView({ currentUser, aspirations, onAssignAspiration }: { currentUser: any, aspirations: any[], onAssignAspiration: (empId: string, posId: string) => void }) {
-  // Find direct reports
-  const myTeam = useMemo(() => {
-    const reportIds = RELATIONSHIPS.filter(r => r.supervisor === currentUser.id).map(r => r.subordinate);
-    return EMPLOYEES.filter(e => reportIds.includes(e.id));
-  }, [currentUser]);
-
+function SupervisorView({
+  currentUser,
+  aspirations,
+  myTeam,
+  onAssignAspiration,
+}: {
+  currentUser: any;
+  aspirations: any[];
+  myTeam: any[];
+  onAssignAspiration: (empId: string, posId: string) => void;
+}) {
   const [selectedMember, setSelectedMember] = useState<string>("");
   const [targetPos, setTargetPos] = useState<string>("");
 
@@ -245,81 +351,111 @@ function SupervisorView({ currentUser, aspirations, onAssignAspiration }: { curr
     setTargetPos("");
   };
 
-  return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>My Team Aspirations</CardTitle>
-          <CardDescription>Nominate your team members for career progression.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div>
-              <label className="text-sm font-medium mb-1 block">Team Member</label>
-              <Select value={selectedMember} onValueChange={setSelectedMember}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Employee" />
-                </SelectTrigger>
-                <SelectContent>
-                  {myTeam.map(m => (
-                    <SelectItem key={m.id} value={m.id}>{m.name} - {m.position}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-sm font-medium mb-1 block">Target Position</label>
-              <Select value={targetPos} onValueChange={setTargetPos}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Position" />
-                </SelectTrigger>
-                <SelectContent>
-                  {POSITIONS.map(p => (
-                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-end">
-              <Button onClick={handleAssign} className="w-full">Submit Nomination</Button>
-            </div>
-          </div>
+  const teamAspirations = aspirations.filter((asp) => asp.source === "SUPERVISOR" && myTeam.some((member) => member.id === asp.emp_id));
 
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Employee</TableHead>
-                  <TableHead>Nominated For</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {aspirations
-                  .filter(a => a.source === "SUPERVISOR" && myTeam.some(m => m.id === a.emp_id))
-                  .map(asp => {
-                    const emp = EMPLOYEES.find(e => e.id === asp.emp_id);
-                    const pos = POSITIONS.find(p => p.id === asp.pos_id);
-                    return (
-                      <TableRow key={asp.id}>
-                        <TableCell>{emp?.name}</TableCell>
-                        <TableCell>{pos?.name}</TableCell>
-                        <TableCell><Badge>{asp.type}</Badge></TableCell>
-                        <TableCell>{asp.submitted}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
+  return (
+    <SectionPanel
+      title="Nominasi atasan"
+      description="Ajukan nominasi perkembangan karier anggota tim dari workspace line manager yang lebih konsisten."
+      actions={<StatusBadge variant="warning">{myTeam.length} direct reports</StatusBadge>}
+    >
+      <FilterRail
+        title="Buat nominasi"
+        description="Pilih anggota tim dan posisi tujuan, lalu kirim nominasi pada siklus berjalan."
+        actionsClassName="w-full"
+      >
+        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Anggota tim</label>
+            <Select value={selectedMember} onValueChange={setSelectedMember}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih anggota tim" />
+              </SelectTrigger>
+              <SelectContent>
+                {myTeam.map((member) => (
+                  <SelectItem key={member.id} value={member.id}>
+                    {member.name} - {member.position}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Posisi tujuan</label>
+            <Select value={targetPos} onValueChange={setTargetPos}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih posisi" />
+              </SelectTrigger>
+              <SelectContent>
+                {POSITIONS.map((position) => (
+                  <SelectItem key={position.id} value={position.id}>
+                    {position.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-end">
+            <Button onClick={handleAssign} className="w-full lg:w-auto">
+              <Plus className="size-4" />
+              Kirim Nominasi
+            </Button>
+          </div>
+        </div>
+      </FilterRail>
+
+      <div className="mt-5 overflow-hidden rounded-[20px] border border-border bg-background shadow-sm">
+        {teamAspirations.length === 0 ? (
+          <div className="p-6">
+            <EmptyState
+              title="Belum ada nominasi atasan"
+              description="Nominasi yang Anda kirimkan untuk anggota tim akan muncul di sini sebagai antrian peninjauan."
+            />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Anggota tim</TableHead>
+                <TableHead>Posisi tujuan</TableHead>
+                <TableHead>Tipe</TableHead>
+                <TableHead>Tanggal</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {teamAspirations.map((asp) => {
+                const emp = EMPLOYEES.find((employee) => employee.id === asp.emp_id);
+                const pos = POSITIONS.find((position) => position.id === asp.pos_id);
+                return (
+                  <TableRow key={asp.id}>
+                    <TableCell className="font-medium text-foreground">{emp?.name}</TableCell>
+                    <TableCell>{pos?.name}</TableCell>
+                    <TableCell>
+                      <StatusBadge variant={getAspirationTypeVariant(asp.type)}>{asp.type}</StatusBadge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{asp.submitted}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
+      </div>
+    </SectionPanel>
   );
 }
 
-function JobHolderView({ currentUser, aspirations, onNominateSuccessor }: { currentUser: any, aspirations: any[], onNominateSuccessor: (nomineeId: string) => void }) {
+function JobHolderView({
+  currentUser,
+  aspirations,
+  eligibleNominees,
+  onNominateSuccessor,
+}: {
+  currentUser: any;
+  aspirations: any[];
+  eligibleNominees: any[];
+  onNominateSuccessor: (nomineeId: string) => void;
+}) {
   const [nomineeId, setNomineeId] = useState("");
 
   const handleNominate = () => {
@@ -328,139 +464,244 @@ function JobHolderView({ currentUser, aspirations, onNominateSuccessor }: { curr
     setNomineeId("");
   };
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Successor Nomination</CardTitle>
-        <CardDescription>Nominate a successor for your current position ({currentUser.position}).</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex gap-4 mb-6">
-          <Select value={nomineeId} onValueChange={setNomineeId}>
-            <SelectTrigger className="w-[300px]">
-              <SelectValue placeholder="Select Nominee" />
-            </SelectTrigger>
-            <SelectContent>
-              {EMPLOYEES.filter(e => e.id !== currentUser.id).map(e => (
-                <SelectItem key={e.id} value={e.id}>{e.name} ({e.position})</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Button onClick={handleNominate}>Nominate</Button>
-        </div>
+  const successorNominations = aspirations.filter((asp) => asp.source === "JOB_HOLDER" && asp.nominator === currentUser.name);
 
-        <div className="rounded-md border">
+  return (
+    <SectionPanel
+      title="Nominasi successor"
+      description={`Tentukan kandidat successor untuk posisi ${currentUser.position}.`}
+      actions={<StatusBadge variant="success">{successorNominations.length} nominations</StatusBadge>}
+    >
+      <FilterRail title="Pilih nominee" description="Pilih kandidat penerus dan lanjutkan alur nominasi yang sama." actionsClassName="w-full">
+        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Nominee</label>
+            <Select value={nomineeId} onValueChange={setNomineeId}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih nominee" />
+              </SelectTrigger>
+              <SelectContent>
+                {eligibleNominees.map((employee) => (
+                  <SelectItem key={employee.id} value={employee.id}>
+                    {employee.name} ({employee.position})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-end">
+            <Button onClick={handleNominate} className="w-full lg:w-auto">
+              <Briefcase className="size-4" />
+              Kirim Nominasi
+            </Button>
+          </div>
+        </div>
+      </FilterRail>
+
+      <div className="mt-5 overflow-hidden rounded-[20px] border border-border bg-background shadow-sm">
+        {successorNominations.length === 0 ? (
+          <div className="p-6">
+            <EmptyState
+              title="Belum ada nominasi successor"
+              description="Kandidat penerus yang Anda pilih akan tampil pada daftar ini untuk pemantauan berikutnya."
+            />
+          </div>
+        ) : (
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Nominee</TableHead>
-                <TableHead>Current Position</TableHead>
+                <TableHead>Posisi saat ini</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {aspirations
-                .filter(a => a.source === "JOB_HOLDER" && a.nominator === currentUser.name)
-                .map(asp => {
-                  const emp = EMPLOYEES.find(e => e.id === asp.emp_id);
-                  return (
-                    <TableRow key={asp.id}>
-                      <TableCell>{emp?.name}</TableCell>
-                      <TableCell>{emp?.position}</TableCell>
-                      <TableCell>Nominated</TableCell>
-                    </TableRow>
-                  );
-                })}
+              {successorNominations.map((asp) => {
+                const emp = EMPLOYEES.find((employee) => employee.id === asp.emp_id);
+                return (
+                  <TableRow key={asp.id}>
+                    <TableCell className="font-medium text-foreground">{emp?.name}</TableCell>
+                    <TableCell>{emp?.position}</TableCell>
+                    <TableCell>
+                      <StatusBadge status="success">Nominated</StatusBadge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
-        </div>
-      </CardContent>
-    </Card>
+        )}
+      </div>
+    </SectionPanel>
   );
 }
 
-function UnitView({ currentUser, unitRequests, onRequestTalent }: { currentUser: any, unitRequests: any[], onRequestTalent: (req: any) => void }) {
+function UnitView({
+  currentUser,
+  unitRequests,
+  onRequestTalent,
+}: {
+  currentUser: any;
+  unitRequests: any[];
+  onRequestTalent: (req: any) => void;
+}) {
   const [requestOpen, setRequestOpen] = useState(false);
-  
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-medium">Unit Aspirations</h3>
-          <p className="text-sm text-muted-foreground">Request talent from other units or propose movements.</p>
-        </div>
-        <Dialog open={requestOpen} onOpenChange={setRequestOpen}>
-          <DialogTrigger asChild>
-            <Button>New Talent Request</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Request Talent</DialogTitle>
-              <DialogDescription>Submit a request for a specific talent to join your unit.</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Target Position (In Your Unit)</label>
-                <Input placeholder="e.g. Manager Marketing" />
+    <SectionPanel
+      title="Permintaan unit"
+      description="Ajukan kebutuhan talenta lintas unit melalui workspace yang lebih rapi tanpa mengubah interaksi yang ada."
+      actions={
+        <div className="flex flex-wrap items-center gap-3">
+          <StatusBadge variant="warning">{unitRequests.length} requests</StatusBadge>
+          <Dialog open={requestOpen} onOpenChange={setRequestOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="size-4" />
+                Permintaan Baru
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Permintaan talenta</DialogTitle>
+                <DialogDescription>Ajukan permintaan untuk talenta yang dibutuhkan pada unit Anda.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Posisi tujuan di unit Anda</label>
+                  <Input placeholder="Contoh: Manager Marketing" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Nama nominee</label>
+                  <Input placeholder="Contoh: Budi Santoso" />
+                </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Nominee Name</label>
-                <Input placeholder="e.g. Budi Santoso" />
+              <DialogFooter>
+                <Button
+                  onClick={() => {
+                    onRequestTalent({
+                      unit_id: currentUser.unit,
+                      requested_by: currentUser.name,
+                      requested_pos: "Director SDM",
+                      nominee_name: "Ratna Wijaya",
+                      nominee_pos: "Manager HR Ops",
+                    });
+                    setRequestOpen(false);
+                  }}
+                >
+                  Kirim Permintaan
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      }
+    >
+      <div className="grid grid-cols-1 gap-4">
+        {unitRequests.length === 0 ? (
+          <div className="rounded-[20px] border border-dashed border-border bg-muted/20 px-6 py-8">
+            <EmptyState
+              title="Belum ada permintaan unit"
+              description="Permintaan talenta antar unit akan tampil di sini agar mudah dipantau oleh pemilik unit."
+            />
+          </div>
+        ) : (
+          unitRequests.map((req) => (
+            <div key={req.id} className="rounded-[20px] border border-border bg-card p-5 shadow-sm">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="space-y-1">
+                  <p className="text-base font-semibold text-foreground">{req.requested_pos}</p>
+                  <p className="text-sm text-muted-foreground">Requested by {req.requested_by}</p>
+                </div>
+                <StatusBadge variant="warning">Pending</StatusBadge>
+              </div>
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
+                <p>
+                  <span className="text-muted-foreground">Nominee:</span> <span className="font-medium text-foreground">{req.nominee_name}</span>
+                </p>
+                <p className="text-muted-foreground">{req.submitted}</p>
               </div>
             </div>
-            <DialogFooter>
-              <Button onClick={() => {
-                onRequestTalent({
-                  unit_id: currentUser.unit,
-                  requested_by: currentUser.name,
-                  requested_pos: "Director SDM", // Mocked
-                  nominee_name: "Ratna Wijaya", // Mocked
-                  nominee_pos: "Manager HR Ops"
-                });
-                setRequestOpen(false);
-              }}>Submit Request</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          ))
+        )}
       </div>
+    </SectionPanel>
+  );
+}
 
-      <div className="grid grid-cols-1 gap-4">
-        {unitRequests.map(req => (
-          <Card key={req.id}>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between">
-                <CardTitle className="text-base">{req.requested_pos}</CardTitle>
-                <Badge variant="outline">Pending</Badge>
-              </div>
-              <CardDescription>Requested by {req.requested_by}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-center text-sm">
-                <div>
-                  <span className="text-muted-foreground">Nominee:</span> <span className="font-medium">{req.nominee_name}</span>
-                </div>
-                <div className="text-muted-foreground">{req.submitted}</div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+function TeamSummary({
+  aspirations,
+  unitRequests,
+  availablePositions,
+}: {
+  aspirations: any[];
+  unitRequests: any[];
+  availablePositions: any[];
+}) {
+  const totalRecords = aspirations.length + unitRequests.length;
+  const individualRecords = aspirations.filter((asp) => asp.source === "INDIVIDUAL").length;
+  const supervisorRecords = aspirations.filter((asp) => asp.source === "SUPERVISOR").length;
+  const openPositions = availablePositions.filter((position) => position.status === "Vacant").length;
+
+  return (
+    <StatCardGroup>
+      <StatCard
+        label="Total record"
+        value={totalRecords}
+        description="Seluruh aspirasi dan permintaan unit pada data aktif."
+        supportingText="Ringkasan ini menjaga konteks halaman tetap mudah dipindai."
+        icon={<FileText className="size-5" />}
+        tone="info"
+      />
+      <StatCard
+        label="Aspirasi individu"
+        value={individualRecords}
+        description="Pengajuan aspirasi mandiri oleh karyawan."
+        supportingText="Alur self-service tetap sama."
+        icon={<User className="size-5" />}
+        tone="success"
+      />
+      <StatCard
+        label="Nominasi atasan"
+        value={supervisorRecords}
+        description="Usulan atasan untuk direct report."
+        supportingText="Flow line manager tetap berada di route yang sama."
+        icon={<Users className="size-5" />}
+        tone="warning"
+      />
+      <StatCard
+        label="Posisi terbuka"
+        value={openPositions}
+        description="Posisi vacant yang tersedia sebagai target aspirasi."
+        supportingText="Daftar target tidak berubah."
+        icon={<Building className="size-5" />}
+        tone="neutral"
+      />
+    </StatCardGroup>
   );
 }
 
 // --- MAIN PAGE COMPONENT ---
 
 export function CareerAspirationPage({ embedded = false }: { embedded?: boolean }) {
-  const [currentView, setCurrentView] = useState("EMP004"); 
-  const [currentUser, setCurrentUser] = useState(EMPLOYEES.find(e => e.id === "EMP004"));
+  const [currentView, setCurrentView] = useState("EMP004");
+  const [currentUser, setCurrentUser] = useState(EMPLOYEES.find((employee) => employee.id === "EMP004"));
 
   const [aspirations, setAspirations] = useState(INITIAL_ASPIRATIONS_DATA);
   const [unitRequests, setUnitRequests] = useState(INITIAL_UNIT_REQUESTS);
 
+  const availablePositions = useMemo(() => POSITIONS.filter((position) => !["POS001", "POS002", "POS003"].includes(position.id)), []);
+  const currentTeam = useMemo(() => {
+    if (!currentUser) return [];
+    const reportIds = RELATIONSHIPS.filter((relationship) => relationship.supervisor === currentUser.id).map((relationship) => relationship.subordinate);
+    return EMPLOYEES.filter((employee) => reportIds.includes(employee.id));
+  }, [currentUser]);
+  const currentViewOption = getCurrentViewLabel(currentView);
+  const isAdminView = currentUser?.id === "EMP014";
+
   const handleViewChange = (val: string) => {
     setCurrentView(val);
-    setCurrentUser(EMPLOYEES.find(e => e.id === val));
+    setCurrentUser(EMPLOYEES.find((employee) => employee.id === val));
   };
 
   const handleSaveIndividualAspiration = (asp: any) => {
@@ -469,16 +710,16 @@ export function CareerAspirationPage({ embedded = false }: { embedded?: boolean 
       id: `NEW_${Date.now()}`,
       emp_id: currentUser?.id,
       source: "INDIVIDUAL",
-      submitted: new Date().toISOString().split('T')[0]
+      submitted: new Date().toISOString().split("T")[0],
     };
-    setAspirations(prev => [...prev, newRecord]);
+    setAspirations((prev) => [...prev, newRecord]);
     toast.success("Aspiration submitted successfully!");
   };
 
   const handleAssignSupervisorAspiration = (empId: string, posId: string) => {
-    const emp = EMPLOYEES.find(e => e.id === empId);
-    const pos = POSITIONS.find(p => p.id === posId);
-    
+    const emp = EMPLOYEES.find((employee) => employee.id === empId);
+    const pos = POSITIONS.find((position) => position.id === posId);
+
     if (emp && pos) {
       const type = getAspirationType(emp.grade_jabatan, pos.grade_jabatan);
       const newRecord = {
@@ -488,130 +729,160 @@ export function CareerAspirationPage({ embedded = false }: { embedded?: boolean 
         type,
         source: "SUPERVISOR",
         nominator: currentUser?.name,
-        submitted: new Date().toISOString().split('T')[0]
+        submitted: new Date().toISOString().split("T")[0],
       };
-      setAspirations(prev => [...prev, newRecord]);
+      setAspirations((prev) => [...prev, newRecord]);
       toast.success(`Nomination for ${emp.name} submitted!`);
     }
   };
 
   const handleNominateSuccessor = (nomineeId: string) => {
-     const myPos = POSITIONS.find(p => p.name === currentUser?.position);
-     
-     if (myPos) {
-        const newRecord = {
-           id: `NEW_JOB_${Date.now()}`,
-           emp_id: nomineeId, 
-           pos_id: myPos.id, 
-           type: 'PROMOSI', 
-           source: 'JOB_HOLDER',
-           nominator: currentUser?.name,
-           submitted: new Date().toISOString().split('T')[0]
-        };
-        setAspirations(prev => [...prev, newRecord]);
-        toast.success(`Successor nominated successfully!`);
-     } else {
-        toast.error("Could not determine your current position ID.");
-     }
+    const myPos = POSITIONS.find((position) => position.name === currentUser?.position);
+
+    if (myPos) {
+      const newRecord = {
+        id: `NEW_JOB_${Date.now()}`,
+        emp_id: nomineeId,
+        pos_id: myPos.id,
+        type: "PROMOSI",
+        source: "JOB_HOLDER",
+        nominator: currentUser?.name,
+        submitted: new Date().toISOString().split("T")[0],
+      };
+      setAspirations((prev) => [...prev, newRecord]);
+      toast.success("Successor nominated successfully!");
+    } else {
+      toast.error("Could not determine your current position ID.");
+    }
   };
 
   const handleRequestTalent = (req: any) => {
-     const newReq = {
-       ...req,
-       id: `NEW_UNIT_${Date.now()}`,
-       submitted: new Date().toISOString().split('T')[0]
-     };
-     setUnitRequests(prev => [...prev, newReq]);
-     
-     const pos = POSITIONS.find(p => p.name === req.requested_pos && p.unit === req.unit_id);
-     const emp = EMPLOYEES.find(e => e.name === req.nominee_name);
-     
-     if (pos && emp) {
-        setAspirations(prev => [...prev, {
-           id: `NEW_UNIT_ASP_${Date.now()}`,
-           emp_id: emp.id,
-           pos_id: pos.id,
-           type: 'ROTASI', // Defaulting
-           source: 'UNIT',
-           nominator: currentUser?.name,
-           submitted: new Date().toISOString().split('T')[0]
-        }]);
-     }
-     
-     toast.success("Talent request submitted successfully");
+    const newReq = {
+      ...req,
+      id: `NEW_UNIT_${Date.now()}`,
+      submitted: new Date().toISOString().split("T")[0],
+    };
+    setUnitRequests((prev) => [...prev, newReq]);
+
+    const pos = POSITIONS.find((position) => position.name === req.requested_pos && position.unit === req.unit_id);
+    const emp = EMPLOYEES.find((employee) => employee.name === req.nominee_name);
+
+    if (pos && emp) {
+      setAspirations((prev) => [
+        ...prev,
+        {
+          id: `NEW_UNIT_ASP_${Date.now()}`,
+          emp_id: emp.id,
+          pos_id: pos.id,
+          type: "ROTASI",
+          source: "UNIT",
+          nominator: currentUser?.name,
+          submitted: new Date().toISOString().split("T")[0],
+        },
+      ]);
+    }
+
+    toast.success("Talent request submitted successfully");
   };
 
   const pageContent = (
-    <div className={embedded ? "h-full" : "p-8 max-w-[1200px] mx-auto space-y-8 pb-20"}>
-      
-      {/* Header & View Toggle */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-           <div className="flex items-center gap-2 text-primary">
-             <TrendingUp className="w-8 h-8" />
-             <h3 className="text-2xl font-bold tracking-tight">Career Path (Aspiration)</h3>
-           </div>
-           <p className="text-muted-foreground">Manage your career aspirations and succession planning.</p>
+    <div className={embedded ? "flex h-full flex-col gap-6" : "mx-auto max-w-[var(--layout-max-width-workspace)] space-y-6 px-4 pb-10 pt-6 md:px-6 lg:px-8"}>
+      <PageHeader
+        variant="workspace"
+        eyebrow="My Talent Journey"
+        title="Career Aspiration"
+        description="Kelola aspirasi karier, nominasi atasan, successor, dan permintaan unit dalam workspace yang selaras dengan pola UI Talent terbaru."
+        badge={<StatusBadge variant={getViewRoleVariant(currentViewOption?.role)}>{currentViewOption?.role ?? "Persona"}</StatusBadge>}
+      />
+
+      <TeamSummary aspirations={aspirations} unitRequests={unitRequests} availablePositions={availablePositions} />
+
+      <FilterRail
+        title="Konteks tampilan"
+        description={currentUser ? `${currentUser.name} • ${currentUser.position} • ${currentUser.unit}` : "Pilih persona untuk melihat konteks halaman."}
+        actionsClassName="w-full"
+      >
+        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)]">
+          <div className="rounded-[20px] border border-border bg-muted/30 px-4 py-4">
+            <p className="text-sm font-semibold text-foreground">{currentViewOption?.role ?? "Persona aktif"}</p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">{getViewRoleSummary(currentViewOption?.role)}</p>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Lihat sebagai</label>
+            <Select value={currentView} onValueChange={handleViewChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih persona" />
+              </SelectTrigger>
+              <SelectContent>
+                {VIEW_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label} ({option.role})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        
-        <div className="w-[300px]">
-           <label className="text-xs font-medium text-muted-foreground mb-1 block">View As (Prototype Only)</label>
-           <Select value={currentView} onValueChange={handleViewChange}>
-             <SelectTrigger>
-               <SelectValue placeholder="Select User View" />
-             </SelectTrigger>
-             <SelectContent>
-               <SelectItem value="EMP004">👤 Budi Santoso (Employee)</SelectItem>
-               <SelectItem value="EMP003">👔 Ratna Wijaya (Supervisor)</SelectItem>
-               <SelectItem value="EMP001">🎯 Sri Mulyani (Job Holder)</SelectItem>
-               <SelectItem value="EMP010">🏢 Bambang Sugiarto (Unit Lead)</SelectItem>
-               <SelectItem value="EMP014">⚙️ Linda Sari (HC Admin)</SelectItem>
-               <SelectItem value="EMP016">🏨 Rudi Hermawan (Ops Manager - HIN)</SelectItem>
-             </SelectContent>
-           </Select>
-        </div>
-      </div>
+      </FilterRail>
 
-      {/* Dynamic Content Based on View */}
-      
-      {currentUser?.id === "EMP014" ? (
-        <AdminView aspirations={aspirations} />
-      ) : (
-        <Tabs defaultValue="individual">
-          <TabsList className="mb-4">
-            <TabsTrigger value="individual" className="gap-2"><User className="w-4 h-4"/> Individual</TabsTrigger>
-            {/* Show Supervisor Tab if applicable - Checking if Level includes BOD-1/2/3 */}
-            {(currentUser?.level_jabatan === "BOD-01" || currentUser?.level_jabatan === "BOD-02" || currentUser?.level_jabatan === "BOD-03") && (
-              <TabsTrigger value="supervisor" className="gap-2"><Users className="w-4 h-4"/> Supervisor</TabsTrigger>
-            )}
-            {/* Show Job Holder Tab if applicable - BOD-1/2 */}
-            {(currentUser?.level_jabatan === "BOD-01" || currentUser?.level_jabatan === "BOD-02") && (
-              <TabsTrigger value="jobholder" className="gap-2"><Briefcase className="w-4 h-4"/> Job Holder</TabsTrigger>
-            )}
-            {/* Show Unit Tab if applicable - BOD-1/2/3 */}
-            {(currentUser?.level_jabatan === "BOD-01" || currentUser?.level_jabatan === "BOD-02" || currentUser?.level_jabatan === "BOD-03") && (
-              <TabsTrigger value="unit" className="gap-2"><Building className="w-4 h-4"/> Unit</TabsTrigger>
-            )}
-          </TabsList>
+      {!isAdminView ? (
+        <Tabs defaultValue="individual" className="space-y-6">
+          <FilterRail
+            title="Mode aspirasi"
+            description="Pindah antar mode kerja tanpa mengubah route maupun logika data halaman."
+            actionsClassName="w-full"
+          >
+            <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-muted p-2">
+              <TabsTrigger value="individual" className="gap-2 rounded-full px-4 py-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
+                <User className="size-4" /> Individu
+              </TabsTrigger>
+              {(currentUser?.level_jabatan === "BOD-01" || currentUser?.level_jabatan === "BOD-02" || currentUser?.level_jabatan === "BOD-03") && (
+                <TabsTrigger value="supervisor" className="gap-2 rounded-full px-4 py-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
+                  <Users className="size-4" /> Atasan
+                </TabsTrigger>
+              )}
+              {(currentUser?.level_jabatan === "BOD-01" || currentUser?.level_jabatan === "BOD-02") && (
+                <TabsTrigger value="jobholder" className="gap-2 rounded-full px-4 py-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
+                  <Briefcase className="size-4" /> Job Holder
+                </TabsTrigger>
+              )}
+              {(currentUser?.level_jabatan === "BOD-01" || currentUser?.level_jabatan === "BOD-02" || currentUser?.level_jabatan === "BOD-03") && (
+                <TabsTrigger value="unit" className="gap-2 rounded-full px-4 py-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
+                  <Building className="size-4" /> Unit
+                </TabsTrigger>
+              )}
+            </TabsList>
+          </FilterRail>
 
-          <TabsContent value="individual">
-             <EmployeeView currentUser={currentUser} aspirations={aspirations} onSaveAspiration={handleSaveIndividualAspiration} />
+          <TabsContent value="individual" className="mt-0">
+            <EmployeeView
+              currentUser={currentUser}
+              aspirations={aspirations}
+              availablePositions={availablePositions}
+              onSaveAspiration={handleSaveIndividualAspiration}
+            />
           </TabsContent>
 
-          <TabsContent value="supervisor">
-             <SupervisorView currentUser={currentUser} aspirations={aspirations} onAssignAspiration={handleAssignSupervisorAspiration} />
+          <TabsContent value="supervisor" className="mt-0">
+            <SupervisorView currentUser={currentUser} aspirations={aspirations} myTeam={currentTeam} onAssignAspiration={handleAssignSupervisorAspiration} />
           </TabsContent>
 
-          <TabsContent value="jobholder">
-             <JobHolderView currentUser={currentUser} aspirations={aspirations} onNominateSuccessor={handleNominateSuccessor} />
+          <TabsContent value="jobholder" className="mt-0">
+            <JobHolderView
+              currentUser={currentUser}
+              aspirations={aspirations}
+              eligibleNominees={EMPLOYEES.filter((employee) => employee.id !== currentUser.id)}
+              onNominateSuccessor={handleNominateSuccessor}
+            />
           </TabsContent>
 
-           <TabsContent value="unit">
-             <UnitView currentUser={currentUser} unitRequests={unitRequests} onRequestTalent={handleRequestTalent} />
+          <TabsContent value="unit" className="mt-0">
+            <UnitView currentUser={currentUser} unitRequests={unitRequests} onRequestTalent={handleRequestTalent} />
           </TabsContent>
         </Tabs>
+      ) : (
+        <AdminView aspirations={aspirations} />
       )}
-
     </div>
   );
 

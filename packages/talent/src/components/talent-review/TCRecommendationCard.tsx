@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Building2, Award, TrendingUp, FileCheck, ArrowRight } from 'lucide-react';
 import { HCRecommendation, eligibleEmployees, supervisorProposals } from '../../data/mockTalentReviewData';
+import { Badge, Button, StatusBadge } from '@rinjani/shared-ui';
 
 interface TCRecommendationCardProps {
   recommendation: HCRecommendation;
@@ -13,71 +14,37 @@ export function TCRecommendationCard({ recommendation, onMakeDecision }: TCRecom
 
   if (!employee || !supervisorProposal) return null;
 
-  const getZonasiColor = (zonasi: string): { bg: string; color: string } => {
-    return zonasi === 'INTERNAL' 
-      ? { bg: 'var(--color-primary-light)', color: 'var(--color-primary)' }
-      : { bg: 'var(--color-warning-light)', color: 'var(--color-warning)' };
-  };
-
-  const zonasiInfo = getZonasiColor(recommendation.zonasi);
-
   return (
-    <div 
-      className="p-6 rounded transition-all hover:shadow-md"
-      style={{ 
-        backgroundColor: 'var(--color-card)', 
-        border: '1px solid var(--color-border)'
-      }}
-    >
+    <div className="rounded-[20px] border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
       {/* Employee Header */}
-      <div className="flex items-start gap-4 mb-5 pb-5 border-b" style={{ borderColor: 'var(--color-border)' }}>
-        <div 
-          className="w-16 h-16 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: 'var(--color-primary-light)' }}
-        >
-          <User className="w-8 h-8" style={{ color: 'var(--color-primary)' }} />
+      <div className="mb-5 flex items-start gap-4 border-b border-border pb-5">
+        <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <User className="size-8" />
         </div>
         <div className="flex-1">
-          <h3 style={{ 
-            fontSize: 'var(--text-xl)', 
-            fontWeight: 'var(--font-weight-semibold)',
-            color: 'var(--color-foreground)',
-            marginBottom: '8px'
-          }}>
-            {employee.name}
-          </h3>
+          <h3 className="mb-2 text-xl font-semibold text-foreground">{employee.name}</h3>
           <div className="grid grid-cols-2 gap-x-6 gap-y-2">
             <div className="flex items-center gap-2">
-              <Building2 className="w-4 h-4" style={{ color: 'var(--color-muted-foreground)' }} />
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
+              <Building2 className="size-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
                 NIK: {employee.nik}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Award className="w-4 h-4" style={{ color: 'var(--color-muted-foreground)' }} />
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
+              <Award className="size-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
                 {employee.current_position}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" style={{ color: 'var(--color-muted-foreground)' }} />
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
+              <TrendingUp className="size-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
                 Grade: {employee.current_grade} | PG: {employee.personal_grade}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span 
-                className="px-2 py-0.5 rounded"
-                style={{ 
-                  backgroundColor: 'var(--color-primary-light)',
-                  color: 'var(--color-primary)',
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 'var(--font-weight-medium)'
-                }}
-              >
-                {employee.cluster.replace('_', ' ')}
-              </span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-muted-foreground)' }}>
+              <StatusBadge status="info">{employee.cluster.replace('_', ' ')}</StatusBadge>
+              <span className="text-sm text-muted-foreground">
                 EQS: {employee.eqs_score.toFixed(1)}
               </span>
             </div>
@@ -89,40 +56,26 @@ export function TCRecommendationCard({ recommendation, onMakeDecision }: TCRecom
       <div className="mb-5">
         <div className="flex items-start gap-4">
           {/* Supervisor Proposal */}
-          <div 
-            className="flex-1 p-4 rounded"
-            style={{ backgroundColor: 'var(--color-success-light)', border: '1px solid var(--color-success)' }}
-          >
+          <div className="flex-1 rounded-[18px] border border-success/20 bg-success/5 p-4">
             <div className="flex items-center gap-2 mb-3">
-              <div 
-                className="w-6 h-6 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--color-success)', color: 'white' }}
-              >
-                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-semibold)' }}>1</span>
+              <div className="flex size-6 items-center justify-center rounded-full bg-success text-xs font-semibold text-success-foreground">
+                1
               </div>
-              <p style={{ 
-                fontSize: 'var(--text-sm)', 
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-foreground)'
-              }}>
+              <p className="text-sm font-semibold text-foreground">
                 Supervisor Proposal
               </p>
             </div>
             <div className="space-y-2">
               <div>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                  Proposal Type
-                </p>
-                <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-foreground)' }}>
+                <p className="text-xs text-muted-foreground">Proposal Type</p>
+                <p className="text-sm font-medium text-foreground">
                   {supervisorProposal.proposal_type.replace(/_/g, ' ')}
                 </p>
               </div>
               {supervisorProposal.target_position_id && (
                 <div>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-muted-foreground)' }}>
-                    Target Position
-                  </p>
-                  <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-foreground)' }}>
+                  <p className="text-xs text-muted-foreground">Target Position</p>
+                  <p className="text-sm font-medium text-foreground">
                     {supervisorProposal.target_position_id}
                   </p>
                 </div>
@@ -130,61 +83,37 @@ export function TCRecommendationCard({ recommendation, onMakeDecision }: TCRecom
             </div>
           </div>
 
-          <ArrowRight className="w-5 h-5 mt-8" style={{ color: 'var(--color-muted-foreground)' }} />
+          <ArrowRight className="mt-8 size-5 text-muted-foreground" />
 
           {/* HC Recommendation */}
-          <div 
-            className="flex-1 p-4 rounded"
-            style={{ backgroundColor: 'var(--color-primary-light)', border: '1px solid var(--color-primary)' }}
-          >
+          <div className="flex-1 rounded-[18px] border border-primary/20 bg-primary/5 p-4">
             <div className="flex items-center gap-2 mb-3">
-              <div 
-                className="w-6 h-6 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}
-              >
-                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-semibold)' }}>2</span>
+              <div className="flex size-6 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                2
               </div>
-              <p style={{ 
-                fontSize: 'var(--text-sm)', 
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-primary)'
-              }}>
+              <p className="text-sm font-semibold text-primary">
                 HC Recommendation
               </p>
             </div>
             <div className="space-y-2">
               <div>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-primary)' }}>
-                  Zonasi
-                </p>
-                <span 
-                  className="inline-block px-2 py-0.5 rounded"
-                  style={{ 
-                    backgroundColor: zonasiInfo.bg,
-                    color: zonasiInfo.color,
-                    fontSize: 'var(--text-xs)',
-                    fontWeight: 'var(--font-weight-medium)'
-                  }}
-                >
+                <p className="text-xs text-primary">Zonasi</p>
+                <Badge variant={recommendation.zonasi === 'INTERNAL' ? 'info' : 'warning'}>
                   {recommendation.zonasi}
-                </span>
+                </Badge>
               </div>
               {recommendation.recommended_position_id && (
                 <div>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-primary)' }}>
-                    Recommended Position
-                  </p>
-                  <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-primary)' }}>
+                  <p className="text-xs text-primary">Recommended Position</p>
+                  <p className="text-sm font-medium text-primary">
                     {recommendation.recommended_position_id}
                   </p>
                 </div>
               )}
               {recommendation.recommended_grade && (
                 <div>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-primary)' }}>
-                    Recommended Grade
-                  </p>
-                  <p style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-primary)' }}>
+                  <p className="text-xs text-primary">Recommended Grade</p>
+                  <p className="text-sm font-medium text-primary">
                     Grade {recommendation.recommended_grade}
                   </p>
                 </div>
@@ -192,31 +121,21 @@ export function TCRecommendationCard({ recommendation, onMakeDecision }: TCRecom
             </div>
           </div>
 
-          <ArrowRight className="w-5 h-5 mt-8" style={{ color: 'var(--color-muted-foreground)' }} />
+          <ArrowRight className="mt-8 size-5 text-muted-foreground" />
 
           {/* TC Decision (Pending) */}
-          <div 
-            className="flex-1 p-4 rounded"
-            style={{ backgroundColor: 'var(--color-warning-light)', border: '1px solid var(--color-warning)' }}
-          >
+          <div className="flex-1 rounded-[18px] border border-warning/20 bg-warning/5 p-4">
             <div className="flex items-center gap-2 mb-3">
-              <div 
-                className="w-6 h-6 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--color-warning)', color: 'white' }}
-              >
-                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-semibold)' }}>3</span>
+              <div className="flex size-6 items-center justify-center rounded-full bg-warning text-xs font-semibold text-warning-foreground">
+                3
               </div>
-              <p style={{ 
-                fontSize: 'var(--text-sm)', 
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--color-warning)'
-              }}>
+              <p className="text-sm font-semibold text-warning">
                 TC Decision
               </p>
             </div>
             <div className="text-center py-4">
-              <FileCheck className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--color-warning)' }} />
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-warning)' }}>
+              <FileCheck className="mx-auto mb-2 size-8 text-warning" />
+              <p className="text-xs text-warning">
                 Awaiting Decision
               </p>
             </div>
@@ -225,65 +144,32 @@ export function TCRecommendationCard({ recommendation, onMakeDecision }: TCRecom
       </div>
 
       {/* HC Rationale */}
-      <div 
-        className="p-4 rounded mb-5"
-        style={{ backgroundColor: 'var(--color-muted)', border: '1px solid var(--color-border)' }}
-      >
-        <p style={{ 
-          fontSize: 'var(--text-xs)', 
-          color: 'var(--color-muted-foreground)',
-          marginBottom: '8px'
-        }}>
-          HC Rationale
-        </p>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-foreground)', lineHeight: '1.6' }}>
+      <div className="mb-5 rounded-[16px] border border-border bg-muted/40 p-4">
+        <p className="mb-2 text-xs text-muted-foreground">HC Rationale</p>
+        <p className="text-sm leading-6 text-foreground">
           {recommendation.hc_rationale}
         </p>
       </div>
 
       {/* Supervisor Justification */}
-      <div 
-        className="p-4 rounded mb-5"
-        style={{ backgroundColor: '#F9FAFB', border: '1px solid var(--color-border)' }}
-      >
-        <p style={{ 
-          fontSize: 'var(--text-xs)', 
-          color: 'var(--color-muted-foreground)',
-          marginBottom: '8px'
-        }}>
-          Supervisor Justification
-        </p>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-foreground)', lineHeight: '1.6' }}>
+      <div className="mb-5 rounded-[16px] border border-border bg-background p-4">
+        <p className="mb-2 text-xs text-muted-foreground">Supervisor Justification</p>
+        <p className="text-sm leading-6 text-foreground">
           {supervisorProposal.justification}
         </p>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3 justify-end">
-        <button
-          className="px-4 py-2 rounded transition-colors"
-          style={{
-            backgroundColor: 'var(--color-card)',
-            border: '1px solid var(--color-border)',
-            color: 'var(--color-foreground)',
-            fontSize: 'var(--text-sm)',
-            fontWeight: 'var(--font-weight-medium)'
-          }}
-        >
+      <div className="flex justify-end gap-3">
+        <Button variant="outline">
           View Full Profile
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onMakeDecision}
-          className="px-4 py-2 rounded transition-colors"
-          style={{
-            backgroundColor: 'var(--color-primary)',
-            color: 'var(--color-primary-foreground)',
-            fontSize: 'var(--text-sm)',
-            fontWeight: 'var(--font-weight-semibold)'
-          }}
+          variant="primary"
         >
           Make TC Decision
-        </button>
+        </Button>
       </div>
     </div>
   );

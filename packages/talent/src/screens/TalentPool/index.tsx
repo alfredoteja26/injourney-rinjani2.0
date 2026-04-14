@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Layout } from "../../components/shell/Layout";
+import { Sheet } from "../../components/ui/sheet";
 import { TalentProfileDetail } from "./TalentProfileDetail";
 import { BandSidebar } from "./components/BandSidebar";
 import { CandidateRanking } from "./components/CandidateRanking";
@@ -59,19 +60,18 @@ export function TalentPool() {
 
       </div>
 
-      {/* Candidate Profile Slide-over */}
-      {selectedCandidate && (
-        <>
-          <div 
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 animate-in fade-in duration-300"
-            onClick={() => setSelectedCandidate(null)}
+      <Sheet open={Boolean(selectedCandidate)} onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          setSelectedCandidate(null);
+        }
+      }}>
+        {selectedCandidate ? (
+          <TalentProfileDetail
+            candidate={selectedCandidate}
+            onClose={() => setSelectedCandidate(null)}
           />
-          <TalentProfileDetail 
-            candidate={selectedCandidate} 
-            onClose={() => setSelectedCandidate(null)} 
-          />
-        </>
-      )}
+        ) : null}
+      </Sheet>
     </Layout>
   );
 }
