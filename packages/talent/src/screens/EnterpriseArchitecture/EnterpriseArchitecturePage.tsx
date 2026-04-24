@@ -7,7 +7,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/ta
 import { Badge } from "../../components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../components/ui/accordion";
 import { Layout } from "../../components/shell/Layout";
-import { Calculator, TrendingDown, Building2, Users, Wallet, BarChart3, PieChart as PieChartIcon, Layers, Info, Settings2, ChevronDown } from "lucide-react";
+import {
+  ArrowRightLeft,
+  BarChart3,
+  Building2,
+  Calculator,
+  ChevronDown,
+  Database,
+  Info,
+  Layers,
+  LineChart,
+  PieChart as PieChartIcon,
+  Settings2,
+  ShieldCheck,
+  TrendingDown,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
   PieChart, Pie, Cell, ComposedChart, Line
@@ -41,12 +57,12 @@ const RECURRING_COSTS = {
 
 // Colors for Charts
 const COLORS = [
-  "#00495d", // Primary (Chart 1)
-  "#ff9220", // Secondary (Chart 2)
-  "#1e3a5f", // Chart 3
-  "#009689", // Chart 4
-  "#e31937", // Chart 5
-  "#5c6370", // Muted
+  "var(--color-chart-1)",
+  "var(--color-chart-2)",
+  "var(--color-chart-3)",
+  "var(--color-chart-4)",
+  "var(--color-chart-5)",
+  "var(--color-muted-foreground)",
 ];
 
 // Data Structure for Entities
@@ -367,6 +383,11 @@ export function EnterpriseArchitecturePage() {
     return data;
   }, [calculation, projectionScenario]);
 
+  const selectedCapex = projectionScenario === "optimistic" ? TOTAL_CAPEX.optimistic : TOTAL_CAPEX.conservative;
+  const selectedAnnualOpex = projectionScenario === "optimistic" ? calculation.totalOpexHigh : calculation.totalOpexLow;
+  const sapShare = calculation.totalEmployees > 0 ? Math.round((calculation.sapCount / calculation.totalEmployees) * 100) : 0;
+  const sunfishShare = calculation.totalEmployees > 0 ? Math.round((calculation.sunfishCount / calculation.totalEmployees) * 100) : 0;
+
 
   // Format currency
   const formatMoney = (amountInJuta: number) => {
@@ -414,75 +435,141 @@ export function EnterpriseArchitecturePage() {
 
   return (
     <Layout>
-      <div className="p-8 max-w-[1200px] mx-auto space-y-8 pb-20">
+      <div className="mx-auto max-w-[var(--layout-max-width-workspace)] space-y-6 px-4 pb-10 pt-6 md:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-primary">
-            <Building2 className="w-8 h-8" />
-            <h3>Enterprise Architecture Cost Model</h3>
+        <div className="overflow-hidden rounded-[24px] border border-border bg-card shadow-sm">
+          <div className="grid gap-6 p-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:p-7">
+            <div className="min-w-0 space-y-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">Enterprise Architecture</Badge>
+                <Badge variant="outline" className="border-success/20 bg-success-muted text-success">TOGAF 10 model</Badge>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                    <Building2 className="size-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h1 className="text-2xl font-bold tracking-normal text-foreground md:text-3xl">Enterprise Architecture Cost Model</h1>
+                    <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+                      Model skenario platform HR InJourney Group untuk membandingkan komposisi SAP, Sunfish, CAPEX, OPEX, dan estimasi manfaat lima tahun.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-border bg-muted/40 p-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <Database className="size-3.5" />
+                    Source scope
+                  </div>
+                  <p className="mt-2 text-sm font-semibold text-foreground">{entities.length} entities modeled</p>
+                </div>
+                <div className="rounded-xl border border-border bg-muted/40 p-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <ArrowRightLeft className="size-3.5" />
+                    Allocation
+                  </div>
+                  <p className="mt-2 text-sm font-semibold text-foreground">{sapShare}% SAP / {sunfishShare}% Sunfish</p>
+                </div>
+                <div className="rounded-xl border border-border bg-muted/40 p-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <ShieldCheck className="size-3.5" />
+                    Scenario
+                  </div>
+                  <p className="mt-2 text-sm font-semibold capitalize text-foreground">{projectionScenario}</p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5">
+              <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                <LineChart className="size-4" />
+                Executive snapshot
+              </div>
+              <div className="mt-5 space-y-4">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Projected CAPEX</p>
+                  <p className="mt-1 text-3xl font-bold tracking-normal text-foreground">{formatBillion(selectedCapex)}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl bg-card p-3 shadow-sm">
+                    <p className="text-xs text-muted-foreground">Annual OPEX</p>
+                    <p className="mt-1 text-base font-bold text-primary">{formatMoney(selectedAnnualOpex)}</p>
+                  </div>
+                  <div className="rounded-xl bg-card p-3 shadow-sm">
+                    <p className="text-xs text-muted-foreground">Subscription</p>
+                    <p className="mt-1 text-base font-bold text-primary">{formatRange(calculation.totalSubLow, calculation.totalSubHigh)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-muted-foreground">
-            Interactive financial model for InJourney Group EA implementation (TOGAF 10).
-            Adjust parameters to estimate 5-year OPEX and CAPEX.
-          </p>
         </div>
 
         {/* Top Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-primary text-primary-foreground border-none shadow-md">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-primary-foreground font-medium text-sm">Total Employees</CardTitle>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <Card className="border-primary/20 bg-primary text-primary-foreground shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center justify-between text-sm font-semibold text-primary-foreground">
+                Total Employees
+                <Users className="size-4 opacity-80" />
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{calculation.totalEmployees.toLocaleString()}</div>
-              <p className="text-xs text-primary-foreground/80 mt-1">Across all entities</p>
+              <div className="text-3xl font-bold tabular-nums tracking-normal">{calculation.totalEmployees.toLocaleString()}</div>
+              <p className="mt-2 text-xs font-medium text-primary-foreground/80">Across all group entities</p>
             </CardContent>
           </Card>
           
-          <Card className="shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-muted-foreground font-medium text-sm">Annual OPEX (Sub.)</CardTitle>
+          <Card className="border-border bg-card shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center justify-between text-sm font-semibold text-muted-foreground">
+                Annual OPEX
+                <Wallet className="size-4 text-primary" />
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-primary text-2xl font-bold">
-                {formatRange(calculation.totalSubLow, calculation.totalSubHigh)}
+              <div className="text-2xl font-bold tracking-normal text-primary">
+                {formatRange(calculation.totalOpexLow, calculation.totalOpexHigh)}
               </div>
-              <div className="flex items-center gap-1 text-xs text-[color:var(--color-chart-4)] mt-1 font-medium">
+              <div className="mt-2 flex items-center gap-1 text-xs font-medium text-success">
                 <TrendingDown className="w-3 h-3" />
-                <span>Based on current config</span>
+                <span>Includes support overhead</span>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-muted-foreground font-medium text-sm">SAP Users</CardTitle>
+          <Card className="border-border bg-card shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold text-muted-foreground">SAP Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{calculation.sapCount.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">Core HR + Payroll</p>
+              <div className="text-2xl font-bold tabular-nums tracking-normal text-foreground">{calculation.sapCount.toLocaleString()}</div>
+              <p className="mt-2 text-xs text-muted-foreground">Core HR + Payroll ({sapShare}% allocation)</p>
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-muted-foreground font-medium text-sm">Sunfish Users</CardTitle>
+          <Card className="border-border bg-card shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold text-muted-foreground">Sunfish Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{calculation.sunfishCount.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">Workforce + 100 Admin</p>
+              <div className="text-2xl font-bold tabular-nums tracking-normal text-foreground">{calculation.sunfishCount.toLocaleString()}</div>
+              <p className="mt-2 text-xs text-muted-foreground">Workforce + 100 admin ({sunfishShare}% allocation)</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Main Calculator Area */}
         <Tabs defaultValue="calculator" className="w-full">
-          <TabsList className="mb-4">
+          <TabsList className="mb-4 h-auto flex-wrap justify-start rounded-xl border border-border bg-muted/50 p-1">
             <TabsTrigger value="calculator" className="flex items-center gap-2">
               <Calculator className="w-4 h-4" /> OPEX Calculator
             </TabsTrigger>
-            <TabsTrigger value="details">Detailed Breakdown</TabsTrigger>
+            <TabsTrigger value="details" className="flex items-center gap-2">
+              <Layers className="w-4 h-4" /> Detailed Breakdown
+            </TabsTrigger>
             <TabsTrigger value="capex" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" /> Financial Analysis
             </TabsTrigger>
@@ -495,7 +582,7 @@ export function EnterpriseArchitecturePage() {
               <div className="lg:col-span-2 space-y-6">
                 
                 {/* 1. Entity Assignment Strategy */}
-                <Card>
+                <Card className="overflow-hidden border-border shadow-sm">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Settings2 className="w-5 h-5 text-primary" />
@@ -506,6 +593,7 @@ export function EnterpriseArchitecturePage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="p-0">
+                    <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -581,11 +669,12 @@ export function EnterpriseArchitecturePage() {
                         ))}
                       </TableBody>
                     </Table>
+                    </div>
                   </CardContent>
                 </Card>
 
                 {/* 2. Hybrid Category Rules */}
-                <Card>
+                <Card className="border-border shadow-sm">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Layers className="w-5 h-5 text-primary" />
@@ -598,7 +687,7 @@ export function EnterpriseArchitecturePage() {
                   <CardContent>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {CATEGORIES.map((cat) => (
-                        <div key={cat.id} className="flex items-center justify-between border p-3 rounded-lg">
+                        <div key={cat.id} className="flex flex-col gap-3 rounded-xl border border-border bg-muted/20 p-4 sm:flex-row sm:items-center sm:justify-between">
                           <div>
                             <div className="font-medium text-sm">{cat.label}</div>
                             <div className="text-xs text-muted-foreground">{cat.description}</div>
@@ -624,7 +713,7 @@ export function EnterpriseArchitecturePage() {
                   </CardContent>
                 </Card>
 
-                <div className="bg-primary/5 border border-primary/10 rounded-lg p-4 text-sm text-primary flex items-start gap-2">
+                <div className="flex items-start gap-3 rounded-xl border border-primary/10 bg-primary/5 p-4 text-sm text-primary">
                   <Info className="w-5 h-5 mt-0.5" />
                   <div>
                     <strong>Pricing Model Updates:</strong>
@@ -639,7 +728,7 @@ export function EnterpriseArchitecturePage() {
 
               {/* Right Column: Summary */}
               <div className="space-y-6">
-                <Card>
+                <Card className="border-border shadow-sm">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Wallet className="w-5 h-5 text-primary" />
@@ -678,7 +767,7 @@ export function EnterpriseArchitecturePage() {
                         </span>
                       </div>
 
-                      <div className="bg-muted p-3 rounded-md mt-4">
+                      <div className="mt-4 rounded-xl bg-muted p-3">
                         <div className="flex justify-between items-center text-xs text-muted-foreground mb-1">
                            <span>Overhead (Training, Support, Storage)</span>
                            <span>{formatMoney(calculation.totalRecurringOverhead)}</span>
@@ -698,7 +787,7 @@ export function EnterpriseArchitecturePage() {
           </TabsContent>
 
           <TabsContent value="details">
-             <Card>
+             <Card className="overflow-hidden border-border shadow-sm">
               <CardHeader>
                 <CardTitle>Detailed Breakdown by Category</CardTitle>
                 <CardDescription>
@@ -706,6 +795,7 @@ export function EnterpriseArchitecturePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -740,12 +830,13 @@ export function EnterpriseArchitecturePage() {
                     </TableRow>
                   </TableBody>
                 </Table>
+                </div>
               </CardContent>
              </Card>
           </TabsContent>
 
           <TabsContent value="capex" className="space-y-6">
-            <div className="flex items-center justify-between bg-muted/30 p-4 rounded-lg">
+            <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
                <div className="space-y-1">
                  <h4 className="text-sm font-medium">Investment Scenario</h4>
                  <p className="text-xs text-muted-foreground">Toggle between Conservative and Optimistic estimates</p>
@@ -763,7 +854,7 @@ export function EnterpriseArchitecturePage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* CAPEX Pie Chart */}
-              <Card className="min-w-0">
+              <Card className="min-w-0 border-border shadow-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <PieChartIcon className="w-5 h-5 text-primary" />
@@ -799,7 +890,7 @@ export function EnterpriseArchitecturePage() {
               </Card>
 
               {/* 5-Year Projection Bar Chart */}
-              <Card className="min-w-0">
+              <Card className="min-w-0 border-border shadow-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <BarChart3 className="w-5 h-5 text-primary" />
@@ -821,9 +912,9 @@ export function EnterpriseArchitecturePage() {
                         <YAxis label={{ value: 'IDR Milyar', angle: -90, position: 'insideLeft' }} />
                         <Tooltip formatter={(value: number) => [`Rp ${value.toFixed(1)} M`, undefined]} />
                         <Legend />
-                        <Bar dataKey="capex" name="CAPEX" stackId="a" fill="#00495d" radius={[0, 0, 4, 4]} />
-                        <Bar dataKey="opex" name="OPEX" stackId="a" fill="#5c6370" radius={[4, 4, 0, 0]} />
-                        <Line type="monotone" dataKey="savings" name="Est. Savings" stroke="#ff9220" strokeWidth={3} />
+                        <Bar dataKey="capex" name="CAPEX" stackId="a" fill="var(--color-chart-1)" radius={[0, 0, 4, 4]} />
+                        <Bar dataKey="opex" name="OPEX" stackId="a" fill="var(--color-muted-foreground)" radius={[4, 4, 0, 0]} />
+                        <Line type="monotone" dataKey="savings" name="Est. Savings" stroke="var(--color-chart-3)" strokeWidth={3} />
                       </ComposedChart>
                     </ResponsiveContainer>
                   </div>
@@ -832,7 +923,7 @@ export function EnterpriseArchitecturePage() {
             </div>
 
             {/* Detailed Component Breakdown */}
-            <Card>
+            <Card className="border-border shadow-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Layers className="w-5 h-5 text-primary" />
@@ -855,6 +946,7 @@ export function EnterpriseArchitecturePage() {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
+                        <div className="overflow-x-auto">
                         <Table>
                           <TableHeader>
                             <TableRow>
@@ -876,12 +968,13 @@ export function EnterpriseArchitecturePage() {
                             ))}
                           </TableBody>
                         </Table>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   ))}
                 </Accordion>
                 
-                <div className="mt-6 flex justify-between items-center p-4 bg-muted/30 rounded-lg border">
+                <div className="mt-6 flex flex-col gap-3 rounded-xl border border-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
                    <div className="font-bold">Total Projected CAPEX</div>
                    <div className="text-right">
                      <div className="text-xl font-bold text-primary">{formatBillion(TOTAL_CAPEX.conservative)} - {formatBillion(TOTAL_CAPEX.optimistic)}</div>
