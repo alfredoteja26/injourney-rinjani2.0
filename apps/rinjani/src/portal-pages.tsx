@@ -4,18 +4,22 @@ import { Navigate, useNavigate, useParams } from "react-router";
 import type { UserRole } from "@rinjani/shared-types";
 import type { Notification } from "@rinjani/shared-types";
 import Frame from "@portal/imports/Frame1000001738";
-import MyProfile from "@portal/components/MyProfile";
 import Settings from "@portal/components/Settings";
 import SurveyTakePage from "@portal/components/SurveyTakePage";
 import SurveyAnalyticsPage from "@portal/components/SurveyAnalyticsPage";
 import SurveyManagementPage from "@portal/components/SurveyManagementPage";
 import { SurveyPage } from "@portal/components/SurveyPage";
 import HCDigiPolicy from "@portal/components/HCDigiPolicy";
-import PublicProfileView from "@portal/components/PublicProfileView";
 import Analytics from "@portal/components/Analytics";
 import { MailManagement } from "@portal/components/MailManagement";
 import { OffboardingStatus } from "@portal/components/OffboardingStatus";
 import { OnboardingProvider } from "@portal/components/onboarding/onboarding-context";
+import {
+  PortalEmployeeDirectoryPage as WorkerProfileDirectoryPage,
+  PortalEmployeeProfileCompatibilityPage as WorkerProfileCompatibilityPage,
+  PortalMyWorkerProfilePage,
+  PortalWorkerProfilePage as CanonicalWorkerProfilePage,
+} from "./worker-profile/views";
 
 interface SharedPortalProps {
   userRole: UserRole;
@@ -38,8 +42,7 @@ export function PortalDashboardPage({ userRole, userEmail }: Pick<SharedPortalPr
 }
 
 export function PortalMyProfilePage({ userRole, userEmail }: Pick<SharedPortalProps, "userRole" | "userEmail">) {
-  const navigate = useNavigate();
-  return <MyProfile onBack={() => navigate("/")} userRole={userRole} userEmail={userEmail} onLogout={() => navigate("/login")} />;
+  return <PortalMyWorkerProfilePage userRole={userRole} userEmail={userEmail} />;
 }
 
 export function PortalSettingsPage({ userRole, userEmail, notifications, setNotifications }: SharedPortalProps) {
@@ -83,10 +86,16 @@ export function PortalPolicyPage({ userRole, userEmail }: Pick<SharedPortalProps
   return <HCDigiPolicy onBack={() => navigate("/")} userRole={userRole} userEmail={userEmail} />;
 }
 
-export function PortalEmployeeProfilePage() {
-  const navigate = useNavigate();
-  const { email } = useParams();
-  return email ? <PublicProfileView onBack={() => navigate("/")} email={decodeURIComponent(email)} /> : <Navigate to="/" replace />;
+export function PortalEmployeeProfileCompatibilityRoute({ userRole, userEmail }: Pick<SharedPortalProps, "userRole" | "userEmail">) {
+  return <WorkerProfileCompatibilityPage userRole={userRole} userEmail={userEmail} />;
+}
+
+export function PortalWorkerProfileRoute({ userRole, userEmail }: Pick<SharedPortalProps, "userRole" | "userEmail">) {
+  return <CanonicalWorkerProfilePage userRole={userRole} userEmail={userEmail} />;
+}
+
+export function PortalEmployeeDirectoryRoute({ userRole, userEmail }: Pick<SharedPortalProps, "userRole" | "userEmail">) {
+  return <WorkerProfileDirectoryPage userRole={userRole} userEmail={userEmail} />;
 }
 
 export function PortalAnalyticsPage() {

@@ -97,6 +97,11 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PageArchetypePreviewFrame,
+  PageArchetypeSection,
+  PageArchetypeSidebar,
+  PageArchetypeToolbar,
+  PageHeader,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -107,6 +112,7 @@ import {
   RankingList,
   RadioGroupItem,
   Separator,
+  SectionPanel,
   Select,
   SelectContent,
   SelectItem,
@@ -122,6 +128,9 @@ import {
   SheetTitle,
   SheetTrigger,
   Spinner,
+  StatCard,
+  StatCardGroup,
+  StatusBadge,
   StatusLabel,
   Switch,
   Table,
@@ -144,7 +153,7 @@ import {
   EmptyState,
   ErrorState,
 } from "@rinjani/shared-ui";
-import { AlertTriangle, Bell, CheckCircle2, Filter, Grid3X3, Info, Search, Settings, UserRound } from "lucide-react";
+import { AlertTriangle, Bell, CalendarDays, CheckCircle2, FileSearch, Filter, Grid3X3, Info, PanelLeft, Search, Settings, ShieldCheck, SlidersHorizontal, UserRound, Workflow } from "lucide-react";
 
 const implementedComponents = [
   { name: "cn", path: "packages/shared-ui/src/utils.ts", status: "Implemented", category: "Foundation" },
@@ -193,6 +202,10 @@ const implementedComponents = [
   { name: "ProfileSummary", path: "packages/shared-ui/src/profile-summary.tsx", status: "Implemented", category: "Data Display" },
   { name: "Accordion", path: "packages/shared-ui/src/accordion.tsx", status: "Implemented", category: "Data Display" },
   { name: "LoadingState", path: "packages/shared-ui/src/loading-state.tsx", status: "Implemented", category: "Status Indicators" },
+  { name: "PageArchetypePreviewFrame", path: "packages/shared-ui/src/page-archetypes.tsx", status: "Implemented", category: "Layout" },
+  { name: "PageArchetypeToolbar", path: "packages/shared-ui/src/page-archetypes.tsx", status: "Implemented", category: "Layout" },
+  { name: "PageArchetypeSidebar", path: "packages/shared-ui/src/page-archetypes.tsx", status: "Implemented", category: "Layout" },
+  { name: "PageArchetypeSection", path: "packages/shared-ui/src/page-archetypes.tsx", status: "Implemented", category: "Layout" },
   { name: "StatusLabel", path: "packages/shared-ui/src/status-label.tsx", status: "Implemented", category: "Status Indicators" },
   { name: "MetricCard", path: "packages/shared-ui/src/analytics.tsx", status: "Implemented", category: "Analytics" },
   { name: "ChartContainer", path: "packages/shared-ui/src/analytics.tsx", status: "Implemented", category: "Analytics" },
@@ -248,6 +261,10 @@ const componentStates: Record<string, string> = {
   DetailPanel: "header, content, footer, supporting panel",
   EmployeeBriefCard: "assignment-aware employee identity card with primary and secondary role contexts",
   LoadingState: "panel/page loading copy",
+  PageArchetypePreviewFrame: "dashboard-hub, workspace-explorer, governance-cockpit, detail-workspace preview shells",
+  PageArchetypeToolbar: "inline, side-rail, hybrid preview toolbar models",
+  PageArchetypeSidebar: "side-rail preview surface for advanced filters or secondary navigation",
+  PageArchetypeSection: "default, muted, accent section rhythm for preview-phase page compositions",
   Combobox: "searchable selection, descriptions, disabled option",
   DateInput: "single date, disabled-ready",
   Toast: "success, info, warning, error, loading, dismiss",
@@ -319,6 +336,81 @@ const layoutPatterns = [
   { name: "Density modes", usage: "Use compact density for tables and metadata, but keep form/edit flows more breathable." },
   { name: "Inspection patterns", usage: "Use DetailPanel or Sheet before Modal when users need to preserve parent-page context." },
   { name: "State coverage", usage: "Every layout should define loading, empty, error, and overflow behavior before migration." },
+];
+
+const pageArchetypes = [
+  {
+    id: "dashboard-hub",
+    label: "Dashboard Hub",
+    title: "Summary-first surface for monitoring and steering",
+    summary: "Use for monitoring pages that need immediate orientation, strong metric grouping, and a clear path into the next decision zone.",
+    defaultFilterModel: "Inline toolbar",
+    actionPlacement: "Global cycle or export actions can live in the page header; deeper actions stay inside the section they affect.",
+    rhythm: "Lead with a headline summary band, then shift into layered sections for watchlists, charts, and upcoming actions.",
+    candidates: ["Portal dashboard", "Talent home", "Performance overview hub"],
+  },
+  {
+    id: "workspace-explorer",
+    label: "Workspace Explorer",
+    title: "Browse, narrow, compare, then inspect",
+    summary: "Use for list, board, and directory workflows where the user refines a large result set and continuously moves between overview and inspection.",
+    defaultFilterModel: "Hybrid",
+    actionPlacement: "Quick filters and view controls stay attached to the results region; advanced filters remain secondary in a side rail or drawer.",
+    rhythm: "Keep a strong exploration spine: search and filters, result surface, then detail or comparison support.",
+    candidates: ["Career Aspiration", "Talent Pool", "360 Assessment HQ"],
+  },
+  {
+    id: "governance-cockpit",
+    label: "Governance Cockpit",
+    title: "Decision-heavy queue with clear escalation context",
+    summary: "Use for committee, approval, audit, and policy-heavy workflows that need strong priority signaling without turning into a generic dashboard.",
+    defaultFilterModel: "Inline toolbar",
+    actionPlacement: "Priority and review actions should sit next to the queue, case, or evidence block they change, not only in the page header.",
+    rhythm: "Start with state and risk visibility, then move quickly into queue, evidence, and decision support regions.",
+    candidates: ["Talent Committee", "My Team approvals", "Performance approval queue"],
+  },
+  {
+    id: "detail-workspace",
+    label: "Detail Workspace",
+    title: "Deep record inspection with local control",
+    summary: "Use for employee, position, KPI, or case-detail pages where a single record needs rich context, local navigation, and section-level actions.",
+    defaultFilterModel: "Contextual local controls",
+    actionPlacement: "Use lightweight global actions at the top, then place edit, compare, or workflow actions inside the relevant detail section.",
+    rhythm: "Begin with identity and current state, then move through structured sections, contextual tabs, and supporting side context.",
+    candidates: ["Employee profile", "Position detail", "KPI detail workspace"],
+  },
+] as const;
+
+type ArchetypeId = (typeof pageArchetypes)[number]["id"];
+
+const filterModels = [
+  {
+    id: "inline",
+    title: "Inline Toolbar",
+    icon: SlidersHorizontal,
+    usage: "Default for dashboard and governance surfaces where quick scope changes must stay attached to the working content.",
+    guidance: "Search, scope, sort, and quick chips sit in the same band as the content region they affect.",
+  },
+  {
+    id: "side-rail",
+    title: "Side Filter Rail",
+    icon: PanelLeft,
+    usage: "Use for exploration-heavy pages when the user needs a stable faceted navigation model across a large result set.",
+    guidance: "The side rail owns advanced facets while the main surface stays focused on results and comparison.",
+  },
+  {
+    id: "hybrid",
+    title: "Hybrid Model",
+    icon: Workflow,
+    usage: "Recommended default for explorer pages where a few high-frequency filters need inline access and deeper criteria remain secondary.",
+    guidance: "Keep quick controls inline; move deep filters to a side rail, drawer, or popover so content remains the dominant surface.",
+  },
+] as const;
+
+const archetypeDoNotRules = [
+  "Do not use a generic full-width filter strip stacked above the main content by default.",
+  "Do not treat tabs and context switches as filter controls; they are workspace navigation.",
+  "Do not concentrate section-level workflow actions only in the page header.",
 ];
 
 const approvedKawungFactor = {
@@ -417,6 +509,8 @@ const reviewerOptions = [
 
 export function DesignSystemPage() {
   const [activeComponentSection, setActiveComponentSection] = useState<ComponentSectionId>("implementation");
+  const [activeArchetype, setActiveArchetype] = useState<ArchetypeId>("dashboard-hub");
+  const selectedArchetype = pageArchetypes.find((item) => item.id === activeArchetype) ?? pageArchetypes[0];
 
   return (
     <main className="min-h-full bg-background px-6 py-6">
@@ -448,6 +542,7 @@ export function DesignSystemPage() {
             <TabsTrigger value="tokens">Tokens</TabsTrigger>
             <TabsTrigger value="typography">Typography</TabsTrigger>
             <TabsTrigger value="layout">Layout</TabsTrigger>
+            <TabsTrigger value="archetypes">Page Archetypes</TabsTrigger>
           </TabsList>
 
           <TabsContent value="components" className="mt-0">
@@ -1553,9 +1648,583 @@ export function DesignSystemPage() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="archetypes" className="mt-0 flex flex-col gap-6">
+            <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Page Archetype Preview Lab</CardTitle>
+                  <CardDescription>
+                    Preview-phase compositions for live-module rollout later. Review layout intent here first, then apply the approved direction to active modules.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4 text-sm leading-6 text-muted-foreground">
+                  <p>
+                    <span className="font-semibold text-foreground">Why this exists:</span> the current module refactor standardized shell and surface quality, but it also
+                    over-normalized page rhythm. This lab lets Rinjani explore stronger page-level variation without disturbing active routes.
+                  </p>
+                  <p>
+                    <span className="font-semibold text-foreground">Review goal:</span> agree on which archetype best fits each job-to-be-done, how filters should relate
+                    to content, and where actions belong before any live-module redesign starts.
+                  </p>
+                  <div className="grid gap-3 rounded-[20px] border border-border bg-muted/35 p-4">
+                    <p className="text-sm font-semibold text-foreground">Preview-phase rules</p>
+                    <ul className="grid gap-2 text-sm leading-6 text-muted-foreground">
+                      {archetypeDoNotRules.map((rule) => (
+                        <li key={rule} className="flex items-start gap-2">
+                          <AlertTriangle className="mt-1 size-4 shrink-0 text-warning" />
+                          <span>{rule}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Filter Placement Models</CardTitle>
+                  <CardDescription>
+                    The preview must make filter-to-content ownership explicit so future modules do not fall back to a detached top filter block.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4 lg:grid-cols-3">
+                  {filterModels.map((model) => (
+                    <FilterModelCard key={model.id} {...model} />
+                  ))}
+                </CardContent>
+              </Card>
+            </section>
+
+            <section className="grid gap-6 xl:grid-cols-[280px_1fr]">
+              <Card className="h-fit xl:sticky xl:top-6">
+                <CardHeader>
+                  <CardTitle>Page Archetypes</CardTitle>
+                  <CardDescription>Switch between the four preview-phase composition patterns.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-3">
+                  {pageArchetypes.map((archetype) => (
+                    <button
+                      key={archetype.id}
+                      type="button"
+                      onClick={() => setActiveArchetype(archetype.id)}
+                      className={`rounded-[18px] border px-4 py-3 text-left transition-colors ${
+                        activeArchetype === archetype.id
+                          ? "border-primary/30 bg-primary/8 text-foreground shadow-sm"
+                          : "border-border bg-background text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      }`}
+                    >
+                      <p className="text-sm font-semibold">{archetype.label}</p>
+                      <p className="mt-1 text-xs leading-5">{archetype.defaultFilterModel}</p>
+                    </button>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <div className="flex min-w-0 flex-col gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>{selectedArchetype.label}</CardTitle>
+                    <CardDescription>{selectedArchetype.title}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+                    <div className="grid gap-3 text-sm leading-6 text-muted-foreground">
+                      <p>{selectedArchetype.summary}</p>
+                      <p>
+                        <span className="font-semibold text-foreground">Default filter model:</span> {selectedArchetype.defaultFilterModel}
+                      </p>
+                      <p>
+                        <span className="font-semibold text-foreground">Action placement:</span> {selectedArchetype.actionPlacement}
+                      </p>
+                      <p>
+                        <span className="font-semibold text-foreground">Content rhythm:</span> {selectedArchetype.rhythm}
+                      </p>
+                    </div>
+                    <div className="rounded-[22px] border border-border bg-muted/35 p-4">
+                      <p className="text-sm font-semibold text-foreground">Apply later</p>
+                      <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                        Likely rollout candidates once the preview direction is approved. These are references only; live modules remain unchanged in this pass.
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {selectedArchetype.candidates.map((candidate) => (
+                          <Badge key={candidate} variant="neutral">
+                            {candidate}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <PageArchetypeShowcase archetype={activeArchetype} />
+              </div>
+            </section>
+          </TabsContent>
         </Tabs>
       </div>
     </main>
+  );
+}
+
+function FilterModelCard({
+  title,
+  usage,
+  guidance,
+  icon: Icon,
+}: {
+  title: string;
+  usage: string;
+  guidance: string;
+  icon: React.ComponentType<{ className?: string }>;
+}) {
+  return (
+    <div className="rounded-[20px] border border-border bg-muted/25 p-4">
+      <div className="flex items-center gap-3">
+        <div className="rounded-full bg-primary/10 p-2 text-primary">
+          <Icon className="size-4" />
+        </div>
+        <p className="text-sm font-semibold text-foreground">{title}</p>
+      </div>
+      <div className="mt-4 grid gap-2 rounded-[18px] border border-border bg-background p-3">
+        <div className="h-8 rounded-[12px] border border-primary/15 bg-primary/5" />
+        <div className="grid gap-2 lg:grid-cols-[0.34fr_1fr]">
+          <div className="rounded-[12px] border border-dashed border-border bg-muted/45 p-2" />
+          <div className="grid gap-2">
+            <div className="h-12 rounded-[12px] border border-border bg-card" />
+            <div className="h-12 rounded-[12px] border border-border bg-card" />
+          </div>
+        </div>
+      </div>
+      <p className="mt-4 text-sm leading-6 text-muted-foreground">{usage}</p>
+      <p className="mt-2 text-xs leading-5 text-muted-foreground">{guidance}</p>
+    </div>
+  );
+}
+
+function PageArchetypeShowcase({ archetype }: { archetype: ArchetypeId }) {
+  switch (archetype) {
+    case "dashboard-hub":
+      return <DashboardHubPreview />;
+    case "workspace-explorer":
+      return <WorkspaceExplorerPreview />;
+    case "governance-cockpit":
+      return <GovernanceCockpitPreview />;
+    case "detail-workspace":
+      return <DetailWorkspacePreview />;
+    default:
+      return null;
+  }
+}
+
+function DashboardHubPreview() {
+  return (
+    <PageArchetypePreviewFrame
+      variant="dashboard-hub"
+      label="Dashboard Hub"
+      title="Talent Readiness Hub"
+      description="Summary-first composition with quick intervention visibility and inline scope controls connected to the live watchlist."
+      headerMeta={<StatusBadge status="success">Healthy cycle</StatusBadge>}
+      actions={
+        <>
+          <Button variant="outline">Export summary</Button>
+          <Button>Open intervention agenda</Button>
+        </>
+      }
+    >
+      <div className="grid gap-5">
+        <StatCardGroup className="xl:grid-cols-3">
+          <StatCard label="Ready-now coverage" value="72%" description="Critical successor roles covered by approved readiness." tone="success" />
+          <StatCard label="Pending interventions" value="14" description="Items still needing leader action this month." tone="warning" />
+          <StatCard label="Committee confidence" value="89" description="Quality score for current cycle evidence." tone="info" />
+        </StatCardGroup>
+
+        <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
+          <PageArchetypeSection
+            tone="accent"
+            title="Readiness watchlist"
+            description="The filter toolbar sits inside the watchlist region because it changes the chart and table immediately below it."
+            actions={<StatusBadge status="attention">Inline toolbar</StatusBadge>}
+          >
+            <div className="grid gap-4">
+              <PageArchetypeToolbar model="inline" title="Scope & signal" description="Quick scope changes stay attached to the watchlist, not in a detached page strip.">
+                <SearchInput placeholder="Search unit or role" className="min-w-[240px] flex-1" />
+                <Select>
+                  <SelectTrigger className="w-[170px]">
+                    <SelectValue placeholder="Cycle Q2 2026" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="q2">Cycle Q2 2026</SelectItem>
+                    <SelectItem value="q1">Cycle Q1 2026</SelectItem>
+                  </SelectContent>
+                </Select>
+                <ActionChip variant="selected">Critical roles</ActionChip>
+                <ActionChip>Ready now</ActionChip>
+              </PageArchetypeToolbar>
+
+              <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+                <ChartContainer title="Coverage by unit" description="Layered summaries are appropriate here because the page is steering-focused, not queue-first.">
+                  <BarChart data={readinessChartData.slice(0, 5)} />
+                </ChartContainer>
+
+                <SectionPanel
+                  title="Intervention queue"
+                  description="A focused list under the dashboard summary instead of another full-width filter block."
+                  contentClassName="pt-0"
+                >
+                  <List>
+                    {rankingItems.map((item) => (
+                      <ListItem key={item.label}>
+                        <ListItemContent>
+                          <ListItemTitle>{item.label}</ListItemTitle>
+                          <ListItemDescription>{item.description}</ListItemDescription>
+                        </ListItemContent>
+                        <ListItemMeta>
+                          <div className="flex items-center gap-2">
+                            <Badge variant={item.tone === "warning" ? "warning" : "success"}>{item.value}</Badge>
+                            <Button variant="ghost" size="sm">
+                              Review
+                            </Button>
+                          </div>
+                        </ListItemMeta>
+                      </ListItem>
+                    ))}
+                  </List>
+                </SectionPanel>
+              </div>
+            </div>
+          </PageArchetypeSection>
+
+          <PageArchetypeSection
+            title="Upcoming actions"
+            description="A dashboard can still keep a secondary action lane, but it should support the main summary surface instead of fighting it."
+            actions={<CalendarDays className="size-4 text-muted-foreground" />}
+          >
+            <div className="grid gap-3">
+              <div className="rounded-[18px] border border-border bg-card p-4">
+                <p className="text-sm font-semibold text-foreground">Committee dry run</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">Tue, 23 Apr 2026 · HC Strategy and Airport Services focus roles.</p>
+              </div>
+              <div className="rounded-[18px] border border-border bg-card p-4">
+                <p className="text-sm font-semibold text-foreground">Escalate 5 blocked successors</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">Create cross-unit action plan before the next governance checkpoint.</p>
+              </div>
+            </div>
+          </PageArchetypeSection>
+        </div>
+      </div>
+    </PageArchetypePreviewFrame>
+  );
+}
+
+function WorkspaceExplorerPreview() {
+  return (
+    <PageArchetypePreviewFrame
+      variant="workspace-explorer"
+      label="Workspace Explorer"
+      title="Succession Candidate Explorer"
+      description="Explorer composition with a hybrid model: stable advanced filters on the left, fast search and sort controls inline with the results."
+      headerMeta={<StatusBadge status="info">Hybrid model</StatusBadge>}
+      actions={
+        <>
+          <Button variant="outline">Save segment</Button>
+          <Button>Select candidates</Button>
+        </>
+      }
+    >
+      <div className="grid gap-5 xl:grid-cols-[280px_1fr]">
+        <PageArchetypeSidebar>
+          <div className="grid gap-4">
+            <div>
+              <p className="text-sm font-semibold text-foreground">Advanced filters</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">Persistent facets stay here so the main content area can focus on results and comparison.</p>
+            </div>
+            <div className="grid gap-2">
+              <FieldGroup>
+                <FieldLabel>Population</FieldLabel>
+                <div className="flex flex-wrap gap-2">
+                  <ActionChip variant="selected">Critical roles</ActionChip>
+                  <ActionChip>All talent pools</ActionChip>
+                </div>
+              </FieldGroup>
+              <FieldGroup>
+                <FieldLabel>Readiness band</FieldLabel>
+                <div className="grid gap-2">
+                  <label className="flex items-center gap-2 text-sm text-foreground"><Checkbox defaultChecked /> Ready now</label>
+                  <label className="flex items-center gap-2 text-sm text-foreground"><Checkbox defaultChecked /> Ready soon</label>
+                  <label className="flex items-center gap-2 text-sm text-foreground"><Checkbox /> Emerging</label>
+                </div>
+              </FieldGroup>
+              <FieldGroup>
+                <FieldLabel>Entity</FieldLabel>
+                <Combobox options={reviewerOptions} placeholder="Select entity" searchPlaceholder="Search entity" emptyMessage="No entity found" />
+              </FieldGroup>
+            </div>
+          </div>
+        </PageArchetypeSidebar>
+
+        <div className="grid gap-5">
+          <PageArchetypeToolbar
+            model="hybrid"
+            title="Quick controls"
+            description="Only high-frequency controls sit inline. The side rail keeps deeper criteria available without taking over the page."
+          >
+            <SearchInput placeholder="Search employee, role, or unit" className="min-w-[240px] flex-1" />
+            <Select>
+              <SelectTrigger className="w-[170px]">
+                <SelectValue placeholder="Sort by readiness" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="readiness">Sort by readiness</SelectItem>
+                <SelectItem value="risk">Sort by risk</SelectItem>
+              </SelectContent>
+            </Select>
+            <ActionChip variant="selected">Board view</ActionChip>
+            <ActionChip>Compare mode</ActionChip>
+          </PageArchetypeToolbar>
+
+          <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
+            <SectionPanel
+              title="Candidate results"
+              description="The main results surface remains dominant; quick filters sit directly above it and advanced filtering stays secondary."
+            >
+              <div className="grid gap-3 md:grid-cols-2">
+                {employeeBriefCards.map((card) => (
+                  <EmployeeBriefCard key={`${card.employeeId}-${card.assignmentType}`} {...card} />
+                ))}
+              </div>
+            </SectionPanel>
+
+            <PageArchetypeSection
+              title="Selection inspector"
+              description="Comparison or inspection context can sit beside the browser without forcing users into a modal too early."
+              tone="muted"
+              actions={<Button variant="ghost">Open full detail</Button>}
+            >
+              <div className="grid gap-4">
+                <ProfileSummary
+                  name="Binavia Utama"
+                  description="Senior Manager, Human Capital Strategy"
+                  metadata="Human Capital · Head Office · Ready now"
+                  initials="BU"
+                  status="Top match"
+                />
+                <DescriptionList>
+                  <DescriptionListItem>
+                    <DescriptionTerm>Coverage fit</DescriptionTerm>
+                    <DescriptionDetails>Strong match across readiness, exposure, and leadership depth.</DescriptionDetails>
+                  </DescriptionListItem>
+                  <DescriptionListItem>
+                    <DescriptionTerm>Watch-out</DescriptionTerm>
+                    <DescriptionDetails>Needs cross-entity mobility discussion before nomination lock.</DescriptionDetails>
+                  </DescriptionListItem>
+                </DescriptionList>
+              </div>
+            </PageArchetypeSection>
+          </div>
+        </div>
+      </div>
+    </PageArchetypePreviewFrame>
+  );
+}
+
+function GovernanceCockpitPreview() {
+  return (
+    <PageArchetypePreviewFrame
+      variant="governance-cockpit"
+      label="Governance Cockpit"
+      title="Talent Committee Review Queue"
+      description="Decision-heavy queue with explicit risk context and inline controls attached to the cases under review."
+      headerMeta={<StatusBadge status="warning">8 pending decisions</StatusBadge>}
+      actions={
+        <>
+          <Button variant="outline">Session notes</Button>
+          <Button>Start committee review</Button>
+        </>
+      }
+    >
+      <div className="grid gap-5">
+        <PageArchetypeSection
+          tone="muted"
+          title="Cycle status"
+          description="Governance pages can still open with summary, but the summary should point directly into the queue rather than turning into another dashboard."
+        >
+          <StatCardGroup className="xl:grid-cols-3">
+            <StatCard label="Pending cases" value="8" description="Items still waiting for committee decision." tone="warning" />
+            <StatCard label="Needs clarification" value="3" description="Cases blocked by missing evidence or rationale." tone="destructive" />
+            <StatCard label="Session ready" value="11" description="Cases with complete evidence packs and recommended action." tone="success" />
+          </StatCardGroup>
+        </PageArchetypeSection>
+
+        <div className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+          <PageArchetypeSection
+            title="Decision queue"
+            description="The queue owns its own scope and triage controls. This is where the user works, so this is where the controls belong."
+            actions={<StatusBadge status="info">Inline toolbar</StatusBadge>}
+          >
+            <div className="grid gap-4">
+              <PageArchetypeToolbar model="inline" title="Queue controls" description="Quick filters stay connected to the cases they refine.">
+                <ActionChip variant="selected">Needs decision</ActionChip>
+                <ActionChip>Clarification</ActionChip>
+                <SearchInput placeholder="Search candidate or role" className="min-w-[220px] flex-1" />
+                <Button variant="outline">Sort by risk</Button>
+              </PageArchetypeToolbar>
+
+              <div className="grid gap-3">
+                {employeeRows.slice(0, 3).map((employee) => (
+                  <div key={employee.id} className="rounded-[20px] border border-border bg-card p-4 shadow-sm">
+                    <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-sm font-semibold text-foreground">{employee.employee}</p>
+                          <StatusBadge status={employee.status === "Waiting" ? "warning" : employee.status === "Rejected" ? "destructive" : "info"}>
+                            {employee.status}
+                          </StatusBadge>
+                        </div>
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">{employee.unit} · Readiness: {employee.readiness}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button variant="outline" size="sm">Clarify</Button>
+                        <Button size="sm">Review case</Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </PageArchetypeSection>
+
+          <PageArchetypeSection
+            tone="accent"
+            title="Case detail"
+            description="Decision support should remain visible beside the queue so reviewers can act without losing context."
+            actions={<ShieldCheck className="size-4 text-primary" />}
+          >
+            <div className="grid gap-4">
+              <Alert>
+                <Info className="size-4" />
+                <AlertTitle>Evidence complete</AlertTitle>
+                <AlertDescription>Role exposure, mobility history, and committee recommendation are ready for review.</AlertDescription>
+              </Alert>
+              <DescriptionList>
+                <DescriptionListItem>
+                  <DescriptionTerm>Recommended action</DescriptionTerm>
+                  <DescriptionDetails>Approve with mobility follow-up in the next quarter.</DescriptionDetails>
+                </DescriptionListItem>
+                <DescriptionListItem>
+                  <DescriptionTerm>Key evidence</DescriptionTerm>
+                  <DescriptionDetails>Strong readiness trajectory, but temporary assignment closure is still pending.</DescriptionDetails>
+                </DescriptionListItem>
+              </DescriptionList>
+            </div>
+          </PageArchetypeSection>
+        </div>
+      </div>
+    </PageArchetypePreviewFrame>
+  );
+}
+
+function DetailWorkspacePreview() {
+  return (
+    <PageArchetypePreviewFrame
+      variant="detail-workspace"
+      label="Detail Workspace"
+      title="Employee Detail Workspace"
+      description="Record-detail composition with lighter global framing, structured sections, and local controls near the information they affect."
+      headerMeta={<StatusBadge status="success">Profile complete</StatusBadge>}
+      actions={
+        <>
+          <Button variant="outline">Share profile</Button>
+          <Button>Open development actions</Button>
+        </>
+      }
+    >
+      <div className="grid gap-5">
+        <PageHeader
+          variant="workspace"
+          eyebrow="Detail Workspace"
+          title="Binavia Utama"
+          description="Global actions stay light at the top. Section actions and local controls belong inside the areas they affect."
+          badge={<Badge variant="neutral">Employee profile</Badge>}
+          actions={<Button variant="ghost">View audit trail</Button>}
+        />
+
+        <Tabs defaultValue="profile" className="grid gap-4">
+          <TabsList className="w-fit">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="performance">Performance</TabsTrigger>
+            <TabsTrigger value="development">Development</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="profile" className="mt-0 grid gap-5 xl:grid-cols-[1.12fr_0.88fr]">
+            <PageArchetypeSection
+              title="Identity and role context"
+              description="Tabs here are local workspace navigation, not filters. Local controls stay attached to the section."
+              actions={<Button variant="outline">Edit role data</Button>}
+            >
+              <div className="grid gap-4">
+                <ProfileSummary
+                  name="Binavia Utama"
+                  description="Senior Manager, Human Capital Strategy"
+                  metadata="Human Capital · Head Office · Employee ID 24070418"
+                  initials="BU"
+                  status="Primary assignment"
+                />
+                <DescriptionList>
+                  <DescriptionListItem>
+                    <DescriptionTerm>Current focus</DescriptionTerm>
+                    <DescriptionDetails>Leading succession architecture and cross-unit talent mobility readiness.</DescriptionDetails>
+                  </DescriptionListItem>
+                  <DescriptionListItem>
+                    <DescriptionTerm>Secondary assignment</DescriptionTerm>
+                    <DescriptionDetails>Transformation Program Lead for talent mobility alignment across entities.</DescriptionDetails>
+                  </DescriptionListItem>
+                </DescriptionList>
+              </div>
+            </PageArchetypeSection>
+
+            <PageArchetypeSection
+              tone="muted"
+              title="Local controls"
+              description="Detail pages can still have controls, but they are contextual rather than global page filters."
+              actions={<FileSearch className="size-4 text-muted-foreground" />}
+            >
+              <PageArchetypeToolbar model="inline" title="Profile tools" description="Lightweight utilities stay local to the section instead of becoming a full page filter rail.">
+                <ActionChip variant="selected">Current assignment</ActionChip>
+                <ActionChip>History</ActionChip>
+                <Button variant="outline">Compare role</Button>
+              </PageArchetypeToolbar>
+              <div className="mt-4 grid gap-3">
+                <div className="rounded-[18px] border border-border bg-card p-4">
+                  <p className="text-sm font-semibold text-foreground">Recent movement</p>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">Moved into current strategy role after cross-entity transformation assignment in 2025.</p>
+                </div>
+              </div>
+            </PageArchetypeSection>
+          </TabsContent>
+
+          <TabsContent value="performance" className="mt-0">
+            <PageArchetypeSection title="Performance summary" description="Additional tabs can expose deeper record views without changing the overall page composition.">
+              <div className="grid gap-4 md:grid-cols-3">
+                <MetricPreview label="Last cycle" value="4.6/5" />
+                <MetricPreview label="Goal completion" value="91%" />
+                <MetricPreview label="Leadership score" value="88" />
+              </div>
+            </PageArchetypeSection>
+          </TabsContent>
+
+          <TabsContent value="development" className="mt-0">
+            <PageArchetypeSection title="Development actions" description="Section-level actions stay inside the relevant work surface.">
+              <div className="grid gap-3">
+                <div className="rounded-[18px] border border-border bg-card p-4">
+                  <p className="text-sm font-semibold text-foreground">Mobility follow-up</p>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">Schedule a cross-entity assignment review before committee lock.</p>
+                </div>
+              </div>
+            </PageArchetypeSection>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </PageArchetypePreviewFrame>
   );
 }
 

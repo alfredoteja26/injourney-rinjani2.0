@@ -1,6 +1,7 @@
 export const homeData = {
   currentUser: {
     id: "EMP-10042",
+    worker_profile_employee_id: "EMP-INJ-0000000005",
     nik: "INJ-2019-10042",
     name: "Dimas Sayyid",
     email: "dimas@injourney.co.id",

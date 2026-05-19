@@ -1,46 +1,116 @@
-# Agent guidance (Rinjani Integrated)
+# Rinjani Integrated Agent Rules
 
-## Design system routing
+This is the active implementation workspace for the integrated Rinjani 2.0 prototype.
 
-There are two valid design-system routes in this repo:
+@RTK.md
 
-- **Repo-native implementation route** for agents editing code, tokens, or shared components in this repository.
-- **Stage prompt route** for `.stitch` assets used to prepare prompts for Google Stage from Cursor.
+## 1. Commands
 
-### Repo-native implementation route
+Run from `/Users/alfredoteja/Documents/Rinjani 2.0 Prototype/integrated-rinjani`.
 
-When implementing or changing **UI, layout, color, typography, or new composite components in the repository**, use this order when sources conflict:
+- Install: `npm install`
+- Dev server: `npm run dev`
+- Build: `npm run build`
+- App tests: `npm run test --workspace @rinjani/app`
+- Direct app dev: `npm run dev --workspace @rinjani/app`
 
-1. Product decisions in `docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM_BLUEPRINT.md` (if present for the topic).
-2. **Runtime tokens** in `packages/shared-ui/src/theme.css` (CSS variables consumed by Tailwind / `@theme`).
-3. `**docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM.md`** and `**docs/design-system-overhaul-2026-04-07/COMPONENT_LIBRARY.md**` (human-readable spec and component taxonomy).
-4. `**@rinjani/shared-ui**` primitives and patterns (prefer existing components over one-off markup).
-5. InJourney brand book as **rationale**, not an automatic override of `theme.css`.
-6. `**.stitch/DESIGN.md`** and Stitch exports: **condensed / generative reference only**. Do not treat Stitch as the token authority; reconcile any new palette or rule into `theme.css` and the overhaul docs first.
+No root lint or typecheck script is currently declared. Use the closest app/workspace command and report gaps.
 
-### Repo-native update routing
+When shelling, prefer `rtk` wrappers where available. Repo hooks may deny raw Bash commands that have an `rtk` equivalent.
 
-- If the task changes a **design rule**, update `DESIGN_SYSTEM.md` first.
-- If the task changes **component usage, taxonomy, or introduces a new shared component**, update `COMPONENT_LIBRARY.md`.
-- If the task changes **runtime tokens or semantic classes**, update `packages/shared-ui/src/theme.css`.
-- Only update `.stitch/DESIGN.md` after the canonical docs above are aligned, and only as a condensed downstream summary for Stitch/Stage generation.
-- When in doubt, prefer the overhaul docs over `.stitch` files.
+## 2. Project Stack
 
-### Stage prompt route
+- Product: integrated InJourney Human Capital prototype.
+- App: React 18, React Router 7, Vite 6, TypeScript 5.
+- Styling: Tailwind CSS 4 with runtime tokens in shared UI.
+- UI primitives: Radix UI, Lucide icons, shared `@rinjani/shared-ui`.
+- Package manager: npm workspaces.
 
-- Files under `.stitch/` support the `Cursor -> Google Stage` workflow.
-- In that workflow, `.stitch/DESIGN.md` is the prompt-facing design brief and may be used directly.
-- `.stitch/next-prompt.md` should continue to reference `.stitch/DESIGN.md`.
-- Do not treat `.stitch/DESIGN.md` as the repo-native implementation authority unless the task explicitly targets the Stage prompt workflow.
+## 3. Repository Map
 
-### Implementation rules
+- `apps/rinjani/`: integrated app entry, route composition, login/session bootstrap.
+- `packages/shell/`: integrated host shell.
+- `packages/shared-ui/`: shared theme and reusable UI exports.
+- `packages/shared-types/`: shared contracts.
+- `packages/{portal,talent,performance,performance-v2}/`: integration-owned source snapshots imported by Vite aliases.
+- `docs/integrated-product-architecture/`: route, navigation, and shell ownership rules.
+- `docs/design-system-overhaul-2026-04-07/`: canonical design-system docs.
+- `docs/design-input-packs/`: Notion/DIP export references.
 
-- Prefer **semantic Tailwind classes** wired to the theme: `bg-primary`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-muted`, `text-secondary`, etc., instead of **raw hex** (e.g. `#006573`) in feature code.
-- **Avoid** ad hoc `text-[#...]`, `bg-[#...]`, `border-[#...]` in app and package feature modules unless documented as an exception (e.g. third-party embeds, one-off charts pending token mapping).
-- For audits of drift, see `docs/design-system-overhaul-2026-04-07/AUDIT_HARDCODED_COLOR.md` (updated when audits run).
+## 4. Source of Truth
 
-## Repo-specific engineering
+- Product and architecture overview: `README.md`.
+- Current docs index: `docs/README.md`.
+- Shell ownership: `docs/integrated-product-architecture/SHELL_OWNERSHIP.md`.
+- Sitemap and route tree: `docs/integrated-product-architecture/INTEGRATED_SITEMAP.md`.
+- Talent normalization: `docs/integrated-product-architecture/TALENT_ROUTE_NORMALIZATION.md`.
+- Design system: `docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM.md`.
+- Component taxonomy: `docs/design-system-overhaul-2026-04-07/COMPONENT_LIBRARY.md`.
+- Runtime tokens: `packages/shared-ui/src/theme.css`.
 
-- Match existing patterns in the package you touch; keep changes scoped to the task.
-- Run `npm run build` (workspace app) after non-trivial UI changes when feasible.
+## 5. Repo-Specific Patterns
 
+- The integrated app owns shell, route composition, login/session bootstrap, and platform switching.
+- Talent routes live under `/talent/*`; keep legacy redirects compatible while cleanup continues.
+- Use hash routes intentionally, such as `/#/talent` and `/#/performance/my-kpi`.
+- Copied module packages are integration-owned source trees, not independently managed workspace packages.
+- Performance v2 lives in `packages/performance-v2/` and uses its own domain store, fixture layer, and shared UI primitives.
+
+## 6. UI Rules
+
+- Source precedence for repo-native UI work:
+  1. `docs/design-system-overhaul-2026-04-07/DESIGN_SYSTEM_BLUEPRINT.md`
+  2. `packages/shared-ui/src/theme.css`
+  3. `DESIGN_SYSTEM.md` and `COMPONENT_LIBRARY.md`
+  4. `@rinjani/shared-ui` primitives and patterns
+  5. InJourney brand book as rationale only
+- `.stitch/` files support Stage prompt work only; do not treat them as implementation authority.
+- Use semantic Tailwind classes such as `bg-primary`, `text-foreground`, `text-muted-foreground`, `border-border`, and `bg-muted`.
+- Avoid ad hoc `text-[#...]`, `bg-[#...]`, and `border-[#...]` in app and package feature modules.
+- Package-level screens should not render duplicate app chrome inside the integrated shell.
+
+## 7. Testing and Verification
+
+Before reporting completion, run the closest relevant checks:
+
+- Build: `npm run build`
+- App tests: `npm run test --workspace @rinjani/app`
+- Visual QA: run `npm run dev` and inspect affected hash routes when UI changes are meaningful.
+
+If a check cannot run, state why and what fallback was used.
+
+## 8. Git and PR Workflow
+
+- Keep shell/navigation changes separate from module-page changes when possible.
+- Document affected area: Portal, Talent, Performance, shared shell, shared UI, or docs.
+- PR notes should include user-visible behavior, validation, known gaps, and docs updated.
+
+## 9. Boundaries
+
+Always:
+
+- Preserve integrated shell ownership unless the task explicitly changes it.
+- Update design-system docs before changing design rules, component taxonomy, or runtime tokens.
+
+Ask first:
+
+- New dependencies.
+- Changing route ownership or top-level navigation.
+- Moving standalone prototype assumptions into integrated app architecture.
+- Backend, auth, deployment, permissions, or secrets changes.
+
+Never:
+
+- Make `.stitch/` the repo-native implementation authority.
+- Add duplicate sidebar/header chrome to package-level screens.
+- Use raw hex colors in feature modules when semantic tokens exist.
+
+## graphify
+
+This project has a graphify knowledge graph at graphify-out/.
+
+Rules:
+- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
+- If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
+- For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
+- After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)

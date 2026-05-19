@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Link } from "react-router";
+import { buildWorkerProfileHref } from "@rinjani/shared-types";
 import { Layout } from '../components/shell/Layout';
 import { Calendar, FileText, CheckCircle, Clock, Gavel, AlertTriangle } from 'lucide-react';
 import {
@@ -269,11 +271,26 @@ export default function TalentCommitteePortal() {
                               </p>
                             </div>
                           </div>
-                          <button
-                            className="ml-6 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                          >
-                            View BA
-                          </button>
+                          <div className="ml-6 flex shrink-0 flex-col gap-2">
+                            <Button
+                              variant="outline"
+                              asChild
+                            >
+                              <Link
+                                to={buildWorkerProfileHref(decision.employee_id, {
+                                  context: "committee",
+                                  from: "/talent/talent-committee",
+                                })}
+                              >
+                                View Profile
+                              </Link>
+                            </Button>
+                            <button
+                              className="rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                            >
+                              View BA
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );

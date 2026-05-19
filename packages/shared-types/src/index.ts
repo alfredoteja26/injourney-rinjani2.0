@@ -1,4 +1,61 @@
 export type UserRole = "Admin" | "User";
+export type WorkerProfileAccessContext =
+  | "self"
+  | "manager"
+  | "talent_pool"
+  | "succession"
+  | "committee"
+  | "portal_admin";
+
+export interface WorkerProfileLinkOptions {
+  context?: WorkerProfileAccessContext;
+  from?: string;
+}
+
+const workerProfileContexts: WorkerProfileAccessContext[] = [
+  "self",
+  "manager",
+  "talent_pool",
+  "succession",
+  "committee",
+  "portal_admin",
+];
+
+export function isWorkerProfileAccessContext(value: string | null | undefined): value is WorkerProfileAccessContext {
+  return value !== null && value !== undefined && workerProfileContexts.includes(value as WorkerProfileAccessContext);
+}
+
+export function resolveWorkerProfileAccessContext(
+  requestedContext: string | null | undefined,
+  fallbackContext: WorkerProfileAccessContext,
+): WorkerProfileAccessContext {
+  return isWorkerProfileAccessContext(requestedContext) ? requestedContext : fallbackContext;
+}
+
+export function resolveWorkerProfileBackHref(requestedHref: string | null | undefined) {
+  if (!requestedHref || !requestedHref.startsWith("/")) {
+    return undefined;
+  }
+
+  return requestedHref;
+}
+
+export function buildWorkerProfileHref(employeeId: string, options: WorkerProfileLinkOptions = {}) {
+  const searchParams = new URLSearchParams();
+
+  if (options.context) {
+    searchParams.set("context", options.context);
+  }
+
+  const safeBackHref = resolveWorkerProfileBackHref(options.from);
+  if (safeBackHref) {
+    searchParams.set("from", safeBackHref);
+  }
+
+  const query = searchParams.toString();
+  const basePath = `/worker-profile/${encodeURIComponent(employeeId)}`;
+  return query ? `${basePath}?${query}` : basePath;
+}
 
 export type NotificationType = "approval" | "deadline" | "announcement";
 

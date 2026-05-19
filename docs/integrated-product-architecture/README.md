@@ -9,6 +9,7 @@ Use these documents when changing navigation, shell ownership, route structure, 
 - `INTEGRATED_SITEMAP.md`: current route tree and navigation ownership model.
 - `SHELL_OWNERSHIP.md`: rules for which layer owns the integrated shell chrome.
 - `TALENT_ROUTE_NORMALIZATION.md`: Talent route-normalization reference while compatibility redirects still exist.
+- `WORKER_PROFILE_ACCESS_POLICY.md`: canonical edit/view/export policy for the shared Worker Profile / Talent Profile experience.
 
 ## Boundary
 

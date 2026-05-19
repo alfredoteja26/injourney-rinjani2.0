@@ -1,0 +1,25 @@
+# Local dependencies, caches, generated artifacts
+node_modules/
+dist/
+build/
+.vite/
+.npm-cache/
+.pnpm-store/
+coverage/
+graphify-out/
+
+# Local IDE/agent/prototype state
+.claude/
+.cloud/
+.codex/
+.cursor/
+.kiro/
+.playwright/
+.playwright-cli/
+.cli/
+.stitch/
+
+# Binary/office deliverables create noisy converted nodes
+*.pptx
+*.xlsx
+*.xls

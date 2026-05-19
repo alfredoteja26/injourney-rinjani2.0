@@ -1,0 +1,25 @@
+{
+  "name": "rinjani-socialization-video",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "remotion studio src/index.tsx --port=3100",
+    "render": "remotion render src/index.tsx RinjaniSocialization dist/rinjani-2-socialization.mp4 --codec=h264 --pixel-format=yuv420p",
+    "qa:preview": "node scripts/qa-preview.mjs",
+    "still": "remotion still src/index.tsx RinjaniSocialization"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.451",
+    "@remotion/renderer": "4.0.451",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remotion": "4.0.451",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "playwright": "^1.59.1"
+  }
+}

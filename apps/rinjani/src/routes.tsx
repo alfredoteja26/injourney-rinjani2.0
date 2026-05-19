@@ -11,7 +11,22 @@ import type { UserRole } from "@rinjani/shared-types";
 import SignIn from "@portal/imports/SignIn";
 import { MicrosoftLoginPage } from "@portal/components/MicrosoftLoginPage";
 import { LoadingScreen } from "@portal/components/LoadingScreen";
-import { PortalAnalyticsPage, PortalDashboardPage, PortalEmployeeProfilePage, PortalMailPage, PortalMyProfilePage, PortalOffboardingPage, PortalPolicyPage, PortalSettingsPage, PortalSurveyAnalyticsPage, PortalSurveyManagementPage, PortalSurveyPage, PortalSurveyTakePage } from "./portal-pages";
+import {
+  PortalAnalyticsPage,
+  PortalDashboardPage,
+  PortalEmployeeDirectoryRoute,
+  PortalEmployeeProfileCompatibilityRoute,
+  PortalMailPage,
+  PortalMyProfilePage,
+  PortalOffboardingPage,
+  PortalPolicyPage,
+  PortalSettingsPage,
+  PortalSurveyAnalyticsPage,
+  PortalSurveyManagementPage,
+  PortalSurveyPage,
+  PortalSurveyTakePage,
+  PortalWorkerProfileRoute,
+} from "./portal-pages";
 import { DesignSystemPage } from "./design-system-page";
 import {
   PerformanceCheckInPage,
@@ -223,7 +238,19 @@ export const router = createHashRouter([
                   },
                   {
                     path: "employee-profile/:email",
-                    element: <PortalEmployeeProfilePage />
+                    element: <PortalContextRoute render={(props) => <PortalEmployeeProfileCompatibilityRoute userRole={props.userRole} userEmail={props.userEmail} />} />
+                  },
+                  {
+                    path: "worker-profile/:employeeId",
+                    element: <PortalContextRoute render={(props) => <PortalWorkerProfileRoute userRole={props.userRole} userEmail={props.userEmail} />} />
+                  },
+                  {
+                    path: "employee-directory",
+                    element: (
+                      <AdminOnly>
+                        <PortalContextRoute render={(props) => <PortalEmployeeDirectoryRoute userRole={props.userRole} userEmail={props.userEmail} />} />
+                      </AdminOnly>
+                    )
                   },
                   {
                     path: "analytics",

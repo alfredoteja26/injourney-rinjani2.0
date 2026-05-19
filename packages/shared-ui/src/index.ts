@@ -70,6 +70,16 @@ export { List, ListItem, ListItemContent, ListItemDescription, ListItemMeta, Lis
 export { LoadingState } from "./loading-state";
 export { PageHeading } from "./page-heading";
 export {
+  PageArchetypePreviewFrame,
+  PageArchetypeSection,
+  PageArchetypeSidebar,
+  PageArchetypeToolbar,
+  type PageArchetypePreviewFrameProps,
+  type PageArchetypeSectionTone,
+  type PageArchetypeToolbarModel,
+  type PageArchetypeVariant,
+} from "./page-archetypes";
+export {
   FilterRail,
   PageHeader,
   SectionPanel,

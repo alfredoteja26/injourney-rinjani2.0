@@ -309,6 +309,12 @@ Approved variation families for this phase:
 - `dashboard hub`
 - `workspace explorer`
 - `governance cockpit`
+- `detail workspace`
+
+Preview-first rollout rule:
+
+- Validate these variations first in the admin-only `/#/design-system` archetype lab.
+- Do not refactor active module routes into these patterns until the preview direction is reviewed and accepted.
 
 #### Dashboard hub
 
@@ -319,6 +325,7 @@ Behavior:
 - Use a broad enterprise frame, but avoid one continuous white slab.
 - Prefer a layered surface model: quieter page canvas plus grouped cards and panels.
 - Hero/header, summary metrics, and first actionable zones should feel structured and slightly denser than reading pages.
+- Attach quick scope controls to the first actionable zone instead of placing a detached page-wide filter block above the entire page.
 - For manager-facing dashboard surfaces such as My Team KPI, avoid the lightest all-white treatment if it weakens hierarchy.
 
 #### Workspace explorer
@@ -327,7 +334,7 @@ Use when the page is an operational work surface with search, filters, tabs, and
 
 Behavior:
 
-- Use a strong filter rail or toolbar near the top of the workspace.
+- Default to a hybrid model: quick search/sort/scope controls inline with results, advanced filters secondary in a rail, drawer, or popover.
 - Use layered panels and contained surfaces rather than a plain document-like page.
 - Let search expand first; keep bounded controls at stable widths.
 - Tables, browser cards, and sheets remain the primary working surfaces.
@@ -339,8 +346,19 @@ Use when the page supports policy, audit, approval, administration, or wide comp
 Behavior:
 
 - This can be the lightest of the approved layout variants because governance pages benefit from clarity and legibility.
-- Prioritize wide data regions, filter controls, summary metrics, and audit views.
+- Prioritize wide data regions, queue-owned filter controls, summary metrics, and audit views.
 - Keep the surface hierarchy visible through borders, panel separation, and spacing, even when the overall page feels cleaner.
+
+#### Detail workspace
+
+Use when the page centers on one record that needs rich context, local navigation, and section-level actions.
+
+Behavior:
+
+- Keep global framing lighter than dashboard or governance pages.
+- Use tabs or sibling navigation as workspace navigation, not as filter controls.
+- Prefer local controls inside the section they affect.
+- Use supporting side context only when it helps inspection without overwhelming the main record.
 
 ### Surface Layering
 
@@ -375,6 +393,9 @@ Rules:
 - Avoid visually bottom-aligning title and subtitle content beside tall form controls.
 - On smaller breakpoints, split the intro block and the controls into stacked rows before forcing awkward mixed-height alignment.
 - The toolbar copy should read as an anchored page introduction, not as vertically centered decoration.
+- Do not default to a generic full-width filter bar stacked above the main content region.
+- Keep quick filters visually attached to the content surface they modify.
+- Treat tabs and context switches as navigation, not generic filtering.
 
 Stitch/Stage desktop viewport rule:
 

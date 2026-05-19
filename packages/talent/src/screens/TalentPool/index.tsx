@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 import { Layout } from "../../components/shell/Layout";
 import { Sheet } from "../../components/ui/sheet";
 import { TalentProfileDetail } from "./TalentProfileDetail";
@@ -8,6 +9,7 @@ import { mockCandidates, mockBands } from "./mockData";
 import { TalentPoolCandidate, Band } from "./types";
 
 export function TalentPool() {
+  const [searchParams] = useSearchParams();
   const [selectedCompany, setSelectedCompany] = useState("InJourney Holding");
   const [selectedBand, setSelectedBand] = useState<Band>(mockBands[0]);
   const [selectedCandidate, setSelectedCandidate] = useState<TalentPoolCandidate | null>(null);
@@ -33,6 +35,23 @@ export function TalentPool() {
        return companyMatch;
     });
   }, [selectedCompany, selectedBand]);
+
+  useEffect(() => {
+    const employeeId = searchParams.get("employee");
+    if (!employeeId) {
+      return;
+    }
+
+    const candidate = mockCandidates.find((item) => item.employee_id === employeeId) ?? null;
+    if (!candidate) {
+      return;
+    }
+
+    setSelectedCompany(candidate.company);
+    const matchedBand = mockBands.find((band) => band.name === candidate.grade) ?? mockBands[0];
+    setSelectedBand(matchedBand);
+    setSelectedCandidate(candidate);
+  }, [searchParams]);
 
   return (
     <Layout breadcrumbs={[

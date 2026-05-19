@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router";
+import { buildWorkerProfileHref } from "@rinjani/shared-types";
 import { 
   ArrowLeft,
   ArrowRight,
@@ -204,6 +206,16 @@ export function PositionDetail({ position, candidates, onBack, onSubmit, onCompa
                         </div>
                         
                         <div className="flex items-center gap-2">
+                          <Button variant="ghost" size="sm" asChild>
+                            <Link
+                              to={buildWorkerProfileHref(candidate.employeeId, {
+                                context: "succession",
+                                from: "/talent/succession-planning",
+                              })}
+                            >
+                              Open Profile
+                            </Link>
+                          </Button>
                           <Button variant="outline" size="sm" onClick={() => onCompare([candidate])}>
                             Compare
                           </Button>

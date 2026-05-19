@@ -139,13 +139,14 @@ Avoid auto-row grid stacks for preview title + component pairs, because taller s
 
 For operational product pages, do not force every module landing page into the same page shell and visual weight.
 
-Use these variation labels as documentation-first layout contracts:
+Use these variation labels as preview-phase layout contracts. They are now rendered in the admin-only `/#/design-system` archetype lab and should be reviewed there before any live-module rollout.
 
 - `dashboard hub`
 - `workspace explorer`
 - `governance cockpit`
+- `detail workspace`
 
-These are page-level composition patterns, not new shell chrome and not automatically shared library components yet.
+These are page-level composition patterns, not new shell chrome. The current shared runtime helpers exist to support preview and review; they are not automatic live-module contracts yet.
 
 #### Dashboard hub
 
@@ -156,6 +157,7 @@ Expected behavior:
 - broader enterprise frame
 - stronger grouped cards and summary zones
 - layered surfaces instead of one continuous white field
+- quick scope controls attached to the first actionable zone, not detached into a generic page-wide filter block
 - suitable for manager and employee dashboard surfaces
 
 #### Workspace explorer
@@ -164,7 +166,7 @@ Use when the page is a browse/search/filter/inspect workflow.
 
 Expected behavior:
 
-- strong top filter rail
+- hybrid filter model by default: quick controls inline with results, advanced filters secondary in a side rail, drawer, or popover
 - stable search and bounded filter widths
 - clear tabs or sibling workspace navigation
 - layered surfaces for browser cards, tables, and inspection panels
@@ -177,12 +179,23 @@ Expected behavior:
 
 - lightest overall surface treatment of the approved variations
 - widest table and governance regions
-- strong top summary plus filtering behavior
+- strong top summary plus queue-owned filtering behavior
 - surface hierarchy preserved through borders and grouped sections
+
+#### Detail workspace
+
+Use when the page is a deep record view for one employee, role, KPI, or case.
+
+Expected behavior:
+
+- lighter global framing with stronger local section structure
+- tabs or sibling navigation treated as workspace navigation, not as filter controls
+- local controls attached to the section they affect
+- supporting context available beside the primary detail content when needed
 
 ### Filter Rail And Toolbar Guidance
 
-Repeated local search + filter rows across modules should follow one composition rule before they are considered for shared-component promotion.
+Repeated local search + filter rows across modules should follow explicit ownership rules before they are considered for broad shared-component promotion.
 
 Use when:
 
@@ -196,6 +209,21 @@ Rules:
 - The rail should wrap gracefully before collapsing into a full one-column stack.
 - Intro copy, title, or subtitle content should align to the top-left of the toolbar region.
 - Do not visually bottom-align the copy block beside taller filter controls.
+- Do not use a generic full-width filter block stacked above the main content by default.
+- Keep quick filters visually attached to the list, board, queue, or detail region they affect.
+- Treat tabs and context switches as workspace navigation, not as generic filters.
+
+Default model guidance:
+
+- `dashboard hub` -> inline toolbar
+- `workspace explorer` -> hybrid
+- `governance cockpit` -> inline toolbar
+- `detail workspace` -> contextual local controls
+
+When to use a dedicated side rail:
+
+- choose a side rail when the user needs persistent faceted exploration across a large result set
+- keep the side rail secondary to the result surface; it should not become the dominant visual object unless exploration is the primary job
 
 Promotion rule:
 
@@ -204,7 +232,8 @@ Promotion rule:
 
 Current shared implementation:
 
-- `FilterRail` is now promoted into `packages/shared-ui/src/page-layout.tsx` for stable top-of-workspace search/filter/action rows.
+- `FilterRail` remains available in `packages/shared-ui/src/page-layout.tsx` for stable top-of-workspace search/filter/action rows already in production-like use.
+- `PageArchetypePreviewFrame`, `PageArchetypeToolbar`, `PageArchetypeSidebar`, and `PageArchetypeSection` now exist in `packages/shared-ui/src/page-archetypes.tsx` as preview-phase composition helpers for the Design System archetype lab.
 
 ### Shared Page Framing Components
 
@@ -1342,4 +1371,3 @@ Validation when implemented:
 - Visually inspect the route on desktop and mobile.
 - Confirm shell remains single-owner.
 - Confirm all examples use design-system tokens and shared components.
-

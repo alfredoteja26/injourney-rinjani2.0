@@ -1,5 +1,6 @@
 import { Link } from "react-router";
-import { Target, ClipboardList, Briefcase, ClipboardCheck } from "lucide-react";
+import { Target, ClipboardList, Briefcase, ClipboardCheck, UserRound } from "lucide-react";
+import { buildWorkerProfileHref } from "@rinjani/shared-types";
 import { Card } from "../ui/card";
 import { homeData } from "../../data/homeData";
 import { cn } from "../ui/utils";
@@ -9,6 +10,16 @@ export function QuickActionsRegion() {
   const pendingAssessments = assessorAssignments.pending_count;
 
   const actions = [
+    {
+      label: "Talent Profile",
+      href: buildWorkerProfileHref(homeData.currentUser.worker_profile_employee_id, {
+        context: "self",
+        from: "/talent",
+      }),
+      icon: UserRound,
+      color: "text-secondary",
+      bgColor: "bg-secondary/10",
+    },
     {
       label: "Ajukan Aspirasi",
       href: "/talent/career-aspiration",

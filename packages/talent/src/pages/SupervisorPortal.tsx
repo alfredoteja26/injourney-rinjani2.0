@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router";
+import { buildWorkerProfileHref } from "@rinjani/shared-types";
 import {
   ArrowUpRight,
   BarChart3,
@@ -824,6 +825,16 @@ export default function SupervisorPortal() {
                       </DetailPanelContent>
 
                       <DetailPanelFooter>
+                        <Button asChild size="sm">
+                          <Link
+                            to={buildWorkerProfileHref(selectedMember.employee_id, {
+                              context: "manager",
+                              from: `/talent/supervisor-portal?tab=team-profile&employee=${selectedMember.employee_id}`,
+                            })}
+                          >
+                            Open Talent Profile
+                          </Link>
+                        </Button>
                         <Button asChild size="sm" variant="outline">
                           <Link to={`/talent/career-aspiration?employee=${selectedMember.employee_id}`}>Lihat Aspiration</Link>
                         </Button>

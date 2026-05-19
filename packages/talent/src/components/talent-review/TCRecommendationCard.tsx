@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from "react-router";
+import { buildWorkerProfileHref } from "@rinjani/shared-types";
 import { User, Building2, Award, TrendingUp, FileCheck, ArrowRight } from 'lucide-react';
 import { HCRecommendation, eligibleEmployees, supervisorProposals } from '../../data/mockTalentReviewData';
 import { Badge, Button, StatusBadge } from '@rinjani/shared-ui';
@@ -161,8 +163,18 @@ export function TCRecommendationCard({ recommendation, onMakeDecision }: TCRecom
 
       {/* Actions */}
       <div className="flex justify-end gap-3">
-        <Button variant="outline">
-          View Full Profile
+        <Button
+          variant="outline"
+          asChild
+        >
+          <Link
+            to={buildWorkerProfileHref(recommendation.employee_id, {
+              context: "committee",
+              from: "/talent/talent-committee",
+            })}
+          >
+            View Full Profile
+          </Link>
         </Button>
         <Button
           onClick={onMakeDecision}

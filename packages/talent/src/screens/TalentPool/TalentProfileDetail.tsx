@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router";
+import { buildWorkerProfileHref } from "@rinjani/shared-types";
 import { Award, BookOpen, Briefcase, Calendar, GraduationCap, Mail, MapPin, Phone, Target, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { Badge } from "../../components/ui/badge";
@@ -447,8 +449,15 @@ export function TalentProfileDetail({ candidate, onClose }: TalentProfileDetailP
               <Target className="mr-2 h-4 w-4" />
               Shortlist
             </Button>
-            <Button variant="outline" className="flex-1 border-border">
-              View History
+            <Button variant="outline" className="flex-1 border-border" asChild>
+              <Link
+                to={buildWorkerProfileHref(candidate.employee_id, {
+                  context: "talent_pool",
+                  from: `/talent/talent-pool?employee=${candidate.employee_id}`,
+                })}
+              >
+                View Talent Profile
+              </Link>
             </Button>
           </div>
         </div>
